@@ -1,0 +1,16 @@
+  *__pycache__
+.mypy_cache/*
+*.pyc
+data/*
+models/*
+doc/*
+dygie/*
+notebooks/*
+cache/*
+pretrained/*
+# predictions/*
+**/stanford*/*
+scratch*
+scripts/*
+training_config
+texts/*
