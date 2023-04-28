@@ -2,7 +2,6 @@ allennlp==1.1.0
 allennlp_models==1.1.0
 beautifulsoup4==4.12.2
 datasets==2.11.0
-en_core_web_sm==2.2.0
 ipdb==0.13.13
 jsonnet==0.20.0
 numpy==1.23.4
