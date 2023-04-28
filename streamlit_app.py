@@ -1,18 +1,17 @@
 
-import sys
-from pathlib import Path # if you haven't already done so
-file = Path(__file__).resolve()
-parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
+# import sys
+# from pathlib import Path # if you haven't already done so
+# file = Path(__file__).resolve()
+# parent, root = file.parent, file.parents[1]
+# sys.path.append(str(root))
 
-# Additionally remove the current file's directory from sys.path
-try:
-    sys.path.remove(str(parent))
-except ValueError: # Already removed
-    pass
+# # Additionally remove the current file's directory from sys.path
+# try:
+#     sys.path.remove(str(parent))
+# except ValueError: # Already removed
+#     pass
 
 from datasets import load_dataset
-from ORKG_parsers.cl_titles_parser.thesis_interface import parse_cl
 import pickle
 from annotated_text import annotated_text
 import streamlit as st
@@ -67,7 +66,8 @@ option = st.selectbox(
 
 st.header('NER & RE Parsing Results')
 if option == "D'Souza's CL-TitleParser":
-    ent_sents, rel_sents= parse_cl(sentences)
+    with open('dsouza_ents', 'rb') as f:
+        ent_sents = pickle.load(f)
 
     for ent_sent in ent_sents:  
         annotated_text(ent_sent)
