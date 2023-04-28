@@ -1,13 +1,25 @@
+
+import sys
+from pathlib import Path # if you haven't already done so
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
+
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError: # Already removed
+    pass
+
 from datasets import load_dataset
-from .ORKG_parsers.cl_titles_parser.thesis_interface import parse_cl
+from ORKG_parsers.cl_titles_parser.thesis_interface import parse_cl
 import pickle
 from annotated_text import annotated_text
 import streamlit as st
 import subprocess
 from spacy import displacy
-from pathlib import Path
 
-os_path = Path(__file__).parents[0]
+
 
 def merge_words_and_entities(words, entities, sentence_start_idx):
     merged = [None] * len(words)
