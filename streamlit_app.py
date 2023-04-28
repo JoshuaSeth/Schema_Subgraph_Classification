@@ -1,10 +1,13 @@
 from datasets import load_dataset
-from ORKG_parsers.cl_titles_parser.thesis_interface import parse_cl
+from .ORKG_parsers.cl_titles_parser.thesis_interface import parse_cl
 import pickle
 from annotated_text import annotated_text
 import streamlit as st
 import subprocess
 from spacy import displacy
+from pathlib import Path
+
+os_path = Path(__file__).parents[0]
 
 def merge_words_and_entities(words, entities, sentence_start_idx):
     merged = [None] * len(words)
