@@ -1,5 +1,5 @@
 datasets==2.11.0
-spacy==3.0.0
+spacy==2.2.4
 spacy_streamlit==1.0.6
 st_annotated_text==4.0.0
-streamlit==1.21.0
+streamlit==1.22.0
