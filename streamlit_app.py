@@ -80,28 +80,83 @@ if "Dygie" in option:
 
     data = eval(data)
 
-    for idx, s in enumerate(data['sentences']):
-        sent_start_idx = sum([len(sent) for sent in data['sentences'][:idx]])
-        words = [{'text': word, 'tag': ''} for word in s]
+    if not 'granular' in option.lower():
+        for idx, s in enumerate(data['sentences']):
+            sent_start_idx = sum([len(sent)
+                                 for sent in data['sentences'][:idx]])
+            words = [{'text': word, 'tag': ''} for word in s]
 
-        if 'predicted_ner' in data:
-            annotated_text(merge_words_and_entities(
-                s, data['predicted_ner'][idx], sent_start_idx))
+            if 'predicted_ner' in data:
+                annotated_text(merge_words_and_entities(
+                    s, data['predicted_ner'][idx], sent_start_idx))
 
-        if 'predicted_relations' in data:
+            if 'predicted_relations' in data:
+                arcs = []
+                for rel in data['predicted_relations'][idx]:
+                    print(s[rel[0]-sent_start_idx:rel[1]-sent_start_idx+1],
+                          rel[4], s[rel[2]-sent_start_idx:rel[3]-sent_start_idx+1])
+                    arcs.append({
+                        "start": rel[0]-sent_start_idx,
+                        "end": rel[2]-sent_start_idx,
+                        "label": rel[4],
+                        "dir": "right" if rel[0]-sent_start_idx < rel[2]-sent_start_idx else "left"
+                    })
+                try:
+                    svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
+                        "offset_x": 100, "distance": 100})
+                    st.write(svg, unsafe_allow_html=True)
+                except Exception as e:
+                    st.text(e)
+
+    if 'granular' in option.lower():
+        for idx, s in enumerate(data['sentences']):
+            sent_start_idx = sum([len(sent)
+                                 for sent in data['sentences'][:idx]])
+            words = [{'text': word, 'tag': ''} for word in s]
+
+            print(s)
+
             arcs = []
-            for rel in data['predicted_relations'][idx]:
-                print(s[rel[0]-sent_start_idx:rel[1]-sent_start_idx+1],
-                      rel[4], s[rel[2]-sent_start_idx:rel[3]-sent_start_idx+1])
-                arcs.append({
-                    "start": rel[0]-sent_start_idx,
-                    "end": rel[2]-sent_start_idx,
-                    "label": rel[4],
-                    "dir": "right" if rel[0]-sent_start_idx < rel[2]-sent_start_idx else "left"
-                })
-            try:
-                svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
-                                      "offset_x": 100, "distance": 100})
-                st.write(svg, unsafe_allow_html=True)
-            except Exception as e:
-                st.text(e)
+            for rel in data['predicted_events'][idx]:
+                print(rel)
+                fullarg0 = []
+                fullarg1 = []
+                arg0 = []
+                arg1 = []
+                for part in rel:
+                    if part[1] == 'TRIGGER':
+                        trigger = s[part[0] - sent_start_idx]
+                    elif part[2] == 'ARG0':
+                        arg0.append(s[part[0] - sent_start_idx])
+                        fullarg0.append(part)
+                    elif part[2] == 'ARG1':
+                        arg1.append(s[part[0] - sent_start_idx])
+                        fullarg1.append(part)
+
+                print(arg0, trigger, arg1)
+                # Do rels with 2 parts as rels
+                if len(arg0) > 0 and len(arg1) > 0:
+                    arcs.append({
+                        "start": fullarg0[0][0]-sent_start_idx,
+                        "end": fullarg1[0][0]-sent_start_idx,
+                        "label": trigger,
+                        'dir': 'right' if fullarg0[0][0]-sent_start_idx < fullarg1[0][0]-sent_start_idx else 'left'
+                    })
+
+            svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
+                "offset_x": 100, "distance": 100})
+            st.write(svg, unsafe_allow_html=True)
+
+            # And the others as entities
+            entities = []
+            for rel in data['predicted_events'][idx]:
+                temp_rel = []
+                for part in rel:
+                    if part[1] != 'TRIGGER':
+                        temp_rel.append(part)
+                entities.append(temp_rel)
+
+            if len(entities) > 0:
+                print('ents', entities[0])
+                annotated_text(merge_words_and_entities(
+                    s, entities[0], sent_start_idx))
