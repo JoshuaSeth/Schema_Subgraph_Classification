@@ -58,12 +58,17 @@ for item in dataset:
         sentences.append(item['text'])
 
 
+st.header('NER & RE Parsing Results')
+
+st.markdown(
+    'The analysis of these results can be found in the [research notes](https://docs.google.com/document/d/1i5xHfUvWKcGeX7D1r3Eb1IPm4Bg83-Y0/edit#bookmark=id.jb6w6xm4vqf2).')
+
 option = st.selectbox(
     'Joint NER and RE method',
     ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular'))
 
+st.divider()
 
-st.header('NER & RE Parsing Results')
 if option == "D'Souza's CL-TitleParser":
     with open('dsouza_ents', 'rb') as f:
         ent_sents = pickle.load(f)
