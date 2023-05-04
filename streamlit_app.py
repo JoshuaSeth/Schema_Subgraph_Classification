@@ -19,7 +19,6 @@ import subprocess
 from spacy import displacy
 
 
-
 def merge_words_and_entities(words, entities, sentence_start_idx):
     merged = [None] * len(words)
     for word_idx, word in enumerate(words):
@@ -28,7 +27,7 @@ def merge_words_and_entities(words, entities, sentence_start_idx):
     for entity in entities:
         start, end, label = entity[0], entity[1], entity[2]
 
-        start-= sentence_start_idx
+        start -= sentence_start_idx
         if isinstance(end, str):
             label = end
             end = start+1
@@ -50,8 +49,8 @@ def merge_words_and_entities(words, entities, sentence_start_idx):
     return merged
 
 
-
-dataset = load_dataset("DanL/scientific-challenges-and-directions-dataset", split="dev")
+dataset = load_dataset(
+    "DanL/scientific-challenges-and-directions-dataset", split="dev")
 
 sentences = []
 for item in dataset:
@@ -61,7 +60,7 @@ for item in dataset:
 
 option = st.selectbox(
     'Joint NER and RE method',
-    ( "D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular'))
+    ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular'))
 
 
 st.header('NER & RE Parsing Results')
@@ -69,14 +68,15 @@ if option == "D'Souza's CL-TitleParser":
     with open('dsouza_ents', 'rb') as f:
         ent_sents = pickle.load(f)
 
-    for ent_sent in ent_sents:  
+    for ent_sent in ent_sents:
         annotated_text(ent_sent)
-            
+
 if "Dygie" in option:
-    model = option.replace('MECHANIC-', '').replace('05', '').split()[1].lower()
+    model = option.replace('MECHANIC-', '').replace('05',
+                                                    '').split()[1].lower()
 # The thesis interfaced can be run in the dygie repo but results are pickled for performance reasons
     with open(f'ORKG_parsers/dygiepp/predictions/{model}.jsonl', 'r') as f:
-        data =f.read()
+        data = f.read()
 
     data = eval(data)
 
@@ -84,19 +84,24 @@ if "Dygie" in option:
         sent_start_idx = sum([len(sent) for sent in data['sentences'][:idx]])
         words = [{'text': word, 'tag': ''} for word in s]
 
-        if 'predicted_ner' in data: 
-            annotated_text(merge_words_and_entities(s, data['predicted_ner'][idx], sent_start_idx))
+        if 'predicted_ner' in data:
+            annotated_text(merge_words_and_entities(
+                s, data['predicted_ner'][idx], sent_start_idx))
 
         if 'predicted_relations' in data:
             arcs = []
             for rel in data['predicted_relations'][idx]:
-                print(s[rel[0]-sent_start_idx:rel[1]-sent_start_idx+1], rel[4], s[rel[2]-sent_start_idx:rel[3]-sent_start_idx+1])
+                print(s[rel[0]-sent_start_idx:rel[1]-sent_start_idx+1],
+                      rel[4], s[rel[2]-sent_start_idx:rel[3]-sent_start_idx+1])
                 arcs.append({
-                        "start": rel[0]-sent_start_idx,
-                        "end": rel[2]-sent_start_idx,
-                        "label": rel[4],
-                        "dir": "right" if rel[0]-sent_start_idx < rel[2]-sent_start_idx else "left"
-                    })
-            svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={ "offset_x": 100, "distance": 100})
-            st.write(svg, unsafe_allow_html=True)
-
+                    "start": rel[0]-sent_start_idx,
+                    "end": rel[2]-sent_start_idx,
+                    "label": rel[4],
+                    "dir": "right" if rel[0]-sent_start_idx < rel[2]-sent_start_idx else "left"
+                })
+            try:
+                svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
+                                      "offset_x": 100, "distance": 100})
+                st.write(svg, unsafe_allow_html=True)
+            except Exception as e:
+                st.text(e)
