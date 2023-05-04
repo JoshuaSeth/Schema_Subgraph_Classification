@@ -109,12 +109,35 @@ if "Dygie" in option:
                     st.text(e)
 
     if 'granular' in option.lower():
+        st.markdown('Short explanation: The granular model of MECHANIC takes a word from the sentence to be the relation and sometimes knows which entities (the arg0 and arg1) this relation is between. Sometimes one or both of these entities is missing. Sometimes multiple arg0 or arg1 denote a coreference resolution between these words.')
+        st.markdown(
+            'For example for the first sentence (Molecular Tests, Detect, BVDV Isolates) and the second sentence has (Vaccines, Control, ___), where vaccines are coreferenced to be the same as Virological tests.')
         for idx, s in enumerate(data['sentences']):
             sent_start_idx = sum([len(sent)
                                  for sent in data['sentences'][:idx]])
             words = [{'text': word, 'tag': ''} for word in s]
 
             print(s)
+
+            # And the others as entities
+            entities = []
+            for rel in data['predicted_events'][idx]:
+                temp_rel = []
+                for part in rel:
+                    if part[1] != 'TRIGGER':
+                        temp_rel.append(part)
+                    else:
+                        temp_rel.append(
+                            [part[0], part[0], s[part[0] - sent_start_idx]])
+                entities.append(temp_rel)
+
+            if len(entities) > 0:
+                print('ents', entities[0])
+                annotated_text(merge_words_and_entities(
+                    s, entities[0], sent_start_idx))
+
+            # If there is a trigger relation in the sentence
+            # Mark the trigger as an entity
 
             arcs = []
             for rel in data['predicted_events'][idx]:
@@ -146,17 +169,3 @@ if "Dygie" in option:
             svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
                 "offset_x": 100, "distance": 100})
             st.write(svg, unsafe_allow_html=True)
-
-            # And the others as entities
-            entities = []
-            for rel in data['predicted_events'][idx]:
-                temp_rel = []
-                for part in rel:
-                    if part[1] != 'TRIGGER':
-                        temp_rel.append(part)
-                entities.append(temp_rel)
-
-            if len(entities) > 0:
-                print('ents', entities[0])
-                annotated_text(merge_words_and_entities(
-                    s, entities[0], sent_start_idx))
