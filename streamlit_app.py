@@ -1,50 +1,15 @@
+'''Streamlit app to visualize the result of applying triple extraction to future research sentences or directions. The results are pre-parsed and pickled and not parsed on the fly.'''
+
+
 from datasets import load_dataset
 import pickle
 from annotated_text import annotated_text
 import streamlit as st
 import subprocess
 from spacy import displacy
+from st_helpers import merge_words_and_entities, visualise_dsouza_parser, visualize_dygie_parser, visualize_mechanic_granular_parser
 
-
-def merge_words_and_entities(words, entities, sentence_start_idx):
-    merged = [None] * len(words)
-    for word_idx, word in enumerate(words):
-        merged[word_idx] = word + ' '
-
-    for entity in entities:
-        start, end, label = entity[0], entity[1], entity[2]
-
-        start -= sentence_start_idx
-        if isinstance(end, str):
-            label = end
-            end = start+1
-        end -= sentence_start_idx
-
-        span_text = ' '.join(words[start:end + 1])
-
-        for idx in range(start, end + 1):
-            if idx == start:
-                if isinstance(merged[idx], tuple):
-                    merged[idx] = (span_text, label)
-                else:
-                    merged[idx] = (span_text, label)
-            else:
-                merged[idx] = None
-
-    merged = [item for item in merged if item is not None]
-
-    return merged
-
-
-dataset = load_dataset(
-    "DanL/scientific-challenges-and-directions-dataset", split="dev")
-
-sentences = []
-for item in dataset:
-    if item['label'][0] > 0 and item['label'][1] > 0:
-        sentences.append(item['text'])
-
-
+# Default interface options
 st.header('NER & RE Parsing Results')
 
 st.markdown(
@@ -59,135 +24,29 @@ use_both = st.checkbox(
 
 st.divider()
 
-if option == "D'Souza's CL-TitleParser":
-    with open('dsouza_ents', 'rb') as f:
-        ent_sents = pickle.load(f)
+# ----- ----- ----- ----- ----- ----- ----- ---- ----
 
-    for ent_sent in ent_sents:
-        annotated_text(ent_sent)
+# Check which option was selected and visualize the parsed sentences form the corresponding schema
+if option == "D'Souza's CL-TitleParser":
+    visualise_dsouza_parser()
+
 
 if "Dygie" in option:
+    # Some preprocessing on model name
     model = option.replace('MECHANIC-', '').replace('05',
                                                     '').split()[1].lower()
-# The thesis interfaced can be run in the dygie repo but results are pickled for performance reasons
+
+    # Data is preparsed and pickled and loaded here (so not parsed on the fly)
     prefix = ''
     if use_both:
         prefix = 'pred_'
     with open(f'ORKG_parsers/dygiepp/predictions/{prefix}{model}.jsonl', 'r') as f:
         data = f.read()
-
     data = eval(data)
 
+    # Choose appropriate visualizer
     if not 'granular' in option.lower():
-        for idx, s in enumerate(data['sentences']):
-            st.markdown('\n')
-            st.subheader(str(idx))
-            sent_start_idx = sum([len(sent)
-                                 for sent in data['sentences'][:idx]])
-            words = [{'text': word, 'tag': ''} for word in s]
-
-            if 'predicted_ner' in data:
-                annotated_text(merge_words_and_entities(
-                    s, data['predicted_ner'][idx], sent_start_idx))
-
-            if 'predicted_relations' in data:
-                arcs = []
-                for rel in data['predicted_relations'][idx]:
-                    sub = s[rel[0]-sent_start_idx:rel[1]-sent_start_idx+1]
-                    trigger = rel[4]
-                    obj = s[rel[2]-sent_start_idx:rel[3]-sent_start_idx+1]
-
-                    sub = ' '.join(sub)
-                    # ' '.join(arg1[0]) if len(arg1) > 0 else ''
-                    obj = ' '.join(obj)
-                    st.text(sub + ' '+trigger+' ' + obj)
-                #     arcs.append({
-                #         "start": rel[0]-sent_start_idx,
-                #         "end": rel[2]-sent_start_idx,
-                #         "label": rel[4],
-                #         "dir": "right" if rel[0]-sent_start_idx < rel[2]-sent_start_idx else "left"
-                #     })
-                # try:
-                #     svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
-                #         "offset_x": 100, "distance": 100})
-                #     st.write(svg, unsafe_allow_html=True)
-                # except Exception as e:
-                #     st.text(e)
+        visualize_dygie_parser(data)
 
     if 'granular' in option.lower():
-        st.markdown('Short explanation: The granular model of MECHANIC takes a word from the sentence to be the relation and sometimes knows which entities (the arg0 and arg1) this relation is between. Sometimes one or both of these entities is missing. Sometimes multiple arg0 or arg1 denote a coreference resolution between these words.')
-        st.markdown(
-            'For example for the first sentence (Molecular Tests, Detect, BVDV Isolates) and the second sentence has (Vaccines, Control, ___), where vaccines are coreferenced to be the same as Virological tests.')
-        st.divider()
-        for idx, s in enumerate(data['sentences']):
-            st.markdown('\n')
-            st.subheader(str(idx))
-            sent_start_idx = sum([len(sent)
-                                 for sent in data['sentences'][:idx]])
-            words = [{'text': word, 'tag': ''} for word in s]
-
-            print(s)
-
-            # And the others as entities
-            entities = []
-            for rel in data['predicted_events'][idx]:
-                temp_rel = []
-                for part in rel:
-                    if part[1] != 'TRIGGER':
-                        temp_rel.append(part)
-
-                    else:
-                        temp_rel.append(
-                            [part[0], part[0], s[part[0] - sent_start_idx]])
-                entities.append(temp_rel)
-                print(temp_rel)
-
-            if len(entities) > 0:
-                entities = [item for sublist in entities for item in sublist]
-
-                print('ents', entities)
-                merged = merge_words_and_entities(
-                    s, entities, sent_start_idx)
-                annotated_text(merged)
-            else:
-                st.text(' '.join(s))
-
-            # If there is a trigger relation in the sentence
-            # Mark the trigger as an entity
-
-            arcs = []
-            for rel in data['predicted_events'][idx]:
-                print(rel)
-                fullarg0 = []
-                fullarg1 = []
-                arg0 = []
-                arg1 = []
-                for part in rel:
-                    if part[1] == 'TRIGGER':
-                        trigger = s[part[0] - sent_start_idx]
-                    elif part[2] == 'ARG0':
-                        arg0.append(
-                            s[part[0] - sent_start_idx: part[1] - sent_start_idx+1])
-                        fullarg0.append(part)
-                    elif part[2] == 'ARG1':
-                        arg1.append(
-                            s[part[0] - sent_start_idx: part[1] - sent_start_idx+1])
-                        fullarg1.append(part)
-
-                sub = ' '.join(arg0[0]) if len(arg0) > 0 else ''
-                obj = ' '.join(arg1[0]) if len(arg1) > 0 else ''
-                st.text(sub + ' '+trigger+' ' + obj)
-                # Do rels with 2 parts as rels
-                # if len(arg0) > 0 and len(arg1) > 0:
-                #     arcs.append({
-                #         "start": fullarg0[0][0]-sent_start_idx,
-                #         "end": fullarg1[0][0]-sent_start_idx,
-                #         "label": trigger,
-                #         'dir': 'right' if fullarg0[0][0]-sent_start_idx < fullarg1[0][0]-sent_start_idx else 'left'
-                #     })
-            # try:
-            #     svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
-            #         "offset_x": 100, "distance": 100})
-            #     st.write(svg, unsafe_allow_html=True)
-            # except Exception as e:
-                # st.text(e)
+        visualize_mechanic_granular_parser(data)

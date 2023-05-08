@@ -11,3 +11,4 @@ Add sentences as text to the text folder in dygie and run 'prepare_all_datasets.
 
 A spacy interface is also present in the dygiepp repo, on which a thesis interface is added, but currently this only works when using the SciErc-trained dygie model.
 
+The exploration folders contains several scripts from the initial phase of testing the contents of different datasets and schema's.
