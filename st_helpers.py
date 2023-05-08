@@ -49,10 +49,13 @@ def visualize_dygie_parser(data):
                               for sent in data['sentences'][:idx]])
         words = [{'text': word, 'tag': ''} for word in s]
 
+        # Tag the relation arguments as entities (i.e. ("Covid-19 induced coughing:, "ARG0"))
+        # And of course, tag the words with the found entities
         if 'predicted_ner' in data:
             annotated_text(merge_words_and_entities(
                 s, data['predicted_ner'][idx], sent_start_idx))
 
+        # Print the relation separately as (object, relation, subject)
         if 'predicted_relations' in data:
             arcs = []
             for rel in data['predicted_relations'][idx]:
@@ -72,6 +75,7 @@ def visualize_mechanic_granular_parser(data):
     st.markdown(
         'For example for the first sentence (Molecular Tests, Detect, BVDV Isolates) and the second sentence has (Vaccines, Control, ___), where vaccines are coreferenced to be the same as Virological tests.')
     st.divider()
+
     for idx, s in enumerate(data['sentences']):
         st.markdown('\n')
         st.subheader(str(idx))
@@ -81,7 +85,8 @@ def visualize_mechanic_granular_parser(data):
 
         print(s)
 
-        # And the others as entities
+        # Tag the relation arguments as entities (i.e. ("Covid-19 induced coughing:, "ARG0"))
+        # Words have no entities here
         entities = []
         for rel in data['predicted_events'][idx]:
             temp_rel = []
@@ -108,7 +113,7 @@ def visualize_mechanic_granular_parser(data):
             # If there is a trigger relation in the sentence
             # Mark the trigger as an entity
 
-        arcs = []
+        # Print the relation separately as (object, relation, subject)
         for rel in data['predicted_events'][idx]:
             print(rel)
             fullarg0 = []
