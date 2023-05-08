@@ -1,16 +1,3 @@
-
-# import sys
-# from pathlib import Path # if you haven't already done so
-# file = Path(__file__).resolve()
-# parent, root = file.parent, file.parents[1]
-# sys.path.append(str(root))
-
-# # Additionally remove the current file's directory from sys.path
-# try:
-#     sys.path.remove(str(parent))
-# except ValueError: # Already removed
-#     pass
-
 from datasets import load_dataset
 import pickle
 from annotated_text import annotated_text
@@ -67,6 +54,9 @@ option = st.selectbox(
     'Joint NER and RE method',
     ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular'))
 
+use_both = st.checkbox(
+    'Use challenges OR directions vs. use challenges AND directions')
+
 st.divider()
 
 if option == "D'Souza's CL-TitleParser":
@@ -80,13 +70,18 @@ if "Dygie" in option:
     model = option.replace('MECHANIC-', '').replace('05',
                                                     '').split()[1].lower()
 # The thesis interfaced can be run in the dygie repo but results are pickled for performance reasons
-    with open(f'ORKG_parsers/dygiepp/predictions/{model}.jsonl', 'r') as f:
+    prefix = ''
+    if use_both:
+        prefix = 'pred_'
+    with open(f'ORKG_parsers/dygiepp/predictions/{prefix}{model}.jsonl', 'r') as f:
         data = f.read()
 
     data = eval(data)
 
     if not 'granular' in option.lower():
         for idx, s in enumerate(data['sentences']):
+            st.markdown('\n')
+            st.subheader(str(idx))
             sent_start_idx = sum([len(sent)
                                  for sent in data['sentences'][:idx]])
             words = [{'text': word, 'tag': ''} for word in s]
@@ -98,26 +93,35 @@ if "Dygie" in option:
             if 'predicted_relations' in data:
                 arcs = []
                 for rel in data['predicted_relations'][idx]:
-                    print(s[rel[0]-sent_start_idx:rel[1]-sent_start_idx+1],
-                          rel[4], s[rel[2]-sent_start_idx:rel[3]-sent_start_idx+1])
-                    arcs.append({
-                        "start": rel[0]-sent_start_idx,
-                        "end": rel[2]-sent_start_idx,
-                        "label": rel[4],
-                        "dir": "right" if rel[0]-sent_start_idx < rel[2]-sent_start_idx else "left"
-                    })
-                try:
-                    svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
-                        "offset_x": 100, "distance": 100})
-                    st.write(svg, unsafe_allow_html=True)
-                except Exception as e:
-                    st.text(e)
+                    sub = s[rel[0]-sent_start_idx:rel[1]-sent_start_idx+1]
+                    trigger = rel[4]
+                    obj = s[rel[2]-sent_start_idx:rel[3]-sent_start_idx+1]
+
+                    sub = ' '.join(sub)
+                    # ' '.join(arg1[0]) if len(arg1) > 0 else ''
+                    obj = ' '.join(obj)
+                    st.text(sub + ' '+trigger+' ' + obj)
+                #     arcs.append({
+                #         "start": rel[0]-sent_start_idx,
+                #         "end": rel[2]-sent_start_idx,
+                #         "label": rel[4],
+                #         "dir": "right" if rel[0]-sent_start_idx < rel[2]-sent_start_idx else "left"
+                #     })
+                # try:
+                #     svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
+                #         "offset_x": 100, "distance": 100})
+                #     st.write(svg, unsafe_allow_html=True)
+                # except Exception as e:
+                #     st.text(e)
 
     if 'granular' in option.lower():
         st.markdown('Short explanation: The granular model of MECHANIC takes a word from the sentence to be the relation and sometimes knows which entities (the arg0 and arg1) this relation is between. Sometimes one or both of these entities is missing. Sometimes multiple arg0 or arg1 denote a coreference resolution between these words.')
         st.markdown(
             'For example for the first sentence (Molecular Tests, Detect, BVDV Isolates) and the second sentence has (Vaccines, Control, ___), where vaccines are coreferenced to be the same as Virological tests.')
+        st.divider()
         for idx, s in enumerate(data['sentences']):
+            st.markdown('\n')
+            st.subheader(str(idx))
             sent_start_idx = sum([len(sent)
                                  for sent in data['sentences'][:idx]])
             words = [{'text': word, 'tag': ''} for word in s]
@@ -131,15 +135,22 @@ if "Dygie" in option:
                 for part in rel:
                     if part[1] != 'TRIGGER':
                         temp_rel.append(part)
+
                     else:
                         temp_rel.append(
                             [part[0], part[0], s[part[0] - sent_start_idx]])
                 entities.append(temp_rel)
+                print(temp_rel)
 
             if len(entities) > 0:
-                print('ents', entities[0])
-                annotated_text(merge_words_and_entities(
-                    s, entities[0], sent_start_idx))
+                entities = [item for sublist in entities for item in sublist]
+
+                print('ents', entities)
+                merged = merge_words_and_entities(
+                    s, entities, sent_start_idx)
+                annotated_text(merged)
+            else:
+                st.text(' '.join(s))
 
             # If there is a trigger relation in the sentence
             # Mark the trigger as an entity
@@ -155,22 +166,28 @@ if "Dygie" in option:
                     if part[1] == 'TRIGGER':
                         trigger = s[part[0] - sent_start_idx]
                     elif part[2] == 'ARG0':
-                        arg0.append(s[part[0] - sent_start_idx])
+                        arg0.append(
+                            s[part[0] - sent_start_idx: part[1] - sent_start_idx+1])
                         fullarg0.append(part)
                     elif part[2] == 'ARG1':
-                        arg1.append(s[part[0] - sent_start_idx])
+                        arg1.append(
+                            s[part[0] - sent_start_idx: part[1] - sent_start_idx+1])
                         fullarg1.append(part)
 
-                print(arg0, trigger, arg1)
+                sub = ' '.join(arg0[0]) if len(arg0) > 0 else ''
+                obj = ' '.join(arg1[0]) if len(arg1) > 0 else ''
+                st.text(sub + ' '+trigger+' ' + obj)
                 # Do rels with 2 parts as rels
-                if len(arg0) > 0 and len(arg1) > 0:
-                    arcs.append({
-                        "start": fullarg0[0][0]-sent_start_idx,
-                        "end": fullarg1[0][0]-sent_start_idx,
-                        "label": trigger,
-                        'dir': 'right' if fullarg0[0][0]-sent_start_idx < fullarg1[0][0]-sent_start_idx else 'left'
-                    })
-
-            svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
-                "offset_x": 100, "distance": 100})
-            st.write(svg, unsafe_allow_html=True)
+                # if len(arg0) > 0 and len(arg1) > 0:
+                #     arcs.append({
+                #         "start": fullarg0[0][0]-sent_start_idx,
+                #         "end": fullarg1[0][0]-sent_start_idx,
+                #         "label": trigger,
+                #         'dir': 'right' if fullarg0[0][0]-sent_start_idx < fullarg1[0][0]-sent_start_idx else 'left'
+                #     })
+            # try:
+            #     svg = displacy.render({'words': words, 'arcs': arcs}, style="dep", manual=True, options={
+            #         "offset_x": 100, "distance": 100})
+            #     st.write(svg, unsafe_allow_html=True)
+            # except Exception as e:
+                # st.text(e)
