@@ -1,4 +1,4 @@
-'''Modified from: https://github.com/lucasmccabe/pyhearst/blob/master/requirements.txt. Can only be used with <=python3.10'''
+'''Modified from: https://github.com/lucasmccabe/pyhearst/blob/master/requirements.txt. To use install nltk@latest and inspect@latest (not the versions mentioned in the repo's requirements).)'''
 
 import re
 import string

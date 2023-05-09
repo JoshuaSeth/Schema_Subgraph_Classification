@@ -1,6 +1,8 @@
 import pickle
 from annotated_text import annotated_text
 import streamlit as st
+from pyhearst import PyHearst
+import nltk
 
 
 def merge_words_and_entities(words: list, entities: list, sentence_start_idx: int) -> list:
@@ -42,13 +44,33 @@ class SchemaParser:
     '''Given a sentence and a schema, will tag entities and parse relations according to the schema.'''
 
     def __init__(self) -> None:
-        pass
+        nltk.download('averaged_perceptron_tagger')
+        self.ph = PyHearst()
+
+    def get_hearst_patterns(self, sentence: str) -> str:
+        '''Given a sentence, will return the sentence with the Hearst patterns'''
+        return self.ph.extract_patterns(' '.join(sentence))
 
     def parse_ents(self, sentence: str, schema: str, data, idx: int, sent_start_idx: int) -> list:
         '''sent_start_idx: index of the first word of the sentence in the text.'''
+        def in_word_index(l, i):
+            for idx, item in enumerate(l):
+                i = i.split(' ')[0]
+                if i in item:
+                    return idx
+            return None
+
+        if schema == 'hearst':
+            entities = self.get_hearst_patterns(sentence)
+            if len(entities) > 0:
+                print(entities, sentence)
+            entities = [[in_word_index(sentence, ent[1]) + sent_start_idx, in_word_index(sentence,
+                        ent[1])+len(ent[1].split())-1 + sent_start_idx, ent[0]] for ent in entities]
+            return merge_words_and_entities(sentence, entities, sent_start_idx)
         if schema == 'granular':
             entities = process_granular_ents(
                 data, idx, sentence, sent_start_idx)
+            print(entities)
             return merge_words_and_entities(
                 sentence, entities, sent_start_idx)
         elif schema == "cl-titleparser":
@@ -85,6 +107,8 @@ class SchemaParser:
                 obj = ' '.join(arg1[0]) if len(arg1) > 0 else ' ? '
                 rels.append(sub + ' - '+trigger+' - ' + obj)
         elif schema == "cl-titleparser":
+            pass
+        elif schema == "hearst":
             pass
         else:
             if 'predicted_relations' in data:

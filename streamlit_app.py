@@ -7,7 +7,7 @@ from annotated_text import annotated_text
 import streamlit as st
 import subprocess
 from spacy import displacy
-from st_helpers import merge_words_and_entities, visualise_dsouza_parser, visualize_dygie_parser, visualize_mechanic_granular_parser, SchemaParser
+from st_helpers import SchemaParser
 from collections import defaultdict
 from sklearn.linear_model import LinearRegression
 import numpy as np
@@ -30,7 +30,7 @@ def load_sentences(use_both):
 def load_data_for_selected_models(options, prefix):
     model_data = {}
     for option in options:
-        if option != "D'Souza's CL-TitleParser":
+        if 'dygie' in option.lower():
             model = option.replace('MECHANIC-', '').replace('05',
                                                             '').split()[1].lower()
 
@@ -70,7 +70,7 @@ st.markdown(
 
 options = st.multiselect(
     'Joint NER and RE method',
-    ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular'))
+    ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular', 'Rule-based Hearst Patterns'))
 
 
 use_both = st.checkbox(
@@ -95,6 +95,7 @@ models_entity_counts = defaultdict(list)
 models_sentence_lengths = defaultdict(list)
 datas = defaultdict(lambda: defaultdict(list))
 
+# Obtain parsed data
 # For each sentence apply all selected models
 for idx, s in enumerate(sentences):
 
@@ -104,7 +105,9 @@ for idx, s in enumerate(sentences):
         model_name = option.replace(
             'MECHANIC-', '').replace('05', '').split()[1].lower()
 
-        data = model_data[model_name] if not model_name == 'cl-titleparser' else None
+        data = None
+        if 'dygie' in option.lower():
+            data = model_data[model_name]
 
         # Get idx of first word of sentence in the total text
         sent_start_idx = sum([len(sent)
@@ -125,7 +128,7 @@ for idx, s in enumerate(sentences):
             model_name, data, s, idx, sent_start_idx)
         datas[model_name]['rels'].append(parsed_rels)
 
-
+# Note the relation between sentence length and entities
 for model in models_sentence_lengths.keys():
     counts = np.array(models_entity_counts[model])
     lenghts = np.array(models_sentence_lengths[model]).reshape(-1, 1)
@@ -135,7 +138,7 @@ for model in models_sentence_lengths.keys():
     st.text(model + ' has regression coefficent ' + str(reg.coef_) +
             ' between sentence length and number of found entities')
 
-
+# Visualize parsed data
 for idx, s in enumerate(sentences):
     # Layout
     st.markdown('\n')
