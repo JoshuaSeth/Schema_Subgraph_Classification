@@ -95,8 +95,8 @@ class SchemaParser:
                     obj = sentence[rel[2] -
                                    sent_start_idx:rel[3]-sent_start_idx+1]
 
-                    sub = ' '.join(sub)
-                    obj = ' '.join(obj)
+                    sub = ' '.join(sub) if len(sub) > 0 else ' ? '
+                    obj = ' '.join(obj) if len(obj) > 0 else ' ? '
                     rels.append(sub + ' - '+trigger+' - ' + obj)
 
         return rels

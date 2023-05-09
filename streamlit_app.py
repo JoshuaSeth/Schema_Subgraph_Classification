@@ -8,7 +8,9 @@ import streamlit as st
 import subprocess
 from spacy import displacy
 from st_helpers import merge_words_and_entities, visualise_dsouza_parser, visualize_dygie_parser, visualize_mechanic_granular_parser, SchemaParser
-
+from collections import defaultdict
+from sklearn.linear_model import LinearRegression
+import numpy as np
 
 # Helper functions
 
@@ -16,7 +18,7 @@ from st_helpers import merge_words_and_entities, visualise_dsouza_parser, visual
 def load_sentences(use_both):
     prefix = ''
     if use_both:
-        prefix = 'pred_'
+        prefix = 'correct_format_'
 
     with open(f'ORKG_parsers/dygiepp/predictions/{prefix}scierc.jsonl', 'r') as f:
         data = f.read()
@@ -72,18 +74,16 @@ options = st.multiselect(
 
 
 use_both = st.checkbox(
-    'Use challenges OR directions vs. use challenges AND directions')
+    'Use challenges OR directions vs. use challenges AND directions', True)
 
-compare_merge = st.checkbox(
-    'Compare parsers results or merge parser results')
+compare_merge = False  # st.checkbox(
+# 'Compare parsers results or merge parser results')
 
 st.divider()
 
 # ----- ----- ----- ----- ----- ----- ----- ---- ----
 
-# Check which option was selected and visualize the parsed sentences form the corresponding schema
-
-
+# Check which options were selected and visualize the parsed sentences form the corresponding schema
 schema_parser = SchemaParser()
 
 # Load sentences either challenging OR direction or challenge AND direction future research
@@ -91,17 +91,15 @@ prefix, sentences = load_sentences(use_both)
 
 model_data = load_data_for_selected_models(options, prefix)
 
+models_entity_counts = defaultdict(list)
+models_sentence_lengths = defaultdict(list)
+datas = defaultdict(lambda: defaultdict(list))
+
 # For each sentence apply all selected models
 for idx, s in enumerate(sentences):
-    # Layout
-    st.markdown('\n')
-    st.subheader(str(idx))
 
     ents_for_models = []
     for option in options:
-        st.markdown('\n')
-        st.caption(option)
-
         # Load pre-parsed data
         model_name = option.replace(
             'MECHANIC-', '').replace('05', '').split()[1].lower()
@@ -116,15 +114,42 @@ for idx, s in enumerate(sentences):
         parsed_ents = schema_parser.parse_ents(
             s, model_name, data, idx, sent_start_idx)
         ents_for_models.append(parsed_ents)
-        annotated_text(parsed_ents)
+        models_entity_counts[model_name].append(
+            len([ent for ent in parsed_ents if type(ent) == tuple]))
+        models_sentence_lengths[model_name].append(len(s))
+
+        datas[model_name]['ents'].append(parsed_ents)
 
         # Relations
         parsed_rels = schema_parser.parse_rels(
             model_name, data, s, idx, sent_start_idx)
+        datas[model_name]['rels'].append(parsed_rels)
+
+
+for model in models_sentence_lengths.keys():
+    counts = np.array(models_entity_counts[model])
+    lenghts = np.array(models_sentence_lengths[model]).reshape(-1, 1)
+    reg = LinearRegression().fit(lenghts, counts)
+    # print(reg.score(lenghts, counts))
+
+    st.text(model + ' has regression coefficent ' + str(reg.coef_) +
+            ' between sentence length and number of found entities')
+
+
+for idx, s in enumerate(sentences):
+    # Layout
+    st.markdown('\n')
+    st.subheader(str(idx))
+
+    for option in options:
+
+        model_name = option.replace(
+            'MECHANIC-', '').replace('05', '').split()[1].lower()
+        st.markdown('\n')
+        st.caption(option)
+
+        annotated_text(datas[model_name]['ents'][idx])
+
+        parsed_rels = datas[model_name]['rels'][idx]
         for rel in parsed_rels:
             st.text(rel)
-
-    if compare_merge:
-        res = merge_two_merged_lists(ents_for_models[0], ents_for_models[1])
-
-        annotated_text(res)

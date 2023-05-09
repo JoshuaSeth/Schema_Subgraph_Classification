@@ -20,4 +20,4 @@ for prediction_filename, dataset_code in dataset_codes.items():
     print(
         f"Processing {prediction_filename} with dataset code {dataset_code}...")
     subprocess.run(["python3.8", "ORKG_parsers/dygiepp/scripts/new-dataset/format_new_dataset.py",
-                   origin_folder, f"ORKG_parsers/dygiepp/prepared_datasets/pred_{prediction_filename}", dataset_code, "--use-scispacy"])
+                   origin_folder, f"ORKG_parsers/dygiepp/prepared_datasets/correct_format_{prediction_filename}", dataset_code, "--use-scispacy"])

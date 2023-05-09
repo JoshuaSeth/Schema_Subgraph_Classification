@@ -5,8 +5,10 @@ dataset = load_dataset(
 
 sentences = []
 for item in dataset:
+    print('\n\n', item)
     if item['label'][0] > 0 or item['label'][1] > 0:
         sentences.append(item['text'])
 
-with open('tom_hope_future_research_or_challenge.txt', 'w') as f:
-    f.writelines(sentences)
+with open('hope.txt', 'w') as f:
+    for sent in sentences:
+        f.write(sent.replace('.', '. ').replace('\n', ' ') + '\n')
