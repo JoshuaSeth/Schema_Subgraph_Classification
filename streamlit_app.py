@@ -73,8 +73,12 @@ options = st.multiselect(
     ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular', 'Rule-based Hearst Patterns'))
 
 
-use_both = st.checkbox(
-    'Use challenges OR directions vs. use challenges AND directions', True)
+use_both = True
+# st.checkbox(
+# 'Use challenges OR directions vs. use challenges AND directions', True)
+
+include_context = st.checkbox(
+    'Include context: include the sentence before and afther the research sentence. \n (For some reason hidden deep in the dygie code this only works for granular MECHANIC and non-dygie models)')
 
 compare_merge = False  # st.checkbox(
 # 'Compare parsers results or merge parser results')
@@ -87,7 +91,11 @@ st.divider()
 schema_parser = SchemaParser()
 
 # Load sentences either challenging OR direction or challenge AND direction future research
-prefix, sentences = load_sentences(use_both)
+_, sentences = load_sentences(use_both)
+
+prefix = ''
+if include_context:
+    prefix = 'context_'
 
 model_data = load_data_for_selected_models(options, prefix)
 

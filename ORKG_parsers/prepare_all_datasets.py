@@ -13,11 +13,11 @@ dataset_codes = {
     "mechanic_granular": "covid-event",
 }
 
-origin_folder = "/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/ORKG_parsers/dygiepp/texts"
+origin_folder = "/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/ORKG_parsers/dygiepp/texts/context/"
 
 # Iterate over the dataset_codes and run the command for each one
 for prediction_filename, dataset_code in dataset_codes.items():
     print(
         f"Processing {prediction_filename} with dataset code {dataset_code}...")
     subprocess.run(["python3.8", "ORKG_parsers/dygiepp/scripts/new-dataset/format_new_dataset.py",
-                   origin_folder, f"ORKG_parsers/dygiepp/prepared_datasets/correct_format_{prediction_filename}", dataset_code, "--use-scispacy"])
+                   origin_folder, f"ORKG_parsers/dygiepp/prepared_datasets/context_{prediction_filename}", dataset_code, "--use-scispacy"])
