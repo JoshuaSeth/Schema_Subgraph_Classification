@@ -68,10 +68,8 @@ class SchemaParser:
                         ent[1])+len(ent[1].split())-1 + sent_start_idx, ent[0]] for ent in entities]
             return merge_words_and_entities(sentence, entities, sent_start_idx)
         if schema == 'granular':
-            print(sentence)
             entities = process_granular_ents(
                 data, idx, sentence, sent_start_idx)
-            print('entities', entities)
             return merge_words_and_entities(
                 sentence, entities, sent_start_idx)
         elif schema == "cl-titleparser":
@@ -209,7 +207,9 @@ def visualize_mechanic_granular_parser(data):
 def process_granular_ents(data, idx, s, sent_start_idx):
     '''Helper function for visualize_mechanic_granular_parser. Processes the events variable to a list of entities'''
     entities = []
+    print('data in', idx, s, sent_start_idx)
     for rel in data['predicted_events'][idx]:
+        print(rel)
         temp_rel = []
         for part in rel:
             if part[1] != 'TRIGGER':

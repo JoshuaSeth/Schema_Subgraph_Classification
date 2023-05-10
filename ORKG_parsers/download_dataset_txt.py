@@ -12,5 +12,7 @@ for item in dataset:
 
 with open('hope.txt', 'w') as f:
     for sent in sentences:
+        print(sent.replace('.', '. ').replace(
+            '\n', ' ').replace('\\', '') + '\n')
         f.write(sent.replace('.', '. ').replace(
             '\n', ' ').replace('\\', '') + '\n')

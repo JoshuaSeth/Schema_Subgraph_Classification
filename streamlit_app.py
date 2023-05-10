@@ -15,12 +15,12 @@ import numpy as np
 # Helper functions
 
 
-def load_sentences(use_both):
-    prefix = ''
-    if use_both:
-        prefix = 'correct_format_'
+def load_sentences(use_context):
+    prefix = 'correct_format_scierc'
+    if use_context:
+        prefix = 'context_granular'
 
-    with open(f'ORKG_parsers/dygiepp/predictions/{prefix}scierc.jsonl', 'r') as f:
+    with open(f'ORKG_parsers/dygiepp/predictions/{prefix}.jsonl', 'r') as f:
         data = f.read()
         data = eval(data)
         sentences = data['sentences']
@@ -91,7 +91,7 @@ st.divider()
 schema_parser = SchemaParser()
 
 # Load sentences either challenging OR direction or challenge AND direction future research
-_, sentences = load_sentences(use_both)
+_, sentences = load_sentences(include_context)
 
 prefix = 'correct_format_'
 if include_context:
@@ -148,9 +148,10 @@ for model in models_sentence_lengths.keys():
 
 # Visualize parsed data
 for idx, s in enumerate(sentences):
-    # Layout
-    st.markdown('\n')
-    st.subheader(str(idx))
+    if idx % 3 == 0 or not include_context:
+        # Layout
+        st.markdown('\n')
+        st.subheader(str(idx / 3) if include_context else str(idx))
 
     for option in options:
 
