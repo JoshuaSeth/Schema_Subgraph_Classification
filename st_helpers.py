@@ -23,7 +23,7 @@ def merge_words_and_entities(words: list, entities: list, sentence_start_idx: in
             label = end
             end = start+1
         end -= sentence_start_idx
-
+        print(start, end, sentence_start_idx, len(merged))
         span_text = ' '.join(words[start:end + 1])
 
         for idx in range(start, end + 1):
@@ -68,9 +68,10 @@ class SchemaParser:
                         ent[1])+len(ent[1].split())-1 + sent_start_idx, ent[0]] for ent in entities]
             return merge_words_and_entities(sentence, entities, sent_start_idx)
         if schema == 'granular':
+            print(sentence)
             entities = process_granular_ents(
                 data, idx, sentence, sent_start_idx)
-            print(entities)
+            print('entities', entities)
             return merge_words_and_entities(
                 sentence, entities, sent_start_idx)
         elif schema == "cl-titleparser":

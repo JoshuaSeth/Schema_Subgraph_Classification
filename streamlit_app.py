@@ -93,7 +93,7 @@ schema_parser = SchemaParser()
 # Load sentences either challenging OR direction or challenge AND direction future research
 _, sentences = load_sentences(use_both)
 
-prefix = ''
+prefix = 'correct_format_'
 if include_context:
     prefix = 'context_'
 
