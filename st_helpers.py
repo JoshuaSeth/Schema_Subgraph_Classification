@@ -3,6 +3,7 @@ from annotated_text import annotated_text
 import streamlit as st
 from pyhearst import PyHearst
 import nltk
+import spacy
 
 
 def merge_words_and_entities(words: list, entities: list, sentence_start_idx: int) -> list:
@@ -23,7 +24,6 @@ def merge_words_and_entities(words: list, entities: list, sentence_start_idx: in
             label = end
             end = start+1
         end -= sentence_start_idx
-        print(start, end, sentence_start_idx, len(merged))
         span_text = ' '.join(words[start:end + 1])
 
         for idx in range(start, end + 1):
@@ -40,12 +40,88 @@ def merge_words_and_entities(words: list, entities: list, sentence_start_idx: in
     return merged
 
 
+def merge_until_stable(merged_list):
+    while True:
+        new_merged_list = merge_consecutive_same_tag_entities(merged_list)
+
+        if new_merged_list == merged_list:
+            # If the result didn't change, we're done
+            break
+
+        # Otherwise, update merged_list for the next iteration
+        merged_list = new_merged_list
+
+    return merged_list
+
+
+def make_all_spans(merged_list):
+    new = []
+    for item in merged_list:
+        if isinstance(item, tuple):
+            new.append(item)
+        else:
+            new.append((item, ' '))
+    return new
+
+
+def merge_consecutive_same_tag_entities(merged_list):
+    result = []
+    prev_entity = None
+    before_prev_entity = None
+
+    for idx, entity in enumerate(merged_list):
+        if isinstance(entity, tuple):
+            next_entity, next_label = None, None
+            span_text, label = entity
+            if idx < len(merged_list) - 1:
+                next_entity = merged_list[idx + 1]
+
+            if prev_entity:
+                # if isinstance(prev_entity, tuple):
+                prev_span_text, prev_label = prev_entity
+                before_prev_span_text, before_prev_label = prev_entity
+                # else:
+                #     prev_span_text, prev_label = prev_entity, ' '
+
+                if label == prev_label:
+                    # Merge current entity with previous one
+                    new_span_text = f"{prev_span_text} {span_text}"
+                    result[-1] = (new_span_text, prev_label)
+                elif (label == "ADJ" and prev_label == "NOUN") or (label == "NOUN" and prev_label == "ADJ") or (label == "NOUN" and prev_label == "DET") or (label == "DET" and prev_label == "NOUN"):
+                    new_span_text = f"{prev_span_text} {span_text}"
+                    result[-1] = (new_span_text, 'NOUN')
+
+                if prev_entity and before_prev_entity and (before_prev_label == 'NOUN' and prev_label == '' and label == 'NOUN'):
+                    new_span_text = f"{before_prev_span_text} {prev_span_text} {span_text}"
+                    result[-2] = (new_span_text, 'NOUN')
+                    result = result[:-1]
+
+                else:
+                    # Add current entity to result
+                    result.append(entity)
+
+                prev_entity = result[-1]
+                if len(result) > 1:
+                    before_prev_entity = result[-2]
+            else:
+                # Add current entity to result and set it as previous entity
+                result.append(entity)
+                prev_entity = entity
+        else:
+            # Add current word to result and set previous entity to None
+            result.append(entity)
+            prev_entity = None
+
+    return result
+
+
 class SchemaParser:
     '''Given a sentence and a schema, will tag entities and parse relations according to the schema.'''
 
     def __init__(self) -> None:
         nltk.download('averaged_perceptron_tagger')
         self.ph = PyHearst()
+        self.nlp = spacy.load("en_core_sci_scibert")
 
     def get_hearst_patterns(self, sentence: str) -> str:
         '''Given a sentence, will return the sentence with the Hearst patterns'''
@@ -59,7 +135,6 @@ class SchemaParser:
                 if i in item:
                     return idx
             return None
-
         if schema == 'hearst':
             entities = self.get_hearst_patterns(sentence)
             if len(entities) > 0:
@@ -76,6 +151,33 @@ class SchemaParser:
             with open('ORKG_parsers/dsouza_ents', 'rb') as f:
                 ent_sents = pickle.load(f)
             return ent_sents[idx]
+        elif schema == "manual":
+            entities = []
+            doc = self.nlp(' '.join(sentence))
+            for token in doc:
+                print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
+                      token.shape_, token.is_alpha, token.is_stop)
+                entities.append((token.pos_, token.text))
+            entities = [[in_word_index(sentence, ent[1]) + sent_start_idx, in_word_index(sentence,
+                        ent[1])+len(ent[1].split())-1 + sent_start_idx, ent[0]] for ent in entities]
+            return merge_until_stable(make_all_spans(merge_words_and_entities(sentence, entities, sent_start_idx)))
+        elif schema == "manual2":
+            entities = []
+            doc = self.nlp(' '.join(sentence))
+            for sent in list(doc.sents):
+                root = sent.root
+                entities.append(('rel', root.head.text))
+                for child in root.children:
+                    if child.dep_ == 'nsubj':
+                        entities.append(('sub', str(child)))
+                    if child.dep_ == 'dobj':
+                        entities.append(('obj', str(child)))
+                    if child.dep_ == 'pobj':
+                        entities.append(('pobj', str(child)))
+
+            entities = [[in_word_index(sentence, ent[1]) + sent_start_idx, in_word_index(sentence,
+                        ent[1])+len(ent[1].split())-1 + sent_start_idx, ent[0]] for ent in entities]
+            return merge_words_and_entities(sentence, entities, sent_start_idx)
         else:
             return merge_words_and_entities(
                 sentence, data['predicted_ner'][idx], sent_start_idx)
@@ -108,6 +210,8 @@ class SchemaParser:
         elif schema == "cl-titleparser":
             pass
         elif schema == "hearst":
+            pass
+        elif schema == "manual" or schema == 'manual2':
             pass
         else:
             if 'predicted_relations' in data:
@@ -207,7 +311,6 @@ def visualize_mechanic_granular_parser(data):
 def process_granular_ents(data, idx, s, sent_start_idx):
     '''Helper function for visualize_mechanic_granular_parser. Processes the events variable to a list of entities'''
     entities = []
-    print('data in', idx, s, sent_start_idx)
     for rel in data['predicted_events'][idx]:
         print(rel)
         temp_rel = []

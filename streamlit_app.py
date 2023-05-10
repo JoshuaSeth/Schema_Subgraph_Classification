@@ -67,10 +67,13 @@ st.header('NER & RE Parsing Results')
 st.markdown(
     'The analysis of these results can be found in the [research notes](https://docs.google.com/document/d/1i5xHfUvWKcGeX7D1r3Eb1IPm4Bg83-Y0/edit#bookmark=id.jb6w6xm4vqf2).')
 
+num_sents = st.number_input(
+    'Max sentences (for manual parser performance)', value=10)
+
 
 options = st.multiselect(
     'Joint NER and RE method',
-    ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular', 'Rule-based Hearst Patterns'))
+    ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular', 'Rule-based Hearst Patterns', 'Self-made Manual', 'Self-made Manual2'))
 
 
 use_both = True
@@ -78,7 +81,7 @@ use_both = True
 # 'Use challenges OR directions vs. use challenges AND directions', True)
 
 include_context = st.checkbox(
-    'Include context: include the sentence before and afther the research sentence. \n (For some reason hidden deep in the dygie code this only works for granular MECHANIC and non-dygie models)')
+    'Include context: include the sentence before and afther the research sentence.')
 
 compare_merge = False  # st.checkbox(
 # 'Compare parsers results or merge parser results')
@@ -103,12 +106,18 @@ models_entity_counts = defaultdict(list)
 models_sentence_lengths = defaultdict(list)
 datas = defaultdict(lambda: defaultdict(list))
 
+with open('default_sentences.txt', 'r') as f:
+    default_sentences = f.readlines()
+
 # Obtain parsed data
 # For each sentence apply all selected models
-for idx, s in enumerate(sentences):
+for idx, s in enumerate(sentences[:num_sents]):
 
     ents_for_models = []
     for option in options:
+        if 'manual' in option.lower():
+
+            s = default_sentences[idx].split()
         # Load pre-parsed data
         model_name = option.replace(
             'MECHANIC-', '').replace('05', '').split()[1].lower()
@@ -147,11 +156,9 @@ for model in models_sentence_lengths.keys():
             ' between sentence length and number of found entities')
 
 # Visualize parsed data
-for idx, s in enumerate(sentences):
-    if idx % 3 == 0 or not include_context:
-        # Layout
-        st.markdown('\n')
-        st.subheader(str(idx / 3) if include_context else str(idx))
+for idx, s in enumerate(sentences[:num_sents]):
+    st.markdown('\n')
+    st.subheader(str(idx))
 
     for option in options:
 

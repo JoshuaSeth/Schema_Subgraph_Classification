@@ -11,8 +11,9 @@ for item in dataset:
                          item['text'] + ' ' + item['next_sent'])
 
 with open('hope.txt', 'w') as f:
+    # We must replace the dots with comma's because they are turned into empty sentences making the models crash when using the context (with empty sentences)
     for sent in sentences:
         print(sent.replace('.', '. ').replace(
             '\n', ' ').replace('\\', '') + '\n')
-        f.write(sent.replace('.', '. ').replace(
-            '\n', ' ').replace('\\', '') + '\n')
+        f.write(" ".join(sent.replace('.', '. ').replace(
+            '\n', ' ').replace('\\', '').strip().split()) + '\n')
