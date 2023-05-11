@@ -91,10 +91,10 @@ def merge_consecutive_same_tag_entities(merged_list):
                     new_span_text = f"{prev_span_text} {span_text}"
                     result[-1] = (new_span_text, 'NOUN')
 
-                if prev_entity and before_prev_entity and (before_prev_label == 'NOUN' and prev_label == '' and label == 'NOUN'):
-                    new_span_text = f"{before_prev_span_text} {prev_span_text} {span_text}"
-                    result[-2] = (new_span_text, 'NOUN')
-                    result = result[:-1]
+                # if prev_entity and before_prev_entity and (before_prev_label == 'NOUN' and prev_label == '' and label == 'NOUN'):
+                #     new_span_text = f"{before_prev_span_text} {prev_span_text} {span_text}"
+                #     result[-2] = (new_span_text, 'NOUN')
+                #     result = result[:-1]
 
                 else:
                     # Add current entity to result
@@ -119,7 +119,7 @@ class SchemaParser:
     '''Given a sentence and a schema, will tag entities and parse relations according to the schema.'''
 
     def __init__(self) -> None:
-        nltk.download('averaged_perceptron_tagger')
+        # nltk.download('averaged_perceptron_tagger')
         self.ph = PyHearst()
         self.nlp = spacy.load("en_core_sci_scibert")
 

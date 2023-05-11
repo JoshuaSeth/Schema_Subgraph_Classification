@@ -14,6 +14,9 @@ import numpy as np
 
 # Helper functions
 
+sample_senteces = ["The epistemic cost in these experiments can be further evaluated on both warm-up and application phases, which could be a significant metric in real-world risk-sensitive applications.", "There is a need for hospitals to improve the supervision and monitoring of HPs, as some of the gaps in IPC compliance were noted to be due to limited supervision and follow-up.", "However, it remains unproven if the infection caused the flu-like effects with SARS-CoV-2.", "It will be interesting to determine whether similar anti-PrP antibody-mediated effects could indirectly limit the neurotoxic activation of microglia during prion disease [147,168].",
+                   "That being said, the disproportionate levels of stress refugee families experience warrant a targeted policy agenda that supports multilevel interventions.", "Should ILI be added to the list of 146 once recommended but now contradicted medical practices we should stop using and rename it? [", "Generally in Africa, many episodes of gastroenteritis remain unexplained as no etiological agent is determined (9, 10).", "In differentiated MPC cells, however, little LC3-II is degraded by lysosomal proteases, suggesting that there is little fusion between LC3-II-localized vesicles and lysosomes (Asanuma et al., 2003)."]
+
 
 def load_sentences(use_context):
     prefix = 'correct_format_scierc'
@@ -69,6 +72,9 @@ st.markdown(
 
 num_sents = st.number_input(
     'Max sentences (for manual parser performance)', value=10)
+
+# use_sample = st.checkbox(
+#     'Use sample sentences (a setence set studied more extensively in the research otes)', value=True)
 
 
 options = st.multiselect(
