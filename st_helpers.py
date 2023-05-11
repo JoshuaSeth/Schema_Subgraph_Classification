@@ -178,6 +178,18 @@ class SchemaParser:
             entities = [[in_word_index(sentence, ent[1]) + sent_start_idx, in_word_index(sentence,
                         ent[1])+len(ent[1].split())-1 + sent_start_idx, ent[0]] for ent in entities]
             return merge_words_and_entities(sentence, entities, sent_start_idx)
+        elif schema == 'keyword':
+            keyword_list = ['Suggesting', 'remain', 'unexplained', 'should', 'question', 'warrant', 'determine',
+                            'whether', 'could', 'remains', 'unproven', 'if', 'there is a need', 'evaluated', 'further', 'could']
+            entities = []
+            for word in sentence:
+                if word in keyword_list:
+                    entities.append((word, word))
+                else:
+                    entities.append(('', word))
+            entities = [[in_word_index(sentence, ent[1]) + sent_start_idx, in_word_index(sentence,
+                        ent[1]) + sent_start_idx, ent[0]] for ent in entities if ent[0] != '']
+            return merge_words_and_entities(sentence, entities, sent_start_idx)
         else:
             return merge_words_and_entities(
                 sentence, data['predicted_ner'][idx], sent_start_idx)
@@ -211,7 +223,7 @@ class SchemaParser:
             pass
         elif schema == "hearst":
             pass
-        elif schema == "manual" or schema == 'manual2':
+        elif schema == "manual" or schema == 'manual2' or 'keyword':
             pass
         else:
             if 'predicted_relations' in data:

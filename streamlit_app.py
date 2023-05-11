@@ -79,7 +79,7 @@ num_sents = st.number_input(
 
 options = st.multiselect(
     'Joint NER and RE method',
-    ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular', 'Rule-based Hearst Patterns', 'Self-made Manual', 'Self-made Manual2'))
+    ("D'Souza's CL-TitleParser", 'Dygie SciErc', 'Dygie GENIA', 'Dygie Ace05_Rels', 'Dygie Ace05_Event', 'Dygie MECHANIC-coarse', 'Dygie MECHANIC-granular', 'Rule-based Hearst Patterns', 'Self-made Manual', 'Self-made Manual2', 'Self-made Keyword'))
 
 
 use_both = True
@@ -121,7 +121,7 @@ for idx, s in enumerate(sentences[:num_sents]):
 
     ents_for_models = []
     for option in options:
-        if 'manual' in option.lower():
+        if 'manual' in option.lower() or 'keyword' in option.lower():
 
             s = default_sentences[idx].split()
         # Load pre-parsed data
