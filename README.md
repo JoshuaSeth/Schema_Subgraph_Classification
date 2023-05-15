@@ -1,14 +1,15 @@
-Repository containing several disjointed tasks and investigations for the thesis at VU: Triple extraction from future research sentences
+Repository for the VU Thesis Triple Extraction from Future Research Sentences.
+
+## Resources
+Research Notes: https://docs.google.com/document/d/1i5xHfUvWKcGeX7D1r3Eb1IPm4Bg83-Y0/edit#heading=h.ia8q0laqhx6c
+Streamlit Schema Comparison App: https://joshuaseth-vuthesis-lm-triple-extraction-streamlit-app-1h1o4h.streamlit.app/
+
+## Folders
+
+Deeper folders might have their own dedicated README's. 
+
+[The Exploration folder](exploration/) contains quick scripts exploring sizes, schema's etcetera of datasets.
+
+[The Streamlit Schema Comparison folder](streamlit_compare_schemas/) Contains all the code for the streamlit app comparing multiple schema's, such as DSouza's title parser, Dygie SciErc, Dygie Mechanic, Manual parsing schema's and quite some others for Named Entity Recognition (NER) and Relation Extraction (RE).
 
 
-**Comparing different NER + RE extractors**
-Comparison of different datasets and schema's by running the streamlit_app.py with streamlit run.
-
-The ORKG_parsers folder has several parsers that do joint NER and RE. For example Dygie, see: https://github.com/dwadden/dygiepp#making-predictions-on-existing-datasets.
-
-Datasets need to be preprocessed to be used with dygie, see: https://github.com/dwadden/dygiepp/blob/master/doc/data.md#formatting-a-new-dataset
-Add sentences as text to the text folder in dygie and run 'prepare_all_datasets.py' to do this, predictions can then be made using parse_all_datasets.py run from the dygie repo (so not main repo).
-
-A spacy interface is also present in the dygiepp repo, on which a thesis interface is added, but currently this only works when using the SciErc-trained dygie model.
-
-The exploration folders contains several scripts from the initial phase of testing the contents of different datasets and schema's.

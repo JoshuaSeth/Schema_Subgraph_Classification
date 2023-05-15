@@ -180,7 +180,7 @@ class SchemaParser:
             return merge_words_and_entities(sentence, entities, sent_start_idx)
         elif schema == 'keyword':
             keyword_list = ['Suggesting', 'remain', 'unexplained', 'should', 'question', 'warrant', 'determine',
-                            'whether', 'could', 'remains', 'unproven', 'if', 'there is a need', 'evaluated', 'further', 'could']
+                            'whether', 'could', 'remains', 'unproven', 'if', 'there is a need', 'evaluated', 'further', 'unless', 'suffer', 'unknown', 'may']
             entities = []
             for word in sentence:
                 if word in keyword_list:
