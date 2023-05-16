@@ -34,12 +34,19 @@ def clean_preprocess(sent):
 data = load_dataset(
     "DanL/scientific-challenges-and-directions-dataset", split="all")
 
-# Get the relevant items + context
-sentences = [get_sent(item) for item in data if is_research_sent(item)]
 
-# Clean sentences
-sentences = [clean_preprocess(sent) for sent in sentences]
+# Save 4 datasets (OR, AND challenges) x (with, without context)
+for mode in ['OR', 'AND']:
+    for context in [True, False]:
 
-# Save
-with open('research_sents.txt', 'w') as f:
-    [f.write(sent) for sent in sentences]
+        # Get the relevant items + context
+        sentences = [get_sent(item, context)
+                     for item in data if is_research_sent(item, mode)]
+
+        # Clean sentences
+        sentences = [clean_preprocess(sent) for sent in sentences]
+
+        # Save
+        postfix = ('context_' if context else '') + mode
+        with open(f'KG_per_schema/data/sents/sents_{postfix}.txt', 'w') as f:
+            [f.write(sent) for sent in sentences]
