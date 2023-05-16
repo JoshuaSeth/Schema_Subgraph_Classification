@@ -19,8 +19,6 @@ print('dygie_formatter_path:', dygie_formatter_path)
 # Define the dataset codes (needed for dygie to correctly understand dataset)
 dataset_codes = [
     "scierc",
-    "scierc",
-    "genia",
     "genia",
     "chemprot",
     "ace05",
@@ -32,13 +30,17 @@ dataset_codes = [
 
 for origin_path in glob.glob(f"{default_sent_folder}*.txt"):
 
+    print(origin_path)
+
     # Iterate over the dataset_codes and run the command for each one
     for dataset_code in dataset_codes:
-        target_filename = os.path.basename(origin_path) + '_' + dataset_code
+        target_filename = (
+            dataset_code + '_' + os.path.basename(origin_path)).replace('.txt', '.jsonl')
         target_path = f"{project_path}/KG_per_schema/data/dygie_data/" + \
             target_filename
 
-        print(f"Processing dataset code {dataset_code}...")
+        print(
+            f"Processing dataset code {dataset_code} for target {target_filename}...")
 
         # Call the dygie dataset converter script
         subprocess.run([python_executive, dygie_formatter_path,
