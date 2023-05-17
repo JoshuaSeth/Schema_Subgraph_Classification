@@ -6,7 +6,7 @@ from utils import project_path
 import json
 from tqdm import tqdm
 from copy import deepcopy
-
+from typing import List
 # Some variables for the operation
 dygie_prediction_dir_path = project_path + '/KG_per_schema/data/predictions/'
 
@@ -83,7 +83,7 @@ def set_idx_and_tag(ent, tags_idxs):
             tags_idxs[ent[0]] = ent[1]
 
 
-def extract_relations(data: dict) -> list[list[str | tuple]]:
+def extract_relations(data: dict) -> List[List]:
     '''Extracts the relations from the data if relations in the data. 
 
     Parameters
@@ -115,26 +115,26 @@ def extract_relations(data: dict) -> list[list[str | tuple]]:
                     rel_in_sent = extract_rel_items(
                         flattened_sents, sub_element)
                     rels_in_sent.append(rel_in_sent)
-            if len(rels_in_sent) > 0:
-                rels.append(rels_in_sent)
+
+            rels.append(rels_in_sent)
 
     return rels
 
 
-def extract_rel_items(flattened_sents: list[str], rel: list) -> list[str]:
+def extract_rel_items(flattened_sents: List[str], rel: list) -> tuple:
     '''Takes a single list representing a relation and returns a list of the origin text, target text and relation tag.'''
     origin_start_idx = rel[0]
     origin_end_idx = rel[1]+1
     target_start_idx = rel[2]
     target_end_idx = rel[3]+1
     rel_tag = rel[4]
-    rel_in_sent = [' '.join(flattened_sents[origin_start_idx:origin_end_idx]),
-                   ' '.join(flattened_sents[target_start_idx:target_end_idx]), rel_tag]
+    rel_in_sent = tuple([' '.join(flattened_sents[origin_start_idx:origin_end_idx]),
+                         ' '.join(flattened_sents[target_start_idx:target_end_idx]), rel_tag])
 
     return rel_in_sent
 
 
-def extract_entities(data: dict) -> list[list[str | tuple]]:
+def extract_entities(data: dict) -> List[list]:
     '''Extracts the entities from the data if entities in the data. 
 
     Parameters
@@ -160,7 +160,7 @@ def extract_entities(data: dict) -> list[list[str | tuple]]:
     return ents
 
 
-def build_tagged_sent(sents: list[list], ent_list: list[list]) -> list[list[str | tuple]]:
+def build_tagged_sent(sents: List[list], ent_list: List[list]) -> List[list]:
     '''Returns the list with the tagged sentences based on the sentences and the entities from the dygie data.
 
     Parameters
@@ -191,9 +191,10 @@ def build_tagged_sent(sents: list[list], ent_list: list[list]) -> list[list[str 
                 # If is entity add new tag span or extend previous span
             else:
                 if last_tag == tags_idxs[global_idx]:
-                    tagged_sent[-1][0] += ' ' + word
+                    tagged_sent[-1] = (tagged_sent[-1][0] +
+                                       ' ' + word, tagged_sent[-1][1])
                 else:
-                    tagged_sent.append([word, tags_idxs[global_idx]])
+                    tagged_sent.append(tuple([word, tags_idxs[global_idx]]))
                     # Set this tag as the last tag
                 last_tag = tags_idxs[global_idx]
         sent_total_idx += len(sent)

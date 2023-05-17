@@ -1,28 +1,40 @@
-{'coref': {'loss': 0}, 'relation': {'loss': 0}, 'ner': {'loss': 0}, 'events': {'loss': 0}, 'loss': tensor(0.), 'metadata': 0: Monitoring and modeling environmental precursors of IDTEs can help to anticipate , or even forecast , an upsurge of IDTEs 39 .
-1: A major problem with COVID19 is that , besides a bulk of mild cases , SARSCoV2 is a pneumotropic virus that causes a number of severe pneumonia requiring intensive hospital care .
-2: There is a need for hospitals to improve the supervision and monitoring of HPs , as some of the gaps in IPC compliance were noted to be due to limited supervision and follow-up .
-3: In particular , drawbacks of the Hoechst efflux technique concerning the parallel purification of different stem cell types have been emphasized 115 .
-4: Acute tonsillitis manifests with fever , throat pain , foul breath , dysphagia and odynophagia , tender cervical adenopathy , and tonsillar erythema and exudates .
-5: A major challenge in the clinical management of persistent digestive disorders is the weakness of health systems in many low-income countries 16 - 18 .
-6: Vaccines have become the hopeful savior to end the worst global health and economic crisis of living memory .
-7: The criminalization of perpetrators and a social unawareness about gender-based violence are in fact the two ineffective options assumed by the literature 46 behind this helpless repetitiveness .
-8: Unavailability of chemotherapeuticsvaccine has posed tremendous challenges to scientists and doctors for developing an urgent therapeutic strategy .
-9: Progress in elucidating the molecular basis of T6SS-5 induced cell-cell fusions is hampered by the circumstance that the activity of the potential effector protein VgrG-5 is unknown and the possibility that other as yet unidentified effector proteins participate in MNGC formation .
-10: However , it remains unproven if the infection caused the flu-like effects with SARS-CoV-2 .
-11: It will be interesting to determine whether similar anti-PrP antibody-mediated effects could indirectly limit the neurotoxic activation of microglia during prion disease 147,168 .
-12: Of note , we plan to analyze the primary endpoint after all patients have reached day 14 to expeditiously determine whether a larger study should be undertaken .
-13: We may never have another opportunity , both logistically and financially , to do this .
-14: Unfamiliar objectsevents activate feelings of threat and people choose to accommodate it into an already existing approach .
-15: Different limitations of accessible information , such as the local observation and the one-shot observation , are taken into account .
-16: Naturally , the perception and interaction with the topic of COVID-19 in the information space are superimposed on a whole set of rumors , stereotypes , conjectures , and myths about public health that circulate in social discourse .
-17: We are reminded that medicine has become a large and unwieldy system of hospitals , clinics , corporations , insurance companies , and other entities and an enormous part of our economy e.g. , 17 of the 2018 US gross domestic product .
-18: That being said , the disproportionate levels of stress refugee families experience warrant a targeted policy agenda that supports multilevel interventions .
-19: As the clinical implications are not well established to date , and most pharmacokinetic studies report total concentrations of chloroquine only i.e. , the sum of both enantiomers , we focus on the total chloroquine concentration in this article .
-20: We learned outbreak events are not universal as they differ from one disease to another , and from one context to another .
-21: Should ILI be added to the list of 146 once recommended but now contradicted medical practices we should stop using and rename it   A systematic review of the published literature by Nejadshafiee et al17 reveals a surprising gap in evidence about telenursing in incidents and disasters .
-22: Generally in Africa , many episodes of gastroenteritis remain unexplained as no etiological agent is determined 9 , 10 .
-23: In differentiated MPC cells , however , little LC3-II is degraded by lysosomal proteases , suggesting that there is little fusion between LC3-II-localized vesicles and lysosomes Asanuma et al. , 2003 .
-24: Bias influences an actors performance and decision making 5 , 30 and may shift the opinion of actors to an incorrect answersolution 25 .
-25: If we assume that the onset of VF can be viewed as such a critical transition , we expect that we can detect the same early warning signals that are found in a variety of other real systems .
-26: Among other platforms , online social networks OSNs have proved to be particularly unsuitable to manage access control in a satisfying way for the users 6 , 12 , 36 .
-27: Autophagy has significant associations with neurodegenerative diseases , cardiomyopathies , cancer , programmed cell death , and bacterial and viral infections .}
+{'coref': {'loss': 0}, 'relation': {'loss': 0}, 'ner': {'loss': 0}, 'events': {'loss': 0}, 'loss': tensor(0.), 'metadata': 0: The observations described in this paper may inform experimental design of further studies into mechanisms and duration of virus persistence following natural infection with WPDV .
+1: However the relationship between the level of sequence similarity between TRS-L and TRS-B and the transcriptional activity at a TRS was not entirely straight-forward and thus additional factors are thought to play a role .
+2: It is not surprising that researchers have investigated whether wine consumption affects the incidence of neurodegenerative diseases affected by oxidative stress , such as Alzheimers Barnham et al. , 2004 .
+3: This combination only differed from combination numbers 1 and 4 by the presence of PCMV , thus it can be speculated that presence of PCMV causes exacerbation of the disease .
+4: During the H7N9 outbreak , we designed a study to investigate the potential roles of Internet surveillance on reactions of Internet users to the H7N9 outbreaks and provide evidence for government , health authorities , and the public to efficiently control and prevent public health emergency problems , such as H7N9 , in the future .
+5: Altogether , these data highlight the need for further studies on the zoonotic potential of these viruses .
+6: By coupling models and data , hypothesis testing can be done to assess seasonal drivers and their modes of action .
+7: Although siRNAbased therapy is still in infancy , it holds tremendous promise for use in routine clinical practice as an adjunct to existing procedures as it can help to overcome the limitations associated with current therapeutic regimens 17 , 18 .
+8: Further studies focusing on the barriers and self-efficacy might also be needed .
+9: Despite the reaction simplicity , many intermediate compounds can form and multiple elementary steps must be considered for better understanding of H2O2 decomposition over the Pd surface , for which we reserve our future study .
+10: Significant nosocomial transmission of SARS-CoV has incited the most research regarding the role of AGMPs in nosocomial virus transmission 11,12,13 , while recent nosocomial transmission events of MERS-CoV warrant further research 2,3,4,5 .
+11: If these central nervous system-resident myeloid cells are also dysregulated in cell cycle , this could potentially represent a method used by EBOV to counteract its own cytotoxicity to support prolonged viral replication or latency .
+12: We speculate that MIS-C is a delayed immunological phenomenon associated with inflammation Stage IIIhyperinflammation phase following either symptomatic or asymptomatic COVID-19 infection .
+13: Virtual technologies enhance surgical education , are increasingly relevant , and deserve further investigation as supplementary teaching platforms .
+14: Ultimately , further research is needed to assess whether pronounced oozing that is clinically concerning for a coagulopathy is a common presentation of COVID-19 in the parturient patient .
+15: Although it is an unexplored area of research , the study of isolation in time may reveal pathogen metapopulation structure and parasite adaptations for surviving through transmission troughs .
+16: Although neutrophil-mediated immune regulation in the context of RSV infection has yet to be examined directly , general concepts can be derived from studies with other viruses and guide further research into the severely understudied role of neutrophils in patients with RSV infection .
+17: Collectively , these differences may explain why the fatal H7N9 cases had a longer incubation period , as the virus could spread deeper in the organism due to an abnormal immune response and potentially induced severe adverse events , such as acute respiratory distress syndrome , increasing the risk of death 9 .
+18: The probability distributions of other parameters , such as infectivity , are also critical to disease dynamics Nelson et al. , 2004 , Lloyd , 2001c and we hope to address such issues in future work .
+19: Some of these pathogenetic responses , if answered , may allow the discovery of new therapies .
+20: Therefore , besides pathogen mutations or selection , CST could be considered a major way to support diseaseparasite spreading and survival evolution .
+21: In general , the incidence of EBV-LPD after autologous transplantation is very low .
+22: By showing the value of lymph node derived-immune libraries for isolating in vivo matured mAbs with promising virus-neutralizing properties , we expect the LYNDAL concept to be also extendable to other disease-specific targets .
+23: Collectively , these data point to an increased rate of growth in some cell types other than 293 T , including primary cells , and thereby potentially indicating a cell type-dependent effect of VP40 on growth regulation .
+24: However , the perception that cyanobacteria can represent a threat to human health only in connection with acute events such as blooms should be widened to consider the possibility of neurologic damage as consequence of chronic exposition to toxins such as BMAA via long-term ingestion of water or aquatic fauna .
+25: It is necessary to strengthen the identification of such patients in the future .
+26: Moreover , the partial restoration of envelope-specific T cell responses observed in this study could represent another important cause of the vaccine failure in reducing HBsAg load , in line with the concept that envelope-specific responses are associated with complete control of infection and anti-HBs seroconversion 7 .
+27: The priorities and future directions will also include the organization of large-scale clinical trials and the development and update of guidelines on respiratory diseases .
+28: This Handbook on small satellites addresses key issues such as orbital space debris , end of life removal of small satellites from orbit , new ways to design and build satellites , frequency spectrum coordination , as well as innovative ways to address the problems of jamming and interference .
+29: Some of these viruses are closely related to human viruses , and are therefore suspected to possess zoonotic potential Luis et al. , 2013 .
+30: The use of neuromuscular blocking agents during mechanical ventilation has been classically considered as a risk factor however , it is not clear to date if they actually play a role in the development of muscular weakness 22 .
+31: To what extent the size of the topology can be restricted to find bugs in a given controller is another interesting research question , as is the analysis of the number and length of interleavings necessary to detect certain bugs .
+32: The underlying mechanisms of this new action remain elusive , but experimental studies point to improved synaptic function and increased serotonin activity , along with the known inflammatory and antioxidant properties of metformin .
+33: Despite the widespread use of nebulizers in the management of many lung pathologies , further research is required to acquire definitive therapies .
+34: Based on the summary of the existing works , this paper also analyzes the opportunities and challenges in this field , which attempts to shed some light on designing more effective algorithms to solve the problems in data science for real-world applications .
+35: Negotiation with insurance or government payers for more fair reimbursement rate will help to overcome one important obstacle for ISBCS in many countries .
+36: Carefully characterized of SARS-CoV-2 transmission models will be crucial to assess potential changes in transmission and pathogenic potential in the light of the ongoing SARS-CoV-2 evolution .
+37: This ambiguity shows that the relationship between RDW and mortality is not consistent , and further investigation into the same is warranted .
+38: Predicting how zoonotic diseases emerge and spread in response to anthropogenic LUC requires a comprehensive understanding of how these changes will influence both the hosts and the pathogens .
+39: It seems that more studies are needed to elaborate on the efficiency of the Brevinin family against viruses .}
