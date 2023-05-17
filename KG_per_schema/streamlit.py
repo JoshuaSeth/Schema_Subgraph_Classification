@@ -9,10 +9,13 @@ import subprocess
 from utils import project_path, get_model_fname
 from results_loader import load_data
 from annotated_text import annotated_text
+import pickle
+from collections import defaultdict
 
-# Options
+# Variables
 schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event']
 modes = ['AND', 'OR']
+visualizations = ['sentences', 'graph']
 
 # Default interface options
 st.header('NER & RE Parsing Results')
@@ -25,9 +28,18 @@ mode = st.selectbox('Mode', modes)
 use_context = st.checkbox('Use context', value=True)
 st.divider()
 
+st.selectbox('Data', visualizations)
 
 if schema != None and mode != None:
-    sents, corefs, rels, ents = load_data(schema, mode, use_context)
+    groups = load_data(schema, mode, use_context, grouped=True)
 
-    for ent in ents:
-        annotated_text(ent)
+    if isinstance(groups, dict):
+        for idx, group in groups.items():
+            st.subheader(idx)
+
+            for sent, ent, rels in group:
+                annotated_text(ent)
+                for rel in rels:
+                    st.text(rel)
+
+                st.divider()

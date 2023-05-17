@@ -7,11 +7,15 @@ import json
 from tqdm import tqdm
 from copy import deepcopy
 from typing import List
+import pickle
+from collections import defaultdict
+
 # Some variables for the operation
 dygie_prediction_dir_path = project_path + '/KG_per_schema/data/predictions/'
+group_info_fpath = project_path + '/KG_per_schema/data/group_info/group_info.pkl'
 
 
-def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None):
+def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None, grouped=True):
     '''Loads all predicted data for certain request parameters.
 
     Parameters
@@ -22,11 +26,18 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None)
             Whether to use sentences that are a research challenge or direction or are both. One of: [AND, OR]. Default: AND
         context: bool, Optional
             Whether to include context sentences or not. Default: False
+        index: int, Optional
+            Whether to use a specific index file. If None then all data conforming to the request params is used. If given an index only a single datafile containing the request params and this specific index is used. Which might be handy for taking small samples. Default: None
+        grouped: bool, Optional
+            Whether to group the data by the 'group info' group_info.pkl file. The groups result from what sentence where grouped together in a context. Only relevant when using context = true. Default: True
 
     Return
     -----------
-        sents, corefs, rels and ents 
-            Returns four lists containing the sentences, coreferences, relations and entities respectively. These four lists contain a list for every sentence or ner/re span.'''
+        If grouped: groups: dict[group_number, list[tuples]]
+            Returns a dictionary where the key is group number and the values are lists of tuples. Each tuple contains the sentences, coreferences, relations and entities respectively. These four lists contain a list for every sentence.
+        If not grouped: sents, corefs, rels and ents 
+            Returns four lists containing the sentences, coreferences, relations and entities respectively. These four lists contain a list for every sentence or ner/re span.
+        '''
 
     # Check input
     if schema not in ["scierc", "None", "genia", "covid-event", "ace05", "ace-event"]:
@@ -53,7 +64,29 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None)
 
         rels.extend(extract_relations(data))
 
-    return sents, corefs, rels, ents
+    # If not grouped everything if done
+    if not grouped:
+        return sents, corefs, rels, ents
+
+    # Else start grouping
+    # Ugliest part of the code: Since spacy has in a small number of cases incorrectly split the sentences, their groups can not be retrieved anymore from the grouping info
+    with open(group_info_fpath, 'rb') as f:
+        group_info = pickle.load(f)
+    groups = defaultdict(list)
+    found_groups = 1.0
+    total_groups = 1.0
+    for sent, ent, rel in zip(sents, ents, rels):
+        sent_text = ' '.join(sent).replace(' ,', ',').replace(' .', '.') + ' '
+        group = -1
+        total_groups += 1.0
+        if 'sent_text' in group_info:
+            group = group_info[sent_text]
+            found_groups += 1.0
+        print(f'Found groups: {found_groups/total_groups}')
+        groups[group].append((sent, ent, rel))
+
+    # Requires python>=3.7
+    return dict(sorted(groups.items()))
 
 
 def get_tag_idxs(entity_list):
@@ -217,8 +250,3 @@ def get_fpaths_for_request(schema, mode, context, index):
             print(dygie_data_fpath)
             matching_fpaths.append(dygie_data_fpath)
     return matching_fpaths
-
-
-# Test
-sents, corefs, rels, ents = load_data('scierc', 'AND', True, index=960)
-print(rels)
