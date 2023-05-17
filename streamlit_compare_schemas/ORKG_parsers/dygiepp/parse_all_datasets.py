@@ -23,8 +23,9 @@ for dataset_code, model_filename, output_filename in datasets_and_models:
         f"Processing {model_filename} with output file {output_filename} for dataset {dataset_code}...")
     subprocess.run([
         "allennlp", "predict", f"pretrained/{model_filename}", prepared_dataset,
-        "--predictor", "dygie",
         "--include-package", "dygie",
+        "--predictor", "dygie",
+
         "--use-dataset-reader",
         "--output-file", f"predictions/context_{output_filename}"
     ])
