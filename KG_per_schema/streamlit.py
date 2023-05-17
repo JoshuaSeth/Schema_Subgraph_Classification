@@ -30,5 +30,4 @@ if schema != None and mode != None:
     sents, corefs, rels, ents = load_data(schema, mode, use_context)
 
     for ent in ents:
-        # print(ent)
         annotated_text(ent)

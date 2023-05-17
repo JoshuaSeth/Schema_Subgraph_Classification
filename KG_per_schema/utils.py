@@ -18,6 +18,6 @@ def get_model_fname(filename):
     if filename == "ace-event":
         return "ace05-event.tar.gz"
     if filename == "None":
-        return "mechanic-granular.tar.gz"
-    if filename == "covid-event":
         return "mechanic-coarse.tar.gz"
+    if filename == "covid-event":
+        return "mechanic-granular.tar.gz"

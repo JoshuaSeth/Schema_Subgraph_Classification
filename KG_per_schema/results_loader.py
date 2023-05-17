@@ -17,7 +17,7 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None)
     Parameters
     ------------
         schema: str
-            Which schema to use. One of: [scierc, None (= mechanic granular), genia, covid-event (= mechanic coarse), ace05, ace-event]
+            Which schema to use. One of: [scierc, None (= mechanic coarse), genia, covid-event (= mechanic granular), ace05, ace-event]
         mode: str, Optional
             Whether to use sentences that are a research challenge or direction or are both. One of: [AND, OR]. Default: AND
         context: bool, Optional
@@ -186,7 +186,7 @@ def build_tagged_sent(sents: List[list], ent_list: List[list]) -> List[list]:
             # Add plain word if not tagged
             global_idx = sent_total_idx+idx
             if not global_idx in tags_idxs:
-                tagged_sent.append(word)
+                tagged_sent.append(word + ' ')
                 last_tag = None
                 # If is entity add new tag span or extend previous span
             else:
