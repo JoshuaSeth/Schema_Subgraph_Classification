@@ -34,17 +34,17 @@ dataset_codes = [
 
 def convert_dygie_compatible_datasets():
     # Iterate over the dataset_codes and run the command for each one
-    # print('Converting datasets to dygie compatible format...')
-    # for sents_fpath in tqdm(glob.glob(f"{sents_dir_path}*.txt")):
-    #     for dataset_code in tqdm(dataset_codes, leave=False):
+    print('Converting datasets to dygie compatible format...')
+    for sents_fpath in tqdm(glob.glob(f"{sents_dir_path}*.txt")):
+        for dataset_code in tqdm(dataset_codes, leave=False):
 
-    #         target_fname = (
-    #             dataset_code + '_' + os.path.basename(sents_fpath)).replace('.txt', '')
-    #         target_fpath = dygie_data_dir_path + target_fname
+            target_fname = (
+                dataset_code + '_' + os.path.basename(sents_fpath)).replace('.txt', '')
+            target_fpath = dygie_data_dir_path + target_fname
 
-    #         # Call the dygie dataset converter script
-    #         subprocess.run([python_kernel, dygie_formatter_fpath,
-    #                         sents_fpath, target_fpath, dataset_code, "--use-scispacy"])
+            # Call the dygie dataset converter script
+            subprocess.run([python_kernel, dygie_formatter_fpath,
+                            sents_fpath, target_fpath, dataset_code, "--use-scispacy"])
 
     # Postprocessing needs to happen since spacy short sentences crash dygie
     print('Postprocessing dygie compatible datasets...')
