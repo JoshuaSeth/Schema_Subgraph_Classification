@@ -51,6 +51,8 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None)
 
         ents.extend(extract_entities(data))
 
+        rels.extend(extract_relations(data))
+
     return sents, corefs, rels, ents
 
 
@@ -81,6 +83,57 @@ def set_idx_and_tag(ent, tags_idxs):
             tags_idxs[ent[0]] = ent[1]
 
 
+def extract_relations(data: dict) -> list[list[str | tuple]]:
+    '''Extracts the relations from the data if relations in the data. 
+
+    Parameters
+    ------------
+        data: dict
+            An dygie prediction loaded json file as dict.
+
+    Return
+    -----------
+        rels 
+            List of lists of lists. Each list corresponds to a sentence. The sentence consists of multiple lists. These lists are the origin text, target text and relation tag.'''
+    rels = []
+    if 'predicted_relations' in data:
+
+        flattened_sents = [word for sentence in data['sentences']
+                           for word in sentence]
+
+        for sent in data['predicted_relations']:
+            rels_in_sent = []
+            # Sometimes there will be another layer of nested lists and sometimes just the relation
+            for sub_element in sent:
+                # Sub_element is a list of relations
+                if isinstance(sub_element[0], list):
+                    for rel in sub_element:
+                        rel_in_sent = extract_rel_items(flattened_sents, rel)
+                        rels_in_sent.append(rel_in_sent)
+                # Sub_element is an relation
+                else:
+                    rel_in_sent = extract_rel_items(
+                        flattened_sents, sub_element)
+                    rels_in_sent.append(rel_in_sent)
+            if len(rels_in_sent) > 0:
+                rels.append(rels_in_sent)
+
+    return rels
+
+
+def extract_rel_items(flattened_sents: list[str], rel: list) -> list[str]:
+    '''Takes a single list representing a relation and returns a list of the origin text, target text and relation tag.'''
+    origin_start_idx = rel[0]
+    origin_end_idx = rel[1]+1
+    target_start_idx = rel[2]
+    target_end_idx = rel[3]+1
+    rel_tag = rel[4]
+    rel_in_sent = [' '.join(flattened_sents[origin_start_idx:origin_end_idx]),
+                   ' '.join(flattened_sents[target_start_idx:target_end_idx]), rel_tag]
+
+    return rel_in_sent
+
+
 def extract_entities(data: dict) -> list[list[str | tuple]]:
     '''Extracts the entities from the data if entities in the data. 
 
@@ -107,8 +160,8 @@ def extract_entities(data: dict) -> list[list[str | tuple]]:
     return ents
 
 
-def build_tagged_sent(sents, ent_list):
-    '''Fills the fill list with the tagged sentences based on the sentences and the entities from the dygie data.
+def build_tagged_sent(sents: list[list], ent_list: list[list]) -> list[list[str | tuple]]:
+    '''Returns the list with the tagged sentences based on the sentences and the entities from the dygie data.
 
     Parameters
     ------------
@@ -166,5 +219,5 @@ def get_fpaths_for_request(schema, mode, context, index):
 
 
 # Test
-sents, corefs, rels, ents = load_data('ace-event', 'AND', True, index=880)
-print(ents)
+sents, corefs, rels, ents = load_data('scierc', 'AND', True, index=960)
+print(rels)
