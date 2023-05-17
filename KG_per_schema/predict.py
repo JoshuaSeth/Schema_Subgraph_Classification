@@ -9,10 +9,11 @@ import subprocess
 import os
 from utils import get_model_fname, project_path
 import glob
+from tqdm import tqdm
 
 # Little less verbose logs
-os.environ["ALLENNLP_LOG_LEVEL"] = "INFO"
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
+os.environ["ALLENNLP_LOG_LEVEL"] = "ERROR"
+# os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 # Variables
@@ -23,7 +24,7 @@ dygie_dir_path = project_path + "/streamlit_compare_schemas/ORKG_parsers/dygiepp
 
 def create_prediction_datasets():
     # Iterate over the datasets_and_models and run the command for each one
-    for dygie_data_fpath in glob.glob(f"{dygie_data_dir_path}*"):
+    for dygie_data_fpath in tqdm(glob.glob(f"{dygie_data_dir_path}*")):
 
         # Filenames
         fname = os.path.basename(dygie_data_fpath)

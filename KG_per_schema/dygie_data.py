@@ -5,6 +5,8 @@ import glob
 import os
 from utils import project_path
 import json
+from tqdm import tqdm
+from copy import deepcopy
 
 # Some variables for the operation
 python_kernel = "python3.11"
@@ -32,21 +34,21 @@ dataset_codes = [
 
 def convert_dygie_compatible_datasets():
     # Iterate over the dataset_codes and run the command for each one
-    for sents_fpath in glob.glob(f"{sents_dir_path}*.txt"):
-        for dataset_code in dataset_codes:
-            target_fname = (
-                dataset_code + '_' + os.path.basename(sents_fpath)).replace('.txt', '')
-            target_fpath = dygie_data_dir_path + target_fname
+    # print('Converting datasets to dygie compatible format...')
+    # for sents_fpath in tqdm(glob.glob(f"{sents_dir_path}*.txt")):
+    #     for dataset_code in tqdm(dataset_codes, leave=False):
 
-            print(
-                f"Processing dataset code {dataset_code} for target {target_fname}...")
+    #         target_fname = (
+    #             dataset_code + '_' + os.path.basename(sents_fpath)).replace('.txt', '')
+    #         target_fpath = dygie_data_dir_path + target_fname
 
-            # Call the dygie dataset converter script
-            subprocess.run([python_kernel, dygie_formatter_fpath,
-                            sents_fpath, target_fpath, dataset_code, "--use-scispacy"])
+    #         # Call the dygie dataset converter script
+    #         subprocess.run([python_kernel, dygie_formatter_fpath,
+    #                         sents_fpath, target_fpath, dataset_code, "--use-scispacy"])
 
     # Postprocessing needs to happen since spacy short sentences crash dygie
-    for dygie_data_fpath in glob.glob(f"{dygie_data_dir_path}"):
+    print('Postprocessing dygie compatible datasets...')
+    for dygie_data_fpath in tqdm(glob.glob(f"{dygie_data_dir_path}*")):
         # Filter the sentences that are too short
         with open(dygie_data_fpath, 'r') as f:
             data = json.load(f)
@@ -54,6 +56,27 @@ def convert_dygie_compatible_datasets():
         data['sentences'] = sents
         with open(dygie_data_fpath, 'w') as f:
             json.dump(data, f)  # Overwrite the file
+
+    # We need to take subsets since dygie silently crashes on too large datasets
+    print('Postprocessing dygie compatible datasets...')
+    for dygie_data_fpath in tqdm(glob.glob(f"{dygie_data_dir_path}*")):
+        with open(dygie_data_fpath, 'r') as f:
+            data = json.load(f)
+        n = 0
+        pbar = tqdm(total=len(data['sentences']))
+
+        while n < len(data['sentences']):
+            # Take a subset of 40 sentences
+            subset_data = deepcopy(data)
+            subset = data['sentences'][n:n+40]
+            subset_data['sentences'] = subset
+            with open(dygie_data_fpath + '_' + str(n), 'w') as f:
+                json.dump(subset_data, f)
+            n += 40
+            pbar.update(40)
+        # Remove the old large file
+        os.remove(dygie_data_fpath)
+        pbar.close()
 
 
 if __name__ == '__main__':
