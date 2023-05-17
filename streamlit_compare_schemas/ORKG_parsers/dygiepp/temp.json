@@ -1,174 +1,155 @@
-{'coref': {'loss': 0}, 'relation': {'loss': 0}, 'ner': {'loss': 0}, 'events': {'predictions': [<(12, 'affect', TRIGGER) with confidence 1.0000:
-      (2, 2, ['debate'], TRIGGER, ARG0) with confidence 0.9930>, , <(16, 'prevent', TRIGGER) with confidence 1.0000:
-      (6, 6, ['Vietnam'], TRIGGER, ARG0) with confidence 0.9931;
-      (8, 8, ['Laos'], TRIGGER, ARG0) with confidence 0.9884>, , <(22, 'against', TRIGGER) with confidence 1.0000:
-      (21, 21, ['vaccines'], TRIGGER, ARG0) with confidence 1.0000>
+{'coref': {'loss': 0}, 'relation': {'loss': 0}, 'ner': {'loss': 0}, 'events': {'predictions': [<(29, 'prioritize', TRIGGER) with confidence 0.9968:
+      (26, 26, ['governments'], TRIGGER, ARG0) with confidence 0.9697>
 
-<(33, 'increasing', TRIGGER) with confidence 0.9933:
-      (35, 38, ['death', 'toll', 'of', 'COVID-19'], TRIGGER, ARG1) with confidence 0.9998>, <(19, 'role', TRIGGER) with confidence 0.9988:
-      (22, 24, ['framing', 'of', ' '], TRIGGER, ARG0) with confidence 0.9528;
-      (22, 30, ['framing', 'of', ' ', 'nature', ' ', 'in', 'One', 'Health', 'discourses'], TRIGGER, ARG0) with confidence 0.9970;
-      (24, 24, [' '], TRIGGER, ARG0) with confidence 0.6258>
+<(31, 'shift', TRIGGER) with confidence 0.7746>, <(19, 'strategize', TRIGGER) with confidence 1.0000:
+      (17, 17, ['HLIUs'], TRIGGER, ARG0) with confidence 0.9323;
+      (20, 24, ['methods', 'and', 'models', 'of', 'sustainability'], TRIGGER, ARG1) with confidence 0.9997>, <(7, 'enhance', TRIGGER) with confidence 1.0000:
+      (2, 6, ['higher', 'concentrations', 'of', 'pro-inflammatory', 'cytokines'], TRIGGER, ARG0) with confidence 1.0000;
+      (8, 12, ['intracellular', 'and', 'extracellular', 'bacterial', 'growth'], TRIGGER, ARG1) with confidence 1.0000>, <(9, 'preventing', TRIGGER) with confidence 1.0000:
+      (4, 4, ['glucocorticoids'], TRIGGER, ARG0) with confidence 1.0000;
+      (10, 11, ['immune', 'reprogramming'], TRIGGER, ARG1) with confidence 1.0000;
+      (10, 19, ['immune', 'reprogramming', 'associated', 'to', 'a', 'high', 'production', 'of', 'inflammatory', 'cytokines'], TRIGGER, ARG1) with confidence 0.7669>
 
-<(33, 'barrier', TRIGGER) with confidence 0.9980:
-      (22, 30, ['framing', 'of', ' ', 'nature', ' ', 'in', 'One', 'Health', 'discourses'], TRIGGER, ARG0) with confidence 0.9954>
+<(12, 'associated', TRIGGER) with confidence 0.9422:
+      (10, 11, ['immune', 'reprogramming'], TRIGGER, ARG1) with confidence 0.9908;
+      (25, 26, ['pathogen', 'clearance'], TRIGGER, ARG1) with confidence 0.7018>
 
-<(36, 'facilitator', TRIGGER) with confidence 0.8987:
-      (22, 30, ['framing', 'of', ' ', 'nature', ' ', 'in', 'One', 'Health', 'discourses'], TRIGGER, ARG0) with confidence 0.5381;
-      (38, 38, ['collaboration'], TRIGGER, ARG1) with confidence 0.7990>, , <(21, 'acknowledging', TRIGGER) with confidence 1.0000:
-      (7, 7, ['framing'], TRIGGER, ARG0) with confidence 0.9985;
-      (25, 29, ['diversity', 'of', 'viewpoints', 'and', 'values'], TRIGGER, ARG1) with confidence 0.9998>
+<(28, 'normalization', TRIGGER) with confidence 1.0000:
+      (4, 4, ['glucocorticoids'], TRIGGER, ARG0) with confidence 0.9989;
+      (25, 26, ['pathogen', 'clearance'], TRIGGER, ARG1) with confidence 0.9980;
+      (30, 32, ['respiratory', 'microbiota', 'diversity'], TRIGGER, ARG1) with confidence 0.9957>
 
-<(23, 'explaining', TRIGGER) with confidence 1.0000:
-      (7, 7, ['framing'], TRIGGER, ARG0) with confidence 0.9884;
-      (25, 29, ['diversity', 'of', 'viewpoints', 'and', 'values'], TRIGGER, ARG1) with confidence 0.9998>, , , <(1, 'relationship', TRIGGER) with confidence 1.0000:
-      (3, 3, ['aging'], TRIGGER, ARG0) with confidence 1.0000;
-      (5, 6, ['inflammatory', 'mediators'], TRIGGER, ARG1) with confidence 0.9993;
-      (8, 10, ['response', 'to', 'infection'], TRIGGER, ARG0) with confidence 0.9771;
-      (14, 18, ['progression', 'of', 'chronic', 'inflammatory', 'diseases'], TRIGGER, ARG1) with confidence 0.9997>, <(12, 'alters', TRIGGER) with confidence 1.0000:
-      (14, 20, ['microenvironment', 'of', 'an', 'acute', 'response', 'to', 'infection'], TRIGGER, ARG1) with confidence 0.9999>
+<(34, 'restoration', TRIGGER) with confidence 1.0000:
+      (4, 4, ['glucocorticoids'], TRIGGER, ARG0) with confidence 0.9896;
+      (36, 37, ['mucosal', 'immunity'], TRIGGER, ARG1) with confidence 0.9995>, <(20, 'associated', TRIGGER) with confidence 1.0000:
+      (10, 17, ['chronic', 'inhaled', 'corticosteroids', 'in', 'COPD', 'and', 'asthma', 'patients'], TRIGGER, ARG0) with confidence 0.9837;
+      (22, 24, ['altered', 'respiratory', 'microbiotas'], TRIGGER, ARG1) with confidence 1.0000;
+      (23, 24, ['respiratory', 'microbiotas'], TRIGGER, ARG1) with confidence 0.5320>, <(9, 'contributions', TRIGGER) with confidence 0.9997:
+      (17, 19, ['microbial', 'succession', 'process'], TRIGGER, ARG1) with confidence 0.9955>, <(10, 'influenced', TRIGGER) with confidence 1.0000:
+      (1, 7, ['assembly', 'and', 'composition', 'of', 'the', 'root-associated', 'microbiome'], TRIGGER, ARG1) with confidence 0.9997;
+      (12, 13, ['soil', 'conditions'], TRIGGER, ARG0) with confidence 0.9994>, <(21, 'respond', TRIGGER) with confidence 1.0000:
+      (23, 24, ['soil', 'characteristics'], TRIGGER, ARG0) with confidence 0.9972>, <(15, 'guide', TRIGGER) with confidence 1.0000:
+      (5, 6, ['Posthumanist', 'Knowledge'], TRIGGER, ARG0) with confidence 0.9576;
+      (17, 19, ['conducting', 'materialist', 'cartographies'], TRIGGER, ARG1) with confidence 0.9999;
+      (18, 19, ['materialist', 'cartographies'], TRIGGER, ARG1) with confidence 0.7877>, , , , <(8, 'diagnosis', TRIGGER) with confidence 0.9998:
+      (19, 20, ['histologic', 'examination'], TRIGGER, ARG0) with confidence 0.9976>
 
-<(33, 'results', TRIGGER) with confidence 1.0000:
-      (25, 31, ['accumulation', 'of', 'anergicnonresponse', 'T', 'and', 'B', 'cells'], TRIGGER, ARG0) with confidence 0.9999;
-      (35, 40, ['crossing', 'the', 'threshold', 'of', 'host', 'resistance'], TRIGGER, ARG1) with confidence 0.9989>
+<(18, 'requires', TRIGGER) with confidence 0.6371:
+      (19, 20, ['histologic', 'examination'], TRIGGER, ARG0) with confidence 0.5961>, <(11, 'caused', TRIGGER) with confidence 1.0000:
+      (1, 1, ['malformations'], TRIGGER, ARG1) with confidence 1.0000;
+      (3, 7, ['hereditary', 'in', 'pigs', 'and', 'cats'], TRIGGER, ARG0) with confidence 0.7352>, , <(6, 'served', TRIGGER) with confidence 0.9973:
+      (9, 13, ['monitoring', 'by', 'a', 'multidisciplinary', 'team'], TRIGGER, ARG0) with confidence 0.9498>
 
-<(42, 'resulting', TRIGGER) with confidence 1.0000:
-      (46, 49, ['increase', 'in', 'common', 'infections'], TRIGGER, ARG1) with confidence 0.9885;
-      (51, 53, ['susceptibility', 'to', 'epidemics'], TRIGGER, ARG1) with confidence 0.9943>, <(8, 'activate', TRIGGER) with confidence 0.8555:
-      (3, 4, ['premature', 'apoptosis'], TRIGGER, ARG0) with confidence 0.9975;
-      (10, 11, ['immune', 'response'], TRIGGER, ARG1) with confidence 0.9982>
+<(19, 'ideal', TRIGGER) with confidence 0.9348:
+      (21, 21, ['telehealth'], TRIGGER, ARG1) with confidence 0.9388>, , , <(12, 'associated', TRIGGER) with confidence 1.0000:
+      (6, 7, ['ICPM', 'use'], TRIGGER, ARG0) with confidence 0.9999;
+      (15, 20, ['longer', 'time', 'to', 'initiation', 'of', 'CP'], TRIGGER, ARG1) with confidence 0.9993>
 
-<(20, 'populate', TRIGGER) with confidence 0.9114:
-      (3, 4, ['premature', 'apoptosis'], TRIGGER, ARG0) with confidence 0.7456;
-      (21, 22, ['immune', 'tissues'], TRIGGER, ARG1) with confidence 0.7695>
+<(21, 'leading', TRIGGER) with confidence 1.0000:
+      (6, 7, ['ICPM', 'use'], TRIGGER, ARG0) with confidence 0.6915;
+      (15, 20, ['longer', 'time', 'to', 'initiation', 'of', 'CP'], TRIGGER, ARG0) with confidence 0.9981;
+      (24, 26, ['increase', 'in', 'VTE'], TRIGGER, ARG1) with confidence 0.9998>, , , <(4, 'supporting', TRIGGER) with confidence 1.0000:
+      (5, 7, ['diagnosis', 'and', 'surveillance53'], TRIGGER, ARG1) with confidence 0.9924>
 
-<(27, 'result', TRIGGER) with confidence 1.0000:
-      (3, 4, ['premature', 'apoptosis'], TRIGGER, ARG0) with confidence 0.9996;
-      (24, 25, ['ineffective', 'cells'], TRIGGER, ARG0) with confidence 0.6485;
-      (29, 31, ['impaired', 'host', 'resistance'], TRIGGER, ARG1) with confidence 1.0000>, <(24, 'vulnerable', TRIGGER) with confidence 1.0000:
-      (9, 18, ['regulation', 'of', 'turning', 'on', 'or', 'off', 'of', 'an', 'immune', 'response'], TRIGGER, ARG0) with confidence 0.9309;
-      (29, 29, ['aging'], TRIGGER, ARG0) with confidence 0.6086>, <(16, 'results', TRIGGER) with confidence 1.0000:
-      (19, 22, ['risk', 'for', 'common', 'infections'], TRIGGER, ARG1) with confidence 0.9647;
-      (21, 22, ['common', 'infections'], TRIGGER, ARG1) with confidence 0.9976;
-      (24, 26, ['poor', 'vaccine', 'responses'], TRIGGER, ARG1) with confidence 0.9999>, , <(35, 'involving', TRIGGER) with confidence 1.0000:
-      (29, 34, ['revelations', 'of', 'a', 'major', 'political', 'scandal'], TRIGGER, ARG0) with confidence 0.9922;
-      (37, 39, ['PMs', 'top', 'advisor'], TRIGGER, ARG0) with confidence 0.9995>, , <(11, 'paralyzing', TRIGGER) with confidence 1.0000:
-      (4, 4, ['COVID-19'], TRIGGER, ARG0) with confidence 1.0000;
-      (13, 13, ['lives'], TRIGGER, ARG1) with confidence 0.9943;
-      (17, 20, ['humanity', 'World', 'Health', 'Organization'], TRIGGER, ARG1) with confidence 0.8839>
+<(19, 'track', TRIGGER) with confidence 1.0000:
+      (13, 14, ['genomic', 'epidemiology54'], TRIGGER, ARG0) with confidence 0.9998;
+      (21, 24, ['evolution', 'of', 'a', 'virus'], TRIGGER, ARG1) with confidence 0.9999>, <(7, 'detect', TRIGGER) with confidence 1.0000:
+      (8, 8, ['outbreaks'], TRIGGER, ARG1) with confidence 1.0000>, <(23, 'due', TRIGGER) with confidence 1.0000:
+      (19, 20, ['rapid', 'increase'], TRIGGER, ARG1) with confidence 0.9996;
+      (27, 29, ['Lassa', 'virus', 'variant'], TRIGGER, ARG0) with confidence 0.9633>
 
-<(25, 'devastating', TRIGGER) with confidence 1.0000:
-      (4, 4, ['COVID-19'], TRIGGER, ARG0) with confidence 1.0000;
-      (27, 28, ['tourismhospitality', 'industry'], TRIGGER, ARG1) with confidence 0.9721>, <(8, 'estimated', TRIGGER) with confidence 0.9985>
+<(32, 'attributable', TRIGGER) with confidence 0.9998:
+      (19, 20, ['rapid', 'increase'], TRIGGER, ARG1) with confidence 0.9324;
+      (34, 36, ['sustained', 'human-to-human', 'transmission'], TRIGGER, ARG0) with confidence 0.9990>, <(12, 'employed', TRIGGER) with confidence 1.0000:
+      (11, 11, ['antibiotics'], TRIGGER, ARG0) with confidence 0.9927;
+      (22, 25, ['impatience', 'with', 'clinical', 'progress'], TRIGGER, ARG1) with confidence 0.6401>
 
-<(22, 'deteriorated', TRIGGER) with confidence 1.0000:
-      (23, 30, ['market', 'capital', 'for', 'the', 'air', 'and', 'travel', 'sector'], TRIGGER, ARG1) with confidence 0.9986>, <(14, 'cope', TRIGGER) with confidence 0.9128:
-      (1, 1, ['pandemic'], TRIGGER, ARG0) with confidence 0.6233;
-      (6, 7, ['hospitality', 'industry'], TRIGGER, ARG1) with confidence 0.6854;
-      (29, 30, ['social', 'distancing'], TRIGGER, ARG1) with confidence 0.7088>
+<(20, 'result', TRIGGER) with confidence 1.0000:
+      (11, 11, ['antibiotics'], TRIGGER, ARG1) with confidence 0.8163;
+      (22, 25, ['impatience', 'with', 'clinical', 'progress'], TRIGGER, ARG1) with confidence 0.8322>, <(14, 'efficacious', TRIGGER) with confidence 0.9976:
+      (6, 6, ['antibiotics'], TRIGGER, ARG0) with confidence 0.7080;
+      (8, 8, ['chloramphenicol'], TRIGGER, ARG0) with confidence 0.9815;
+      (18, 19, ['ferret', 'disease'], TRIGGER, ARG1) with confidence 0.9957>
 
-<(23, 'compliance', TRIGGER) with confidence 0.9872:
-      (20, 21, ['enforcedvoluntary', 'quarantine'], TRIGGER, ARG0) with confidence 0.6336;
-      (25, 27, ['strict', 'hygiene', 'protocols'], TRIGGER, ARG0) with confidence 0.7266;
-      (29, 30, ['social', 'distancing'], TRIGGER, ARG0) with confidence 0.5166>, , <(6, 'based', TRIGGER) with confidence 1.0000:
-      (3, 4, ['B-EPIC', 'intervention'], TRIGGER, ARG1) with confidence 0.9768;
-      (9, 11, ['novel', 'theoretical', 'framework'], TRIGGER, ARG0) with confidence 0.9249>, <(27, 'shift', TRIGGER) with confidence 0.8363:
-      (28, 30, ['clinical', 'practice', 'paradigms'], TRIGGER, ARG1) with confidence 0.9460>, <(30, 'due', TRIGGER) with confidence 0.9982:
-      (33, 36, ['longer', 'digital', 'time', 'exposure'], TRIGGER, ARG0) with confidence 0.9961>
+<(24, 'result', TRIGGER) with confidence 1.0000:
+      (21, 22, ['proliferative', 'colitis'], TRIGGER, ARG1) with confidence 0.9996;
+      (26, 27, ['Ileobacter', 'infection'], TRIGGER, ARG0) with confidence 1.0000>, , <(9, 'contribution', TRIGGER) with confidence 1.0000:
+      (13, 14, ['DC', 'function'], TRIGGER, ARG1) with confidence 1.0000>
 
-<(69, 'cause', TRIGGER) with confidence 1.0000:
-      (70, 72, ['higher', 'social', 'jetlag'], TRIGGER, ARG1) with confidence 0.9998>, <(7, 'moderating', TRIGGER) with confidence 0.9471:
-      (0, 0, ['Gender'], TRIGGER, ARG0) with confidence 0.9995;
-      (10, 11, ['social', 'jetlag'], TRIGGER, ARG1) with confidence 0.9997>
+<(20, 'due', TRIGGER) with confidence 1.0000:
+      (13, 14, ['DC', 'function'], TRIGGER, ARG1) with confidence 0.9998>, <(8, 'respond', TRIGGER) with confidence 1.0000:
+      (3, 3, ['pDC'], TRIGGER, ARG0) with confidence 0.9231;
+      (11, 16, ['type', 'I', 'and', 'type', 'III', 'IFNs'], TRIGGER, ARG1) with confidence 0.9929>
 
-<(13, 'influencing', TRIGGER) with confidence 1.0000:
-      (0, 0, ['Gender'], TRIGGER, ARG0) with confidence 0.9998;
-      (10, 11, ['social', 'jetlag'], TRIGGER, ARG1) with confidence 0.7970>, <(7, 'causes', TRIGGER) with confidence 1.0000:
-      (2, 2, ['P.aeruginosa'], TRIGGER, ARG0) with confidence 0.9768;
-      (9, 9, ['exacerbations'], TRIGGER, ARG1) with confidence 1.0000>, <(25, 'associated', TRIGGER) with confidence 1.0000:
-      (21, 23, ['M.catarrhalis', 'asymptomatic', 'colonization'], TRIGGER, ARG0) with confidence 0.9989>, <(9, 'by', TRIGGER) with confidence 0.9998:
-      (10, 10, ['Pseudomonas'], TRIGGER, ARG0) with confidence 0.9995;
-      (12, 12, ['Moraxella'], TRIGGER, ARG0) with confidence 0.8560>
+<(18, 'enhance', TRIGGER) with confidence 0.9999:
+      (3, 3, ['pDC'], TRIGGER, ARG0) with confidence 0.9999;
+      (20, 22, ['upregulation', 'of', 'ISGs'], TRIGGER, ARG1) with confidence 0.9985;
+      (24, 24, ['maturation'], TRIGGER, ARG1) with confidence 0.7795;
+      (27, 29, ['antigen', 'presentation', 'function'], TRIGGER, ARG1) with confidence 0.9026>, <(30, 'improved', TRIGGER) with confidence 0.9572:
+      (15, 15, ['HSCT'], TRIGGER, ARG0) with confidence 0.9772;
+      (33, 35, ['multiple', 'myeloma', 'patients'], TRIGGER, ARG1) with confidence 0.6759>
 
-<(16, 'sensitize', TRIGGER) with confidence 1.0000:
-      (10, 10, ['Pseudomonas'], TRIGGER, ARG0) with confidence 0.9999;
-      (12, 12, ['Moraxella'], TRIGGER, ARG0) with confidence 0.9976;
-      (18, 18, ['lung'], TRIGGER, ARG1) with confidence 0.9999;
-      (23, 24, ['viral', 'infections'], TRIGGER, ARG1) with confidence 0.9950>, <(5, 'requires', TRIGGER) with confidence 1.0000:
-      (1, 3, ['continued', 'super-annual', 'cycle'], TRIGGER, ARG1) with confidence 0.9993;
-      (6, 10, ['seasonally', 'varying', 'forces', 'of', 'infection'], TRIGGER, ARG0) with confidence 0.9901>
+<(37, 'transformed', TRIGGER) with confidence 1.0000:
+      (15, 15, ['HSCT'], TRIGGER, ARG0) with confidence 0.9963;
+      (41, 42, ['chronic', 'disease'], TRIGGER, ARG1) with confidence 0.9974>, , <(3, 'blockade', TRIGGER) with confidence 0.9998:
+      (0, 0, ['Trials'], TRIGGER, ARG0) with confidence 0.9998;
+      (12, 12, ['TNF57'], TRIGGER, ARG0) with confidence 0.4768>, <(4, 'interfering', TRIGGER) with confidence 1.0000:
+      (0, 0, ['Strategies'], TRIGGER, ARG0) with confidence 1.0000;
+      (6, 7, ['cytokine', 'signalling'], TRIGGER, ARG1) with confidence 1.0000>
 
-<(13, 'determines', TRIGGER) with confidence 1.0000:
-      (20, 24, ['evolutionary', 'dynamics', 'of', 'a', 'disease'], TRIGGER, ARG1) with confidence 1.0000>, <(20, 'extract', TRIGGER) with confidence 1.0000:
-      (16, 17, ['quantitative', 'method'], TRIGGER, ARG0) with confidence 0.9814;
-      (22, 22, ['amplitude'], TRIGGER, ARG1) with confidence 1.0000;
-      (25, 27, ['notation', 'of', 'Rt'], TRIGGER, ARG0) with confidence 0.9999>, <(17, 'decreasing', TRIGGER) with confidence 1.0000:
-      (5, 5, ['BPA'], TRIGGER, ARG0) with confidence 0.9974;
-      (18, 20, ['inflammatory', 'cytokines', 'expression'], TRIGGER, ARG1) with confidence 1.0000>, <(11, 'affected', TRIGGER) with confidence 1.0000:
-      (9, 10, ['cell', 'viability'], TRIGGER, ARG1) with confidence 1.0000;
-      (13, 17, ['bisphenols', 'accumulation', 'in', 'F1', 'embryos'], TRIGGER, ARG0) with confidence 1.0000>, <(21, 'for', TRIGGER) with confidence 0.9999:
-      (14, 16, ['flat', 'fee', 'services'], TRIGGER, ARG0) with confidence 0.9995>
+<(11, 'reduce', TRIGGER) with confidence 1.0000:
+      (0, 0, ['Strategies'], TRIGGER, ARG0) with confidence 0.9999;
+      (12, 17, ['hyperinflammation', 'in', 'patients', 'with', 'severe', 'COVID-19'], TRIGGER, ARG1) with confidence 1.0000>, <(20, 'dampen', TRIGGER) with confidence 1.0000:
+      (22, 26, ['occurrence', 'of', 'cytokine', 'release', 'syndromes'], TRIGGER, ARG1) with confidence 1.0000;
+      (24, 26, ['cytokine', 'release', 'syndromes'], TRIGGER, ARG1) with confidence 1.0000>, <(6, 'causes', TRIGGER) with confidence 1.0000:
+      (7, 8, ['economic', 'losses'], TRIGGER, ARG1) with confidence 1.0000>, , , <(16, 'allows', TRIGGER) with confidence 1.0000:
+      (1, 4, ['Buzan', 'and', 'Wvers', 'work'], TRIGGER, ARG0) with confidence 0.6782;
+      (18, 25, ['lower', 'tiers', 'to', 'be', 'subsumed', 'into', 'the', 'process'], TRIGGER, ARG1) with confidence 0.9998>, <(7, 'overcomes', TRIGGER) with confidence 1.0000:
+      (6, 6, ['Vpu'], TRIGGER, ARG0) with confidence 1.0000;
+      (8, 10, ['CAML', 'restriction', 'effect'], TRIGGER, ARG1) with confidence 1.0000>, <(9, 'associated', TRIGGER) with confidence 1.0000:
+      (6, 7, ['Vpu', 'function'], TRIGGER, ARG0) with confidence 1.0000;
+      (11, 12, ['virus', 'release'], TRIGGER, ARG1) with confidence 1.0000>
 
-<(39, 'covers', TRIGGER) with confidence 0.9981:
-      (14, 16, ['flat', 'fee', 'services'], TRIGGER, ARG0) with confidence 0.9832;
-      (40, 40, ['workstation'], TRIGGER, ARG1) with confidence 0.9996;
-      (42, 43, ['exam', 'camera'], TRIGGER, ARG1) with confidence 0.9957>, <(23, 'lowering', TRIGGER) with confidence 1.0000:
-      (18, 20, ['competitive', 'service', 'offerings'], TRIGGER, ARG0) with confidence 0.9991;
-      (24, 25, ['financial', 'barriers'], TRIGGER, ARG1) with confidence 1.0000>
-
-<(27, 'allowing', TRIGGER) with confidence 0.8131>, , <(13, 'threat', TRIGGER) with confidence 0.9969:
-      (1, 2, ['Drainage', 'systems'], TRIGGER, ARG0) with confidence 0.9995;
-      (16, 18, ['community', 'and', 'healthcare'], TRIGGER, ARG1) with confidence 0.9869>
-
-<(19, 'causing', TRIGGER) with confidence 1.0000:
-      (1, 2, ['Drainage', 'systems'], TRIGGER, ARG0) with confidence 0.9999;
-      (20, 20, ['infections'], TRIGGER, ARG1) with confidence 1.0000>
-
-<(30, 'cause', TRIGGER) with confidence 1.0000:
-      (1, 2, ['Drainage', 'systems'], TRIGGER, ARG0) with confidence 0.9143;
-      (31, 33, ['unpredictable', 'clinical', 'manifestations'], TRIGGER, ARG1) with confidence 1.0000>, <(5, 'resulted', TRIGGER) with confidence 1.0000:
-      (2, 2, ['screens'], TRIGGER, ARG1) with confidence 0.6562>, , <(1, 'deal', TRIGGER) with confidence 0.9820:
-      (4, 8, ['high', 'background', 'observed', 'in', 'screens'], TRIGGER, ARG1) with confidence 0.9993>
-
-<(13, 'allow', TRIGGER) with confidence 1.0000:
-      (4, 8, ['high', 'background', 'observed', 'in', 'screens'], TRIGGER, ARG1) with confidence 0.9983;
-      (10, 10, ['methods'], TRIGGER, ARG0) with confidence 0.9293>]}, 'loss': tensor(0.), 'metadata': 0: The ongoing debate is very important because it has the potential to affect certain aspects of the future direction of microbiological research .
-1: Consequently , these days of intense debate may one day be seen as an important historical time in the development of the microbiological sciences .
-2: While Southeast Asian countries such as Vietnam , Laos , and Cambodia took serious measures to prevent the SARS-CoV-2 virus from spreading , they have never implemented the extreme quarantines characteristic of China and Italy .
-3: However , these countries have had consistently low incidence and mortality rates during the second wave Figure 3 , which is puzzling and requires further explanation .
-4: Understanding the success of these Southeast Asian countries is important , because the testing and especially production and implementation of effective vaccines against the SARS-CoV-2 virus may take more time than expected , increasing the death toll of COVID-19 .
-5: Based on complementary perspectives on health and knowledge , this overview provides an inter- and trans-disciplinary analysis of the role of the framing of   nature   in One Health discourses as a barrier or a facilitator to collaboration , as revealed by the scientific literature .
-6: We find that the lack of reflection by scientists about the framing under which they operate appears as a major factor of misunderstanding between disciplines , and a barrier for inter- and trans-disciplinary solutions to improve management of health risks and benefits .
-7: Hence , to build such solutions , framing will have to be a conscious and repeated step in the process , acknowledging and explaining the diversity of viewpoints and values .
-8: The size of the sample was small and , larger studies are necessary to validate the findings .
-9: Also , follow-up of patients after discharge could not be done .
-10: The relationship between aging , inflammatory mediators , response to infection , and the progression of chronic inflammatory diseases is important but complicated .
-11: There likely is a final common pathway interaction of these factors that alters the microenvironment of an acute response to infection that , together with accumulation of anergicnonresponse T and B cells , results in crossing the threshold of host resistance , resulting in the marked increase in common infections , susceptibility to epidemics , and the poor vaccine response in chronically ill , older adults .
-12: Hence , both premature apoptosis failing to sufficiently activate an immune response or inability of immune cells to undergo apoptosis populate immune tissues with ineffective cells can result in impaired host resistance 7 .
-13: The interface between innate and acquired immunity , that regulation of turning on or off of an immune response occurs , may be particularly vulnerable to the effects of aging and the interaction of age- or comorbidity-related inflammation .
-14: It seems this critical interface is where the major age-associated impairment in host resistance occurs and results in increased risk for common infections and poor vaccine responses 7 , 8 , 9 , 10 , 11 , 12 .
-15: Contributions All the studies on deep learning-based COVID-19 classification have so far utilized CNNs , which although being powerful image processing techniques , are prone to an important drawback . They are unable to capture spatial relations between image instances .
-16: It will be shown how the governments ability to successfully narrativize this period has been thrown into jeopardy by contradictions in government actors own public performances , typified by revelations of a major political scandal involving the PMs top advisor .
-17: The effect of these failures is evidenced by a stark decline in government legitimacy during this period , and widespread confusion over government rules and guidance around COVID-19 .
-18: Since January 2020 , COVID-19 has swept through the world , paralyzing the lives of much of humanity World Health Organization , 2020 , while devastating the tourismhospitality industry like never before Gssling et al. , 2020 .
-19: McKinsey and Company 2020 , for example , estimated a sharp decline in travel demand for months to come and hence , deteriorated market capital for the air and travel sector as well as other related businesses e.g. , accommodations .
-20: The pandemic has certainly changed the hospitality industry as practitioners have been trying to cope with the new normal under enforcedvoluntary quarantine , compliance with strict hygiene protocols , social distancing , and other measures Baum and Hai Nguyen Thi , 2020 .
-21: This study has several innovative features .
-22: First , the B-EPIC intervention is based on a novel theoretical framework developed by the Principal Investigators based on previous qualitative work among pregnant and postpartum tobacco and opioid dependent women , including those receiving buprenorphine treatment .
-23: Second , this feasibility study has the potential to lead to a larger , multi-site trial intervention , which if successful , would have the capacity to shift clinical practice paradigms to give specific emphasis on tobacco use rather than letting it fall into general group discussions on illicit substance use and psychosocial issues .
-24: Delayed MST and higher SJL in females compared to males corroborates with our latest report suggesting higher susceptibility for alteration in the sleep-wake pattern during this lockdown which might be due to their longer digital time exposure during the lockdown.4 Besides , earlier reports have also purported compromised sleep health in females on account of domesticcultural or hormonal cycle.13,16,17 More difference in mid-sleep before and during lockdown seems to cause higher social jetlag in females compared to male counterparts in our survey .
-25: Gender is known as one of the moderating factors for social jetlag through influencing sleep quality.18
-26: Interestingly , P.aeruginosa and M.cattharalis are prominent causes of exacerbations 6 , but their role in stable disease is less clear 49 .
-27: It was previously shown that chronic colonization with P. aeruginosa occurs more frequently in more severe COPD patients 50 and that M.catarrhalis asymptomatic colonization was associated with a greater frequency of a sputum IgA response than exacerbation 51 .
-28: Our results suggest that dysbiotic burden at stable state by Pseudomonas , Moraxella and others might sensitize the lung to further exacerbations and viral infections .
-29: A continued super-annual cycle mathematically requires seasonally varying forces of infection , which determines the season-specific threshold condition 64 and evolutionary dynamics of a disease 65 , 66 .
-30: To the best of our knowledge , the present study is the first to suggest a quantitative method to reasonably extract the amplitude using the notation of Rt and extending the previous efforts of Stallybrass 53 .
-31: In the present study , BPA and its analogs accumulate slightly in F1 embryos through parent transfer decreasing inflammatory cytokines expression .
-32: However , further study is needed to reveal the cell viability affected by bisphenols accumulation in F1 embryos .
-33: To curb the weight of initial start-up costs , some companies have begun offering flat fee services starting anywhere from 49 for a simple single-provider HIPAA compliant web application31 to more than 800 per month flat fee , which covers workstation , exam camera , and access to the integrated telehealth software without additional per provider costs 30 .
-34: As demand for long-term telehealth platforms continue to expand in the post-pandemic era , we expect to see competitive service offerings aimed at lowering financial barriers , allowing a more ubiquitous adoption of health technology .
-35: However , in general these infections probably go unnoticed .
-36: CONCLUSION Drainage systems and its maintenance , if neglected , could pose a threat in both community and healthcare causing infections as well as emergence of multi-resistant bacteria that could cause unpredictable clinical manifestations .
-37: In the screens , this resulted in a high background of drug-resistant colonies , independent of glycoprotein-mediated cell entry .
-38: Thus , unless the entry factor cDNA was highly represented in the library , a single round of transductionchallenge would not suffice .
-39: To deal with the high background observed in screens , methods that would allow multiple rounds of selection and enrichment have been developed .}
+<(27, 'required', TRIGGER) with confidence 1.0000:
+      (6, 7, ['Vpu', 'function'], TRIGGER, ARG0) with confidence 0.9946;
+      (19, 25, ['ion', 'channel', 'activity', 'of', 'the', 'transmembrane', 'domain'], TRIGGER, ARG0) with confidence 1.0000;
+      (30, 31, ['viral', 'release'], TRIGGER, ARG1) with confidence 1.0000>]}, 'loss': tensor(0.), 'metadata': 0: However , without the impending threat of EVD or another HID on the immediate horizon , public attention on HID preparedness tends to waver , and governments tend to prioritize and shift funding elsewhere .
+1: Additional external funding sources remain generally uncertain for US HLIUs not designated as RESPTCs therefore , these HLIUs must strategize methods and models of sustainability if they are to maintain capabilities and readiness .
+2: Conversely , higher concentrations of pro-inflammatory cytokines enhance intracellular and extracellular bacterial growth in a dose-dependent manner 66 .
+3: Within this context , glucocorticoids can be beneficial in preventing immune reprogramming associated to a high production of inflammatory cytokines , as well as in pathogen clearance , normalization of respiratory microbiota diversity and restoration of mucosal immunity 67 .
+4: However , further research is needed on this topic since chronic inhaled corticosteroids in COPD and asthma patients have been associated with altered respiratory microbiotas 68 .
+5: Therefore , it is difficult to determine the relative contributions made by individual factors to the overall microbial succession process Jiao et al. 2017 .
+6: The assembly and composition of the root-associated microbiome could be influenced by soil conditions such as the pH , nitrogen and phosphorus contents Edwards et al. 2015 Xiao et al. 2017 .
+7: Therefore , it is desirable to obtain a predictive understanding of how root-associated bacterial communities in licorice plants of different ages respond to soil characteristics .
+8: Although the main purpose of Posthumanist Knowledge is not necessarily to provide a step-by-step how-to guide on conducting materialist cartographies , Braidotti provides some examples of studies that qualify as posthumanist such as Gabrys 2011 study of digital rubbish and Parikkas 2015 work in geological materialism .
+9: Yet it remains unclear what such a cartography would look like and how it would be different from other research in critical studies .
+10: As with all disruptive paradigms , the learning curve can be steep for healthcare students and faculty who embrace the flipped model .
+11: It is not uncommon to encounter real and lasting challenges with regards to the use and management of technology Moraros , Islam , Yu , Banow ,   Schindelka , 2015 .
+12: Although the sac is readily apparent grossly , diagnosis of the presence or absence of brain tissue typically requires histologic examination .
+13: These malformations are hereditary in pigs and cats and are also caused by griseofulvin treatment in pregnant cats during the first week of gestation .
+14: They are uncommon and sporadic in other domestic species .
+15: CF is a chronic condition best served by regular monitoring by a multidisciplinary team much of this care is ideal for telehealth and there have already been positive experiences reported 6,7,8 .
+16: In Italy , a few pilot programs have been implemented 9,10 , but telemedicine is far from routine use and there are hurdles to its practice in todays critical context .
+17: Patients and families must have access to the internet .
+18: In a severe TBI population , ICPM use was found to be associated with a longer time to initiation of CP leading to an increase in VTE .
+19: In addition , there was a nearly two-fold increased associated risk of VTE even when controlling for known VTE risk factors .
+20: Given the lack of clear benefit for ICPMs , physicians should weight this risk especially if they are considering holding CP in association with the use of these devices .
+21: As well as potentially supporting diagnosis and surveillance53 , the fast-developing field of genomic epidemiology54 can yield information to track the evolution of a virus such as Ebola during an epidemic55,56 .
+22: There will be times when it can detect outbreaks better than traditional epidemiology , illustrating the need to have these tools available in the same toolbox .
+23: During the large Lassa fever outbreak in Nigeria in 2018 , real-time genomic sequencing provided clear evidence that the rapid increase was not due to a single Lassa virus variant , nor attributable to sustained human-to-human transmission .
+24: Over the years , the author has seen a number of antibiotics employed as broad-spectrum antibiotics , often as a result of impatience with clinical progress or a lack of proper diagnostic testing .
+25: One of the most commonly misused antibiotics is chloramphenicol , a drug that is efficacious in only one ferret disease , proliferative colitis the result of Ileobacter infection .
+26: A well-stocked pharmacy is no substitute for knowledge of ferret diseases or the judicious use of culture and sensitivity .
+27: A possible explanation of the mixed reports regarding the contribution of IFN to DC function is that this could be due to differential responsiveness of various DC subsets to IFN andor type I IFN .
+28: For example , pDC have been described to respond to both type I and type III IFNs to enhance their upregulation of ISGs , maturation , and antigen presentation function .
+29: In recent years , however , the advent of new treatment modalities , such as HSCT and the novel antimyeloma agents , bortezomib , thalidomide , and lenalidomide , has improved outcomes for multiple myeloma patients and transformed it into a chronic disease .
+30: The resulting cumulative immunosuppression has increased the risk of infection and expanded the spectrum of potential pathogens in this patient population to include infections such as C. difficile , CMV , and opportunistic molds 220 .
+31: Trials examining the blockade of additional myeloid-derived inflammatory cytokines , such as TNF57 and granulocytemacrophage colony-stimulating factor GMCSF NCT04341116 , have also been considered andor initiated .
+32: Strategies aimed at broadly interfering with cytokine signalling could also significantly reduce hyperinflammation in patients with severe COVID-19 , and several trials testing the use of JAK inhibitors are ongoing .
+33: Alternatively , strategies upstream of the production of individual cytokines could represent a broader and possibly more effective way to dampen the occurrence of cytokine release syndromes .
+34: It has been estimated that it causes economic losses in the United States alone of about US664 million per year or up to US156 per litter .
+35: It has been especially devastating in China and Southeast Asia .
+36: Moreover , the challenge of defining who the audience is in an act of macrosecuritization remains problematic .
+37: While Buzan and Wvers work would suggest that states are the audience , the theory also allows for lower tiers to be subsumed into the process .
+38: Currently , the manner in which Vpu overcomes CAML restriction effect is not clear .
+39: Although it was proved that the Vpu function is associated with virus release , the question of whether the ion channel activity of the transmembrane domain is required for the viral release is still debated .}

@@ -9,10 +9,60 @@ from copy import deepcopy
 from typing import List
 import pickle
 from collections import defaultdict
+from streamlit_agraph import Node, Edge, Config
 
 # Some variables for the operation
 dygie_prediction_dir_path = project_path + '/KG_per_schema/data/predictions/'
 group_info_fpath = project_path + '/KG_per_schema/data/group_info/group_info.pkl'
+
+
+def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=None):
+    '''Wrapper around the load_data method. Builds a graph from the data which can be used in streamlit. The nodes and edges are used to build the graph with: agraph(nodes=nodes, edges=edges, config=config) Grouping makes no difference for building the graph.
+
+    Parameters
+    ------------
+        schema: str
+            Which schema to use. One of: [scierc, None (= mechanic coarse), genia, covid-event (= mechanic granular), ace05, ace-event]
+        mode: str, Optional
+            Whether to use sentences that are a research challenge or direction or are both. One of: [AND, OR]. Default: AND
+        context: bool, Optional
+            Whether to include context sentences or not. Default: False
+        index: int, Optional
+            Whether to use a specific index file. If None then all data conforming to the request params is used. If given an index only a single datafile containing the request params and this specific index is used. Which might be handy for taking small samples. Default: None
+        grouped: bool, Optional
+            Whether to group the data by the 'group info' group_info.pkl file. The groups result from what sentence where grouped together in a context. Only relevant when using context = true. Default: True
+
+    Return
+    -----------
+        nodes, edges: list, list
+            Returns a list of nodes, a list of edges and a config object.'''
+
+    sents, corefs, rels, ents = load_data(
+        schema, mode, context, index, grouped=False)
+
+    nodes = []
+    edges = []
+    ids = set()
+    for ent_sent in ents:
+        for item in ent_sent:
+            if isinstance(item, tuple):
+                if not item[0] in ids:
+                    nodes.append(Node(id=item[0],
+                                      label=item[0] + ' (' + item[1] + ')',
+                                      size=25,
+                                      shape="circularImage",
+                                      image="http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_spiderman.png"
+                                      ))
+                ids.add(item[0])
+
+    edges.append(Edge(source="Captain_Marvel",
+                      label="friend_of",
+                      target="Spiderman",
+                      # **kwargs
+                      )
+                 )
+
+    return nodes, edges
 
 
 def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None, grouped=True):
@@ -82,7 +132,6 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None,
         if 'sent_text' in group_info:
             group = group_info[sent_text]
             found_groups += 1.0
-        print(f'Found groups: {found_groups/total_groups}')
         groups[group].append((sent, ent, rel))
 
     # Requires python>=3.7
