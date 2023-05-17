@@ -10,6 +10,6 @@ Deeper folders might have their own dedicated README's.
 
 [The Exploration folder](exploration/) contains quick scripts exploring sizes, schema's etcetera of datasets.
 
-[The Streamlit Schema Comparison folder](streamlit_compare_schemas/) Contains all the code for the streamlit app comparing multiple schema's, such as DSouza's title parser, Dygie SciErc, Dygie Mechanic, Manual parsing schema's and quite some others for Named Entity Recognition (NER) and Relation Extraction (RE).
-
 [The KG per schema folder](KG_per_schema/) Compares the KGs generated from different schema's. This also encompasses (but is more then) the schema comparison work form the schema comprison folder.
+
+[The Streamlit Schema Comparison folder](old/streamlit_compare_schemas/) Old version: Contains all the code for the streamlit app comparing multiple schema's, such as DSouza's title parser, Dygie SciErc, Dygie Mechanic, Manual parsing schema's and quite some others for Named Entity Recognition (NER) and Relation Extraction (RE).
