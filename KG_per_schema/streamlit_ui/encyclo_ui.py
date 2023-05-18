@@ -57,6 +57,9 @@ def build_encyclo_data(schema, mode, use_context):
             if isinstance(part, tuple):
                 rels.append((part[0], part[1], 'is a'))
 
+    # Only take unique relations
+    rels = list(set(rels))
+
     # Create a dict with rel name: rel
     rels_dict = defaultdict(list)
     for rel in rels:
@@ -75,6 +78,10 @@ def build_encyclo_data(schema, mode, use_context):
 
     # Create a dict with ent name: relations with this ent
     ents = {ent: [rel for rel in rels if ent in rel] for ent in ents}
+
+    # Sort ents by number of relations
+    ents = dict(
+        sorted(ents.items(), key=lambda item: len(item[1]), reverse=True))
 
     return ents, rels, sents_for_ents, rels_dict
 
@@ -129,7 +136,7 @@ def viz_current_entity(_set_cur, rels, sents_for_ents):
         rel for rel in rels if st.session_state['current_ent'] in rel]
 
     st.caption('Relations with this entity')
-    for rel in rels_:
+    for rel in set(rels_):
         col1, col2, col3 = st.columns(3)
         col1.button(label=rel[0], key=str(
                     uuid.uuid4()), on_click=_set_cur, args=(rel[0],))
@@ -142,7 +149,7 @@ def viz_current_entity(_set_cur, rels, sents_for_ents):
     st.caption('Other entities in this sentence')
     temp = [part[0]
             for s in sents_for_ents[st.session_state['current_ent']] for part in s if isinstance(part, tuple)]
-    temp = {ent: [rel for rel in rels if ent in rel]
+    temp = {ent: set([rel for rel in rels if ent in rel])
             for ent in temp}
 
     for ent, val in temp.items():

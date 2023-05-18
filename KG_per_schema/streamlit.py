@@ -11,8 +11,9 @@ modes = ['AND', 'OR']
 visualizations = ['sentences', 'graph', 'graph stats', 'encyclopedic explorer']
 
 # Default interface options
-st.header('NER & RE Parsing Results')
+st.header('KG Schema Explorer')
 
+st.markdown('NOTE: To get the best performance when exporing schemas use the "AND" mode and disable using the context. When you want the most complete interconnecte graph use the "OR" mode and enable using the context. Results are cached so the second time loading the results for a particular combination of parameters should be magnitudes faster.')
 st.markdown(
     'The analysis of these results can be found in the [research notes](https://docs.google.com/document/d/1i5xHfUvWKcGeX7D1r3Eb1IPm4Bg83-Y0/edit#bookmark=id.jb6w6xm4vqf2).')
 
