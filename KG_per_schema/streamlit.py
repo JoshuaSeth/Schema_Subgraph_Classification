@@ -146,13 +146,16 @@ if schema != None and mode != None:
                 st.subheader(st.session_state['current_ent'])
 
                 # Viz the sentence involving this one
+                st.caption('Sentences with this entity')
                 for s in sents_for_ents[st.session_state['current_ent']]:
                     annotated_text(s)
 
+                st.divider()
                 # Get all relations that involve the current entity
                 rels_ = [
                     rel for rel in rels if st.session_state['current_ent'] in rel]
 
+                st.caption('Relations with this entity')
                 for rel in rels_:
                     col1, col2, col3 = st.columns(3)
                     col1.button(label=rel[0], key=str(
@@ -161,6 +164,17 @@ if schema != None and mode != None:
                         uuid.uuid4()), on_click=set_cur, args=(None, rel[2]))
                     col3.button(label=rel[1], key=str(
                         uuid.uuid4()), on_click=set_cur, args=(rel[1],))
+
+                st.divider()
+                st.caption('Other entities in this sentence')
+                temp = [part[0]
+                        for s in sents_for_ents[st.session_state['current_ent']] for part in s if isinstance(part, tuple)]
+                temp = {ent: [rel for rel in rels if ent in rel]
+                        for ent in temp}
+
+                for ent, val in temp.items():
+                    st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
+                              on_click=set_cur, args=(ent,))
 
         # Relations tab
         if cur_selection == 'relations':

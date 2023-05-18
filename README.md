@@ -2,7 +2,7 @@ Repository for the VU Thesis Triple Extraction from Future Research Sentences.
 
 ## Resources
 Research Notes: https://docs.google.com/document/d/1i5xHfUvWKcGeX7D1r3Eb1IPm4Bg83-Y0/edit#heading=h.ia8q0laqhx6c
-Streamlit Schema Comparison App: [under construction]
+Streamlit Schema Comparison App: https://joshuaseth-vuthesis-lm-triple-ext-kg-per-schemastreamlit-h78xw9.streamlit.app/
 
 ## Folders
 
