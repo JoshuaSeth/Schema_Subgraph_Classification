@@ -1,155 +1,40 @@
-{'coref': {'loss': 0}, 'relation': {'loss': 0}, 'ner': {'loss': 0}, 'events': {'predictions': [<(29, 'prioritize', TRIGGER) with confidence 0.9968:
-      (26, 26, ['governments'], TRIGGER, ARG0) with confidence 0.9697>
-
-<(31, 'shift', TRIGGER) with confidence 0.7746>, <(19, 'strategize', TRIGGER) with confidence 1.0000:
-      (17, 17, ['HLIUs'], TRIGGER, ARG0) with confidence 0.9323;
-      (20, 24, ['methods', 'and', 'models', 'of', 'sustainability'], TRIGGER, ARG1) with confidence 0.9997>, <(7, 'enhance', TRIGGER) with confidence 1.0000:
-      (2, 6, ['higher', 'concentrations', 'of', 'pro-inflammatory', 'cytokines'], TRIGGER, ARG0) with confidence 1.0000;
-      (8, 12, ['intracellular', 'and', 'extracellular', 'bacterial', 'growth'], TRIGGER, ARG1) with confidence 1.0000>, <(9, 'preventing', TRIGGER) with confidence 1.0000:
-      (4, 4, ['glucocorticoids'], TRIGGER, ARG0) with confidence 1.0000;
-      (10, 11, ['immune', 'reprogramming'], TRIGGER, ARG1) with confidence 1.0000;
-      (10, 19, ['immune', 'reprogramming', 'associated', 'to', 'a', 'high', 'production', 'of', 'inflammatory', 'cytokines'], TRIGGER, ARG1) with confidence 0.7669>
-
-<(12, 'associated', TRIGGER) with confidence 0.9422:
-      (10, 11, ['immune', 'reprogramming'], TRIGGER, ARG1) with confidence 0.9908;
-      (25, 26, ['pathogen', 'clearance'], TRIGGER, ARG1) with confidence 0.7018>
-
-<(28, 'normalization', TRIGGER) with confidence 1.0000:
-      (4, 4, ['glucocorticoids'], TRIGGER, ARG0) with confidence 0.9989;
-      (25, 26, ['pathogen', 'clearance'], TRIGGER, ARG1) with confidence 0.9980;
-      (30, 32, ['respiratory', 'microbiota', 'diversity'], TRIGGER, ARG1) with confidence 0.9957>
-
-<(34, 'restoration', TRIGGER) with confidence 1.0000:
-      (4, 4, ['glucocorticoids'], TRIGGER, ARG0) with confidence 0.9896;
-      (36, 37, ['mucosal', 'immunity'], TRIGGER, ARG1) with confidence 0.9995>, <(20, 'associated', TRIGGER) with confidence 1.0000:
-      (10, 17, ['chronic', 'inhaled', 'corticosteroids', 'in', 'COPD', 'and', 'asthma', 'patients'], TRIGGER, ARG0) with confidence 0.9837;
-      (22, 24, ['altered', 'respiratory', 'microbiotas'], TRIGGER, ARG1) with confidence 1.0000;
-      (23, 24, ['respiratory', 'microbiotas'], TRIGGER, ARG1) with confidence 0.5320>, <(9, 'contributions', TRIGGER) with confidence 0.9997:
-      (17, 19, ['microbial', 'succession', 'process'], TRIGGER, ARG1) with confidence 0.9955>, <(10, 'influenced', TRIGGER) with confidence 1.0000:
-      (1, 7, ['assembly', 'and', 'composition', 'of', 'the', 'root-associated', 'microbiome'], TRIGGER, ARG1) with confidence 0.9997;
-      (12, 13, ['soil', 'conditions'], TRIGGER, ARG0) with confidence 0.9994>, <(21, 'respond', TRIGGER) with confidence 1.0000:
-      (23, 24, ['soil', 'characteristics'], TRIGGER, ARG0) with confidence 0.9972>, <(15, 'guide', TRIGGER) with confidence 1.0000:
-      (5, 6, ['Posthumanist', 'Knowledge'], TRIGGER, ARG0) with confidence 0.9576;
-      (17, 19, ['conducting', 'materialist', 'cartographies'], TRIGGER, ARG1) with confidence 0.9999;
-      (18, 19, ['materialist', 'cartographies'], TRIGGER, ARG1) with confidence 0.7877>, , , , <(8, 'diagnosis', TRIGGER) with confidence 0.9998:
-      (19, 20, ['histologic', 'examination'], TRIGGER, ARG0) with confidence 0.9976>
-
-<(18, 'requires', TRIGGER) with confidence 0.6371:
-      (19, 20, ['histologic', 'examination'], TRIGGER, ARG0) with confidence 0.5961>, <(11, 'caused', TRIGGER) with confidence 1.0000:
-      (1, 1, ['malformations'], TRIGGER, ARG1) with confidence 1.0000;
-      (3, 7, ['hereditary', 'in', 'pigs', 'and', 'cats'], TRIGGER, ARG0) with confidence 0.7352>, , <(6, 'served', TRIGGER) with confidence 0.9973:
-      (9, 13, ['monitoring', 'by', 'a', 'multidisciplinary', 'team'], TRIGGER, ARG0) with confidence 0.9498>
-
-<(19, 'ideal', TRIGGER) with confidence 0.9348:
-      (21, 21, ['telehealth'], TRIGGER, ARG1) with confidence 0.9388>, , , <(12, 'associated', TRIGGER) with confidence 1.0000:
-      (6, 7, ['ICPM', 'use'], TRIGGER, ARG0) with confidence 0.9999;
-      (15, 20, ['longer', 'time', 'to', 'initiation', 'of', 'CP'], TRIGGER, ARG1) with confidence 0.9993>
-
-<(21, 'leading', TRIGGER) with confidence 1.0000:
-      (6, 7, ['ICPM', 'use'], TRIGGER, ARG0) with confidence 0.6915;
-      (15, 20, ['longer', 'time', 'to', 'initiation', 'of', 'CP'], TRIGGER, ARG0) with confidence 0.9981;
-      (24, 26, ['increase', 'in', 'VTE'], TRIGGER, ARG1) with confidence 0.9998>, , , <(4, 'supporting', TRIGGER) with confidence 1.0000:
-      (5, 7, ['diagnosis', 'and', 'surveillance53'], TRIGGER, ARG1) with confidence 0.9924>
-
-<(19, 'track', TRIGGER) with confidence 1.0000:
-      (13, 14, ['genomic', 'epidemiology54'], TRIGGER, ARG0) with confidence 0.9998;
-      (21, 24, ['evolution', 'of', 'a', 'virus'], TRIGGER, ARG1) with confidence 0.9999>, <(7, 'detect', TRIGGER) with confidence 1.0000:
-      (8, 8, ['outbreaks'], TRIGGER, ARG1) with confidence 1.0000>, <(23, 'due', TRIGGER) with confidence 1.0000:
-      (19, 20, ['rapid', 'increase'], TRIGGER, ARG1) with confidence 0.9996;
-      (27, 29, ['Lassa', 'virus', 'variant'], TRIGGER, ARG0) with confidence 0.9633>
-
-<(32, 'attributable', TRIGGER) with confidence 0.9998:
-      (19, 20, ['rapid', 'increase'], TRIGGER, ARG1) with confidence 0.9324;
-      (34, 36, ['sustained', 'human-to-human', 'transmission'], TRIGGER, ARG0) with confidence 0.9990>, <(12, 'employed', TRIGGER) with confidence 1.0000:
-      (11, 11, ['antibiotics'], TRIGGER, ARG0) with confidence 0.9927;
-      (22, 25, ['impatience', 'with', 'clinical', 'progress'], TRIGGER, ARG1) with confidence 0.6401>
-
-<(20, 'result', TRIGGER) with confidence 1.0000:
-      (11, 11, ['antibiotics'], TRIGGER, ARG1) with confidence 0.8163;
-      (22, 25, ['impatience', 'with', 'clinical', 'progress'], TRIGGER, ARG1) with confidence 0.8322>, <(14, 'efficacious', TRIGGER) with confidence 0.9976:
-      (6, 6, ['antibiotics'], TRIGGER, ARG0) with confidence 0.7080;
-      (8, 8, ['chloramphenicol'], TRIGGER, ARG0) with confidence 0.9815;
-      (18, 19, ['ferret', 'disease'], TRIGGER, ARG1) with confidence 0.9957>
-
-<(24, 'result', TRIGGER) with confidence 1.0000:
-      (21, 22, ['proliferative', 'colitis'], TRIGGER, ARG1) with confidence 0.9996;
-      (26, 27, ['Ileobacter', 'infection'], TRIGGER, ARG0) with confidence 1.0000>, , <(9, 'contribution', TRIGGER) with confidence 1.0000:
-      (13, 14, ['DC', 'function'], TRIGGER, ARG1) with confidence 1.0000>
-
-<(20, 'due', TRIGGER) with confidence 1.0000:
-      (13, 14, ['DC', 'function'], TRIGGER, ARG1) with confidence 0.9998>, <(8, 'respond', TRIGGER) with confidence 1.0000:
-      (3, 3, ['pDC'], TRIGGER, ARG0) with confidence 0.9231;
-      (11, 16, ['type', 'I', 'and', 'type', 'III', 'IFNs'], TRIGGER, ARG1) with confidence 0.9929>
-
-<(18, 'enhance', TRIGGER) with confidence 0.9999:
-      (3, 3, ['pDC'], TRIGGER, ARG0) with confidence 0.9999;
-      (20, 22, ['upregulation', 'of', 'ISGs'], TRIGGER, ARG1) with confidence 0.9985;
-      (24, 24, ['maturation'], TRIGGER, ARG1) with confidence 0.7795;
-      (27, 29, ['antigen', 'presentation', 'function'], TRIGGER, ARG1) with confidence 0.9026>, <(30, 'improved', TRIGGER) with confidence 0.9572:
-      (15, 15, ['HSCT'], TRIGGER, ARG0) with confidence 0.9772;
-      (33, 35, ['multiple', 'myeloma', 'patients'], TRIGGER, ARG1) with confidence 0.6759>
-
-<(37, 'transformed', TRIGGER) with confidence 1.0000:
-      (15, 15, ['HSCT'], TRIGGER, ARG0) with confidence 0.9963;
-      (41, 42, ['chronic', 'disease'], TRIGGER, ARG1) with confidence 0.9974>, , <(3, 'blockade', TRIGGER) with confidence 0.9998:
-      (0, 0, ['Trials'], TRIGGER, ARG0) with confidence 0.9998;
-      (12, 12, ['TNF57'], TRIGGER, ARG0) with confidence 0.4768>, <(4, 'interfering', TRIGGER) with confidence 1.0000:
-      (0, 0, ['Strategies'], TRIGGER, ARG0) with confidence 1.0000;
-      (6, 7, ['cytokine', 'signalling'], TRIGGER, ARG1) with confidence 1.0000>
-
-<(11, 'reduce', TRIGGER) with confidence 1.0000:
-      (0, 0, ['Strategies'], TRIGGER, ARG0) with confidence 0.9999;
-      (12, 17, ['hyperinflammation', 'in', 'patients', 'with', 'severe', 'COVID-19'], TRIGGER, ARG1) with confidence 1.0000>, <(20, 'dampen', TRIGGER) with confidence 1.0000:
-      (22, 26, ['occurrence', 'of', 'cytokine', 'release', 'syndromes'], TRIGGER, ARG1) with confidence 1.0000;
-      (24, 26, ['cytokine', 'release', 'syndromes'], TRIGGER, ARG1) with confidence 1.0000>, <(6, 'causes', TRIGGER) with confidence 1.0000:
-      (7, 8, ['economic', 'losses'], TRIGGER, ARG1) with confidence 1.0000>, , , <(16, 'allows', TRIGGER) with confidence 1.0000:
-      (1, 4, ['Buzan', 'and', 'Wvers', 'work'], TRIGGER, ARG0) with confidence 0.6782;
-      (18, 25, ['lower', 'tiers', 'to', 'be', 'subsumed', 'into', 'the', 'process'], TRIGGER, ARG1) with confidence 0.9998>, <(7, 'overcomes', TRIGGER) with confidence 1.0000:
-      (6, 6, ['Vpu'], TRIGGER, ARG0) with confidence 1.0000;
-      (8, 10, ['CAML', 'restriction', 'effect'], TRIGGER, ARG1) with confidence 1.0000>, <(9, 'associated', TRIGGER) with confidence 1.0000:
-      (6, 7, ['Vpu', 'function'], TRIGGER, ARG0) with confidence 1.0000;
-      (11, 12, ['virus', 'release'], TRIGGER, ARG1) with confidence 1.0000>
-
-<(27, 'required', TRIGGER) with confidence 1.0000:
-      (6, 7, ['Vpu', 'function'], TRIGGER, ARG0) with confidence 0.9946;
-      (19, 25, ['ion', 'channel', 'activity', 'of', 'the', 'transmembrane', 'domain'], TRIGGER, ARG0) with confidence 1.0000;
-      (30, 31, ['viral', 'release'], TRIGGER, ARG1) with confidence 1.0000>]}, 'loss': tensor(0.), 'metadata': 0: However , without the impending threat of EVD or another HID on the immediate horizon , public attention on HID preparedness tends to waver , and governments tend to prioritize and shift funding elsewhere .
-1: Additional external funding sources remain generally uncertain for US HLIUs not designated as RESPTCs therefore , these HLIUs must strategize methods and models of sustainability if they are to maintain capabilities and readiness .
-2: Conversely , higher concentrations of pro-inflammatory cytokines enhance intracellular and extracellular bacterial growth in a dose-dependent manner 66 .
-3: Within this context , glucocorticoids can be beneficial in preventing immune reprogramming associated to a high production of inflammatory cytokines , as well as in pathogen clearance , normalization of respiratory microbiota diversity and restoration of mucosal immunity 67 .
-4: However , further research is needed on this topic since chronic inhaled corticosteroids in COPD and asthma patients have been associated with altered respiratory microbiotas 68 .
-5: Therefore , it is difficult to determine the relative contributions made by individual factors to the overall microbial succession process Jiao et al. 2017 .
-6: The assembly and composition of the root-associated microbiome could be influenced by soil conditions such as the pH , nitrogen and phosphorus contents Edwards et al. 2015 Xiao et al. 2017 .
-7: Therefore , it is desirable to obtain a predictive understanding of how root-associated bacterial communities in licorice plants of different ages respond to soil characteristics .
-8: Although the main purpose of Posthumanist Knowledge is not necessarily to provide a step-by-step how-to guide on conducting materialist cartographies , Braidotti provides some examples of studies that qualify as posthumanist such as Gabrys 2011 study of digital rubbish and Parikkas 2015 work in geological materialism .
-9: Yet it remains unclear what such a cartography would look like and how it would be different from other research in critical studies .
-10: As with all disruptive paradigms , the learning curve can be steep for healthcare students and faculty who embrace the flipped model .
-11: It is not uncommon to encounter real and lasting challenges with regards to the use and management of technology Moraros , Islam , Yu , Banow ,   Schindelka , 2015 .
-12: Although the sac is readily apparent grossly , diagnosis of the presence or absence of brain tissue typically requires histologic examination .
-13: These malformations are hereditary in pigs and cats and are also caused by griseofulvin treatment in pregnant cats during the first week of gestation .
-14: They are uncommon and sporadic in other domestic species .
-15: CF is a chronic condition best served by regular monitoring by a multidisciplinary team much of this care is ideal for telehealth and there have already been positive experiences reported 6,7,8 .
-16: In Italy , a few pilot programs have been implemented 9,10 , but telemedicine is far from routine use and there are hurdles to its practice in todays critical context .
-17: Patients and families must have access to the internet .
-18: In a severe TBI population , ICPM use was found to be associated with a longer time to initiation of CP leading to an increase in VTE .
-19: In addition , there was a nearly two-fold increased associated risk of VTE even when controlling for known VTE risk factors .
-20: Given the lack of clear benefit for ICPMs , physicians should weight this risk especially if they are considering holding CP in association with the use of these devices .
-21: As well as potentially supporting diagnosis and surveillance53 , the fast-developing field of genomic epidemiology54 can yield information to track the evolution of a virus such as Ebola during an epidemic55,56 .
-22: There will be times when it can detect outbreaks better than traditional epidemiology , illustrating the need to have these tools available in the same toolbox .
-23: During the large Lassa fever outbreak in Nigeria in 2018 , real-time genomic sequencing provided clear evidence that the rapid increase was not due to a single Lassa virus variant , nor attributable to sustained human-to-human transmission .
-24: Over the years , the author has seen a number of antibiotics employed as broad-spectrum antibiotics , often as a result of impatience with clinical progress or a lack of proper diagnostic testing .
-25: One of the most commonly misused antibiotics is chloramphenicol , a drug that is efficacious in only one ferret disease , proliferative colitis the result of Ileobacter infection .
-26: A well-stocked pharmacy is no substitute for knowledge of ferret diseases or the judicious use of culture and sensitivity .
-27: A possible explanation of the mixed reports regarding the contribution of IFN to DC function is that this could be due to differential responsiveness of various DC subsets to IFN andor type I IFN .
-28: For example , pDC have been described to respond to both type I and type III IFNs to enhance their upregulation of ISGs , maturation , and antigen presentation function .
-29: In recent years , however , the advent of new treatment modalities , such as HSCT and the novel antimyeloma agents , bortezomib , thalidomide , and lenalidomide , has improved outcomes for multiple myeloma patients and transformed it into a chronic disease .
-30: The resulting cumulative immunosuppression has increased the risk of infection and expanded the spectrum of potential pathogens in this patient population to include infections such as C. difficile , CMV , and opportunistic molds 220 .
-31: Trials examining the blockade of additional myeloid-derived inflammatory cytokines , such as TNF57 and granulocytemacrophage colony-stimulating factor GMCSF NCT04341116 , have also been considered andor initiated .
-32: Strategies aimed at broadly interfering with cytokine signalling could also significantly reduce hyperinflammation in patients with severe COVID-19 , and several trials testing the use of JAK inhibitors are ongoing .
-33: Alternatively , strategies upstream of the production of individual cytokines could represent a broader and possibly more effective way to dampen the occurrence of cytokine release syndromes .
-34: It has been estimated that it causes economic losses in the United States alone of about US664 million per year or up to US156 per litter .
-35: It has been especially devastating in China and Southeast Asia .
-36: Moreover , the challenge of defining who the audience is in an act of macrosecuritization remains problematic .
-37: While Buzan and Wvers work would suggest that states are the audience , the theory also allows for lower tiers to be subsumed into the process .
-38: Currently , the manner in which Vpu overcomes CAML restriction effect is not clear .
-39: Although it was proved that the Vpu function is associated with virus release , the question of whether the ion channel activity of the transmembrane domain is required for the viral release is still debated .}
+{'coref': {'loss': 0}, 'relation': {'predictions': [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [(21, 21, ['districts']), (24, 24, ['states']): PART-WHOLE with confidence 0.7335], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]}, 'ner': {'predictions': [[(30, 30, ['servers']): PER with confidence 0.9906], [(21, 21, ['centers']): LOC with confidence 0.9745, (26, 26, ['organization']): ORG with confidence 1.0000], [], [], [(0, 0, ['We']): PER with confidence 0.6884, (9, 9, ['barrier']): ORG with confidence 0.5416], [], [(24, 24, ['host']): LOC with confidence 0.4158, (29, 29, ['IFN']): ORG with confidence 0.9998], [], [], [], [(0, 0, ['Participants']): PER with confidence 1.0000], [(19, 19, ['participants']): PER with confidence 1.0000], [(12, 12, ['our']): PER with confidence 0.8812, (34, 34, ['providers']): PER with confidence 1.0000, (37, 37, ['groups']): PER with confidence 0.9736], [], [(8, 8, ['corporations']): ORG with confidence 1.0000, (29, 29, ['humans']): PER with confidence 0.9999, (31, 31, ['microorganisms']): PER with confidence 0.4404, (43, 43, ['humans']): PER with confidence 0.9999], [(22, 22, ['regions']): LOC with confidence 0.9992, (23, 23, ['that']): LOC with confidence 1.0000, (52, 52, ['their']): LOC with confidence 0.5906], [(9, 9, ['site']): LOC with confidence 0.9355, (12, 12, ['where']): LOC with confidence 0.8823, (13, 13, ['it']): WEA with confidence 0.4439, (20, 20, ['VRC']): LOC with confidence 0.9999, (26, 26, ['sub-domains']): LOC with confidence 0.9832, (30, 30, ['VRC']): LOC with confidence 0.9999], [(5, 5, ['sub-domains']): LOC with confidence 0.6090, (8, 8, ['VRCs']): LOC with confidence 0.9473, (10, 10, ['MPyVs']): VEH with confidence 0.9999], [(2, 2, ['states']): GPE with confidence 1.0000, (21, 21, ['districts']): LOC with confidence 0.7871, (24, 24, ['states']): GPE with confidence 1.0000, (40, 40, ['adult']): PER with confidence 0.7150, (44, 44, ['districts']): LOC with confidence 0.9982], [(12, 12, ['adult']): PER with confidence 0.9940, (39, 39, ['adult']): PER with confidence 0.9964], [(2, 2, ['our']): ORG with confidence 0.9617], [(0, 0, ['We']): ORG with confidence 1.0000, (6, 6, ['our']): ORG with confidence 1.0000], [(13, 13, ['patients']): PER with confidence 1.0000], [(9, 9, ['colleagues']): PER with confidence 1.0000, (13, 13, ['their']): PER with confidence 1.0000, (29, 29, ['our']): PER with confidence 0.9969], [(8, 8, ['avian']): GPE with confidence 0.6868, (13, 13, ['human']): PER with confidence 0.9998], [], [(47, 47, ['our']): PER with confidence 0.9870, (67, 67, ['patients']): PER with confidence 0.9999], [], [(10, 10, ['host']): PER with confidence 0.9585], [(7, 7, ['children']): PER with confidence 1.0000, (12, 12, ['adults']): PER with confidence 0.9999, (19, 19, ['our']): PER with confidence 0.9771, (23, 23, ['adults']): PER with confidence 1.0000, (28, 28, ['children']): PER with confidence 1.0000], [], [(1, 1, ['investigators']): PER with confidence 1.0000, (26, 26, ['patients']): PER with confidence 1.0000, (31, 31, ['them']): PER with confidence 1.0000, (46, 46, ['patients']): PER with confidence 1.0000], [(0, 0, ['We']): PER with confidence 0.8667], [], [], [], [], [(7, 7, ['AMI']): ORG with confidence 0.6344], [], [(3, 3, ['us']): PER with confidence 1.0000]]}, 'events': {'loss': 0}, 'loss': tensor(0.), 'metadata': 0: These emerging tools make access to the Worldwide Web the only requirement to join the genomic revolution and achieve large scale bioinformatics analyses that could not be possible on local servers .
+1: As a consequence , it is conceivable that in the future genomic research will increasingly move away from the large sequencing centers toward a more decentralized organization .
+2: Decentralized rapid genome sequencing and bioinformatic analysis of infectious agents will enable near-real-time global surveillance , detection of new pathogens , new virulence factors , antimicrobial resistance determinants , or engineered organisms .
+3: This fragment includes the transcription start in the 5-end and the pseudoknot in the 3-end .
+4: We suggest that the pseudoknot acts as an exonuclease barrier like the natural stemloop structure in the 3-end of the wild type lacZ transcript 37 and thereby induces a degradation intermediate of a distinct length with increased half life compared to unstructured mRNA sequences like those from construct 0 .
+5: Alternatively , but not mutually exclusive , a pseudoknot acts like a rho-independent termination signal to the RNA polymerase .
+6: Interestingly , the subset of host transcripts that are specifically retained in the nucleus by ORF10 does not belong to the traditional category of host genes involved in the IFN signature but correspond to genes enriched for biological processes such as mitosis , gene silencing , DNA metabolic process , chromosome organization , cell cycle , and transcription regulation .
+7: This may represent a subset of host genes whose expression might be detrimental for herpesvirus replication .
+8: Therefore the ability of glial cell lines derived from the myelinating glial cells oligodendroglia and Schwann cells to myelinate in vivo or in vitro is documented .
+9: Finally methods which have been successfully used to immortalize cells to create new cell lines are documented , and future directions regarding the use and need for new glial cell lines are discussed .
+10: Participants also reported notable prepost improvements in sexual desire , arousal , and satisfaction .
+11: CLINICAL IMPLICATIONS Initial user-experience assessment may represent a method of simultaneously improving online interventions and providing therapeutic education to participants .
+12: STRENGTHS   LIMITATIONS This is one of the first studies , to our knowledge , to test a graphics-rich , interactive online intervention for sexual difficulties that does not require direct contact with expert providers or support groups .
+13: Data produced via portable sequencing for the purpose of EID surveillance could have radically different uses .
+14: It could represent not only commercial opportunity for corporations , but   when considered from a morethanhuman perspective   opportunities to engage with the rich and complex relationships between humans and microorganisms . These relationships are part of a folded life in which humans actively work with complex microbial environments , rather than striving to create biosecure settings that keep disease out Hinchliffe   Ward , 2014 , pp .
+15: It is also interesting to note that when BK or SV40 DNA is labeled with BrdU , nascent replicating DNA localizes to regions that are subtly morphologically distinct from chased accumulated DNA , although both nascent and accumulated DNA localize at or in proximity to PML , which is a marker of their respective VRCs 146 .
+16: This might suggest that polyomavirus DNA accumulates at a site distinct from where it is replicated , either within the VRC or possibly at distinct nuclear sub-domains proximal to the VRC .
+17: The existence of subtly distinct sub-domains within the VRCs of MPyVs have also been suggested 55,153 .
+18: Even for states with lower levels of estimated completeness , the large numbers of registered deaths suggest the potential for some districts within these states to have better levels of completeness 85 , which would enable more reliable estimation of adult mortality for these districts .
+19: From a health policy perspective , the higher than expected levels of adult mortality observed from CRS data indicate a greater need for strengthening health systems and programmes for the control of non-communicable disease and other major causes of adult deaths in India.30 It should be noted that measuring plasma protein levels is technically much easier than other approaches , such as IGRA , and offers an economical and effective initial detection tool in a clinical setting .
+20: It is our hope that further validation of these plasmatic profiles in LTBI will provide information on LTBI-associated targets and the process of pathogenesis .
+21: We would therefore like to launch our idea to control for SARS-CoV-2 infection in cervical specimen as well as examine potential correlation with HPV infection .
+22: Potential scientific proof of such hypothesis would change much regarding follow-up of HPV-positive patients while also triggering further research regarding aitiopathogenetic pathways of COVID .
+23: Communication of such a medical hypothesis could potentially motivate colleagues worldwide to expand their interest also on the research of SARS-CoV-2 cervical infection , in an effort to optimize our level of knowledge towards this new threatening and unknown reality of SARS-CoV-2 .
+24: Possible reasons might include differing densities of the avian influenza virus receptor in human beings , differences in blood supply pathways and nerve connections that allow virus-target cell contact , and differing viral loads and viral replication stages .
+25: The detection of positive-stranded RNA by RT-PCR and in-situ hybridisation could indicate active viral replication in the brain .
+26: The virus could reach the CNS by penetrating the blood-brain barrier or by invading the afferent fibres of the olfactory , vagal , trigeminal , and sympathetic nerves after replicating in the respiratory mucosa , as has been shown in animals.24 In conclusion , the results of our study show the existence of an imbalance between sHLA-I and sHLA-II concentrations in the serum and CSF of MS patients .
+27: Whether these alterations may play a pathogenetic role and whether their detection could have a diagnostic relevance in MS deserve further investigation .
+28: Persistent viral shedding may indicate different levels of virulence , host immune response and infectiousness 32 , 33 .
+29: In sharp contradistinction to influenza infection where children shed virus longer than adults 34 , 35 , 36 , our data suggest that adults shed HRV longer than children .
+30: Previous speculations regarding the potential mechanisms of music-based interventions may have drastically oversimplified an extremely complex set of possible neurobiological processes 78 .
+31: Many investigators have proposed that music may compete with noxious stimuli and thereby close neurological gates of pain signal transmission , or that it may distract patients from threats that cause them to feel anxious , andor that it may promote a sense of well-being in patients with an otherwise depressed mood .
+32: We suggest an influence of the HPR over the ISAV HE esterase activity , considering the results previously reported for hemadsorption with rabbit RBCs , and that this activity may influence the interaction of F with its cell receptor 18 .
+33: Indeed , fusion assays using a Ser32Ala mutated version of HPR0 HE showed an increased fusion activity compared to the WT HPR0 HE , demonstrating a negative influence of the enzymatic activity over the fusion mechanism .
+34: The NF-B-induced activation of NLRP3 and pro-IL-1 gene expression is requisite for activating caspase-1 by the NLRP3 inflammasome to further regulate the secretion of the inflammatory cytokines IL-1 and IL-18 Motta et al. , 2015 .
+35: However , whether there is signaling crosstalk between NF-B activation and the NLR signaling pathway during CDV infection is an open question .
+36: Collectively , the findings suggested that activation of the innate immune NF-B signaling pathway and the NLR signaling pathway was involved in mink immune responses against CDV infection , and the NF-B signaling was associated with the pathological respiratory or other symptoms in mink after CDV infection .
+37: A history of CVD prior to index AMI admission , suggesting greater vasculopathy and inadequate secondary prevention in the past , was associated with higher mean systolic BP during admission , which persisted over 30 days post-discharge .
+38: The exploratory findings of this study may guide future work in interpreting longitudinal data from DHIs and best practices for tailoring therapy based on this data .
+39: This study provides us more information about moderate COVID-19 , but still has some limitations .}

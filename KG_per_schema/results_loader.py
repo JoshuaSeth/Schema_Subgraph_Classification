@@ -9,13 +9,123 @@ from copy import deepcopy
 from typing import List
 import pickle
 from collections import defaultdict
-from streamlit_agraph import Node, Edge, Config
+from streamlit_agraph import Node, Edge, Config, agraph
 import streamlit as st
 from stqdm import stqdm
+import networkx as nx
+import numpy as np
 
 # Some variables for the operation
 dygie_prediction_dir_path = project_path + '/KG_per_schema/data/predictions/'
 group_info_fpath = project_path + '/KG_per_schema/data/group_info/group_info.pkl'
+
+
+@st.cache_data(persist="disk")
+def get_metrics(ents, rels):
+    '''Gets the metrics for the given ents and rels as a dict.'''
+    metrics = {}
+    G = to_nx_graph(ents, rels)
+
+    metrics['asbolute recall ner'] = len(ents)
+    metrics['asbolute recall re'] = len(rels)
+
+    degrees = [item[1] for item in list(G.degree)]
+    metrics['mean degree'] = np.nanmean(degrees)
+    metrics['std degree'] = np.nanstd(degrees)
+
+    nx_metrics = {'degree centrality': nx.degree_centrality(G), 'closeness centrality': nx.closeness_centrality(
+        G), 'betweenness centrality': nx.betweenness_centrality(G), 'pagerank': nx.pagerank(G)}
+    for k, v in nx_metrics.items():
+        t = sorted(v.values())
+
+        metrics['mean ' + k] = np.nanmean(t)
+        metrics['std ' + k] = np.nanstd(t)
+
+    return metrics
+
+
+def to_nx_graph(ents, rels):
+    '''Converts a list of entity tagged sentences and relations to a nx graph'''
+    G = nx.Graph()
+
+    for rel_sent in rels:
+        for rel in rel_sent:
+            G.add_edge(rel[0], rel[1], label=rel[2])
+
+    for ent_sent in ents:
+        for ent in ent_sent:
+            G.add_edge(ent[1], ent[0], label='type')
+    return G
+
+
+def get_degrees_dist(ents, rels):
+    '''Gets the degrees distribution of a nx graph constructed from rels and ents For example: with degree 15 there is 1 node, with degree 10 there are 2 nodes, with degree 3 there are 20 nodes, etc.'''
+    G = to_nx_graph(ents, rels)
+    degrees = defaultdict(int)
+    for item in list(G.degree):
+        degrees[item[1]] += 1
+    return degrees
+
+
+def get_abs_recall_dist(items):
+    '''Get the distribution of absolute recalls. For example: 3 sentences with 4 triples, 5 sentences with 3 triples, 20 sentences with 2 triples and 100 sentences with 1 triple. Can be given an sentence with entities or relations.'''
+    distribution = defaultdict(int)
+    # Entity sentence
+    if len(items) > 0:
+        if isinstance(items[0], str) or isinstance(items[0], tuple):
+            for sent in items:
+                num_ents = len(
+                    [part for part in sent if isinstance(part, tuple)])
+                distribution[num_ents] += 1
+        # Relation sentence
+        else:
+            for sent in items:
+                num_rels = len(sent)
+                distribution[num_rels] += 1
+
+    return distribution
+
+
+@st.cache_data(persist="disk", experimental_allow_widgets=True)
+def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=None):
+    '''Wrapper around the load_data method. Builds a graph from the data which can be used in streamlit. The nodes and edges are used to build the graph with: agraph(nodes=nodes, edges=edges, config=config) Grouping makes no difference for building the graph.
+
+    Parameters
+    ------------
+        schema: str
+            Which schema to use. One of: [scierc, None (= mechanic coarse), genia, covid-event (= mechanic granular), ace05, ace-event]
+        mode: str, Optional
+            Whether to use sentences that are a research challenge or direction or are both. One of: [AND, OR]. Default: AND
+        context: bool, Optional
+            Whether to include context sentences or not. Default: False
+        index: int, Optional
+            Whether to use a specific index file. If None then all data conforming to the request params is used. If given an index only a single datafile containing the request params and this specific index is used. Which might be handy for taking small samples. Default: None
+
+
+    Return
+    -----------
+        nodes, edges: list, list
+            Returns a list of nodes, a list of edges and a config object.'''
+
+    sents, corefs, rels, ents = load_data(
+        schema, mode, context=False, index=None, grouped=False)
+
+    nodes = []
+    edges = []
+    ids = set()
+    for idx, ent_sent in enumerate(ents):
+        for item in ent_sent:
+            if isinstance(item, tuple):
+                if not item[0] in ids:
+                    nodes.append(
+                        Node(id=item[0], label=item[0] + ' (' + item[1] + ')', size=25,))
+                ids.add(item[0])
+
+    for idx, rel_sent in enumerate(rels):
+        for rel in rel_sent:
+            edges.append(Edge(source=rel[0], label=rel[2], target=rel[1]))
+
+    return nodes, edges
 
 
 @st.cache_data(persist="disk")
@@ -58,8 +168,11 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None,
     sents, corefs, rels, ents = [], [], [], []
 
     for dygie_data_fpath in matching_fpaths:
-        with open(dygie_data_fpath, 'r') as f:
-            data = json.load(f)
+        try:
+            with open(dygie_data_fpath, 'r') as f:
+                data = json.load(f)
+        except Exception as e:
+            print('malformed data file', dygie_data_fpath)
 
         # Extend the collected data
         sents.extend(data['sentences'])

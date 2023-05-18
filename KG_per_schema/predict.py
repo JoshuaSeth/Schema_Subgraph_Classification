@@ -19,7 +19,8 @@ os.environ["ALLENNLP_LOG_LEVEL"] = "ERROR"
 # Variables
 dygie_data_dir_path = project_path + '/KG_per_schema/data/dygie_data/'
 output_dir_path = project_path + '/KG_per_schema/data/predictions/'
-dygie_dir_path = project_path + "/streamlit_compare_schemas/ORKG_parsers/dygiepp/"
+dygie_dir_path = project_path + \
+    "/old/streamlit_compare_schemas/ORKG_parsers/dygiepp/"
 
 
 def create_prediction_datasets(schemas=['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event'], use_cached=True):
