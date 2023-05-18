@@ -19,7 +19,7 @@ import plotly
 # Variables
 schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event']
 modes = ['AND', 'OR']
-visualizations = ['sentences', 'graph', 'graph stats']
+visualizations = ['sentences', 'graph', 'graph stats', 'encyclopedic explorer']
 
 # Default interface options
 st.header('NER & RE Parsing Results')
@@ -30,10 +30,17 @@ st.markdown(
 schema = st.selectbox('Schema', schemas)
 mode = st.selectbox('Mode', modes)
 use_context = st.checkbox('Use context', value=True)
-sent_tab, graph_tab, graph_stats_tab = st.tabs(visualizations)
+sent_tab, graph_tab, graph_stats_tab, ecyclo_tab = st.tabs(visualizations)
+current_ent = None
+
+
+def show_connections(ent):
+    global current_ent
+    current_ent = ent
 
 
 if schema != None and mode != None:
+    # Visualize the sentences and the tagged entities and relations
     with sent_tab:
         groups = load_data(schema, mode, use_context, grouped=True)
 
@@ -46,6 +53,7 @@ if schema != None and mode != None:
                     for rel in rels:
                         st.text(rel)
 
+    # Visualize the full graph as an interactive graph
     with graph_tab:
         nodes, edges = build_graph(schema, mode, use_context)
 
@@ -59,20 +67,21 @@ if schema != None and mode != None:
                edges=edges,
                config=config)
 
+    # Visualize the graph statistics for each schema
     with graph_stats_tab:
         # Collect metrics
         all_metrics = {}
         ent_recalls, rel_recalls, degrees = {}, {}, {}
 
-        for schema in schemas:
+        for schema_any in schemas:
             sents, corefs, rels,  ents,  = load_data(
-                schema, mode, use_context, grouped=False)
+                schema_any, mode, use_context, grouped=False)
             metrics = get_metrics(ents, rels)
 
-            all_metrics[schema] = metrics
-            ent_recalls[schema] = get_abs_recall_dist(ents)
-            rel_recalls[schema] = get_abs_recall_dist(rels)
-            degrees[schema] = get_degrees_dist(ents, rels)
+            all_metrics[schema_any] = metrics
+            ent_recalls[schema_any] = get_abs_recall_dist(ents)
+            rel_recalls[schema_any] = get_abs_recall_dist(rels)
+            degrees[schema_any] = get_degrees_dist(ents, rels)
 
         for v, name in [(ent_recalls, 'entities per sentence'), (rel_recalls, 'relations per sentence'), (degrees, 'degrees of graph')]:
             long_df = to_long_format_df(v, name)
@@ -83,16 +92,19 @@ if schema != None and mode != None:
 
         st.dataframe(pd.DataFrame(all_metrics))
 
+    # Explore the graoh in encyclopedic fashion
+    with ecyclo_tab:
 
-def to_nx_graph(ents, rels):
-    '''Converts a list of entity tagged sentences and relations to a nx graph'''
-    G = nx.Graph()
+        # The entry point is a list of all entities
+        sents, corefs, rels,  ents,  = load_data(
+            schema, mode, use_context, grouped=False)
 
-    for rel_sent in rels:
-        for rel in rel_sent:
-            G.add_edge(rel[0], rel[1], label=rel[2])
+        ents = set([
+            part[0] for sent in ents for part in sent if isinstance(part, tuple)])
 
-    for ent_sent in ents:
-        for ent in ent_sent:
-            G.add_edge(ent[1], ent[0], label='type')
-    return G
+        if not current_ent:
+            for ent in ents:
+                st.button(label=ent, on_click=show_connections, args=(ent,))
+        else:
+            st.text(current_ent)
+        # When clicking on an entity we get a list of all relations that entity is involved in
