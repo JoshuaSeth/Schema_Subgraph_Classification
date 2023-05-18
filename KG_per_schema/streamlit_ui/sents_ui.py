@@ -19,6 +19,7 @@ import uuid
 
 @st.cache_data(persist="disk", experimental_allow_widgets=True)
 def viz_sents_ui(schema, mode, use_context):
+    '''Visualizes the sentences and their entities and relations.'''
     groups = load_data(schema, mode, use_context, grouped=True)
 
     if isinstance(groups, dict):

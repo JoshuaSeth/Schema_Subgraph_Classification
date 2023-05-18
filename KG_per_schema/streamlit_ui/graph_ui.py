@@ -21,6 +21,7 @@ import uuid
 
 
 def viz_graph_ui(schema, mode, use_context):
+    '''Visualizes the complete interactive graph.'''
     nodes, edges = build_graph(schema, mode, use_context)
 
     config = Config(width=700,

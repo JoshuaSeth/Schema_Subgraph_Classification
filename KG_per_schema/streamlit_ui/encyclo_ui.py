@@ -19,6 +19,7 @@ import uuid
 
 @st.cache_data(persist="disk", experimental_allow_widgets=True)
 def viz_encyclo_ui(schema, mode, use_context, _set_cur):
+    '''Visualizes an interactive encyclopedia of entities and relations of the graph for the current selected parameters'''
     # The entry point is a list of all entities
     sents, corefs, rels,  ents,  = load_data(
         schema, mode, use_context, grouped=False)
