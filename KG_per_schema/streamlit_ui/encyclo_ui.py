@@ -31,7 +31,7 @@ def viz_encyclo_ui(schema, mode, use_context, _set_cur):
     for ent_sent in entitity_sents:
         for part in ent_sent:
             if isinstance(part, tuple):
-                rels.append((part[0], 'is a', part[1]))
+                rels.append((part[0], part[1], 'is a'))
 
     # Create a dict with rel name: rel
     rels_dict = defaultdict(list)
@@ -73,9 +73,10 @@ def viz_encyclo_ui(schema, mode, use_context, _set_cur):
 
 def viz_current_relation(_set_cur, rels_dict):
     '''Visualizes the current relation and all relations of this relation type. '''
-    st.button(label='Back', on_click=_set_cur,
-              args=(None, None), type='primary')
-    st.subheader(st.session_state['current_rel'])
+    col1, col2 = st.columns([6, 1])
+    col2.button(label='Back', on_click=_set_cur,
+                args=(None, None), type='primary')
+    col1.subheader(st.session_state['current_rel'])
 
     for rel in rels_dict[st.session_state['current_rel']]:
         col1, col2, col3 = st.columns(3)
@@ -88,21 +89,26 @@ def viz_current_relation(_set_cur, rels_dict):
 
 
 def viz_list_all_relations(_set_cur, rels_dict):
+    '''Visualizes all relations of the graph.'''
     for rel_name, rel in rels_dict.items():
         st.button(label=rel_name + ' (' + str(len(rel)) + ' entities) ',
                   on_click=_set_cur, args=(None, rel_name,), key=str(uuid.uuid4()))
 
 
 def viz_list_all_entities(_set_cur, ents):
+    '''Visualizes all entities of the graph.'''
     for ent, val in ents.items():
         st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
                   on_click=_set_cur, args=(ent,))
 
 
 def viz_current_entity(_set_cur, rels, sents_for_ents):
-    st.button(label='Back', on_click=_set_cur,
-              args=(None,), type='primary')
-    st.subheader(st.session_state['current_ent'])
+    '''Visualizes current selected entity. 1. Shows sentences in which it appears. 2. Shows relations with this entity. 3. Shows other entities in the same sentence.'''
+    col1, col2 = st.columns([6, 1])
+
+    col2.button(label='Back', on_click=_set_cur,
+                args=(None,), type='primary')
+    col1.subheader(st.session_state['current_ent'])
 
     # Viz the sentence involving this one
     st.caption('Sentences with this entity')
