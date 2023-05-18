@@ -20,94 +20,119 @@ import uuid
 @st.cache_data(persist="disk", experimental_allow_widgets=True)
 def viz_encyclo_ui(schema, mode, use_context, _set_cur):
     '''Visualizes an interactive encyclopedia of entities and relations of the graph for the current selected parameters'''
-    # The entry point is a list of all entities
-    sents, corefs, rels,  ents,  = load_data(
+    # Load the data
+    sents, corefs, rels,  entitity_sents,  = load_data(
         schema, mode, use_context, grouped=False)
 
+    # Flatten relations
     rels = [rel for sent in rels for rel in sent]
 
+    # Append the entity types to the relations of the graph
+    for ent_sent in entitity_sents:
+        for part in ent_sent:
+            if isinstance(part, tuple):
+                rels.append((part[0], 'is a', part[1]))
+
+    # Create a dict with rel name: rel
     rels_dict = defaultdict(list)
     for rel in rels:
         rels_dict[rel[2]].append(rel)
 
+    # Create a dict with ent name: sentences wherein it appears
     sents_for_ents = defaultdict(list)
-
-    for s in ents:
+    for s in entitity_sents:
         for part in s:
             if isinstance(part, tuple):
                 sents_for_ents[part[0]].append(s)
 
+    # Extract the acgual entities from the entity sentences
     ents = [
-        part[0] for sent in ents for part in sent if isinstance(part, tuple)]
+        part[0] for sent in entitity_sents for part in sent if isinstance(part, tuple)]
 
+    # Create a dict with ent name: relations with this ent
     ents = {ent: [rel for rel in rels if ent in rel] for ent in ents}
 
+    # Select entities or relations
     cur_selection = st.selectbox('Entities or relations', [
         'entities', 'relations'], key='search_1')
 
     # Entities tab
     if cur_selection == 'entities':
-        print(st.session_state['current_ent'])
-        # Main scrolling menu
         if st.session_state['current_ent'] == None:
-            for ent, val in ents.items():
-                st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
-                          on_click=_set_cur, args=(ent,))
-        # Visualization  for specifc item
+            viz_list_all_entities(_set_cur, ents)
         else:
-            st.button(label='Back', on_click=_set_cur,
-                      args=(None,), type='primary')
-            st.subheader(st.session_state['current_ent'])
-
-            # Viz the sentence involving this one
-            st.caption('Sentences with this entity')
-            for s in sents_for_ents[st.session_state['current_ent']]:
-                annotated_text(s)
-
-            st.divider()
-            # Get all relations that involve the current entity
-            rels_ = [
-                rel for rel in rels if st.session_state['current_ent'] in rel]
-
-            st.caption('Relations with this entity')
-            for rel in rels_:
-                col1, col2, col3 = st.columns(3)
-                col1.button(label=rel[0], key=str(
-                    uuid.uuid4()), on_click=_set_cur, args=(rel[0],))
-                col2.button(label=rel[2], key=str(
-                    uuid.uuid4()), on_click=_set_cur, args=(None, rel[2]))
-                col3.button(label=rel[1], key=str(
-                    uuid.uuid4()), on_click=_set_cur, args=(rel[1],))
-
-            st.divider()
-            st.caption('Other entities in this sentence')
-            temp = [part[0]
-                    for s in sents_for_ents[st.session_state['current_ent']] for part in s if isinstance(part, tuple)]
-            temp = {ent: [rel for rel in rels if ent in rel]
-                    for ent in temp}
-
-            for ent, val in temp.items():
-                st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
-                          on_click=_set_cur, args=(ent,))
+            viz_current_entity(_set_cur, rels, sents_for_ents)
 
     # Relations tab
     if cur_selection == 'relations':
         if st.session_state['current_rel'] == None:
-            for rel_name, rel in rels_dict.items():
-                st.button(label=rel_name + ' (' + str(len(rel)) + ' entities) ',
-                          on_click=_set_cur, args=(None, rel_name,), key=str(uuid.uuid4()))
+            viz_list_all_relations(_set_cur, rels_dict)
         else:
-            st.button(label='Back', on_click=_set_cur,
-                      args=(None, None), type='primary')
-            st.subheader(st.session_state['current_rel'])
+            viz_current_relation(_set_cur, rels_dict)
 
-            for rel in rels_dict[st.session_state['current_rel']]:
-                col1, col2, col3 = st.columns(3)
-                col1.button(label=rel[0], key=str(
+
+def viz_current_relation(_set_cur, rels_dict):
+    '''Visualizes the current relation and all relations of this relation type. '''
+    st.button(label='Back', on_click=_set_cur,
+              args=(None, None), type='primary')
+    st.subheader(st.session_state['current_rel'])
+
+    for rel in rels_dict[st.session_state['current_rel']]:
+        col1, col2, col3 = st.columns(3)
+        col1.button(label=rel[0], key=str(
                     uuid.uuid4()), on_click=_set_cur, args=(rel[0],))
-                col2.button(label=rel[2], key=str(
+        col2.button(label=rel[2], key=str(
                     uuid.uuid4()), on_click=_set_cur, args=(None, rel[2]))
-                col3.button(label=rel[1], key=str(
+        col3.button(label=rel[1], key=str(
                     uuid.uuid4()), on_click=_set_cur, args=(rel[1],))
+
+
+def viz_list_all_relations(_set_cur, rels_dict):
+    for rel_name, rel in rels_dict.items():
+        st.button(label=rel_name + ' (' + str(len(rel)) + ' entities) ',
+                  on_click=_set_cur, args=(None, rel_name,), key=str(uuid.uuid4()))
+
+
+def viz_list_all_entities(_set_cur, ents):
+    for ent, val in ents.items():
+        st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
+                  on_click=_set_cur, args=(ent,))
+
+
+def viz_current_entity(_set_cur, rels, sents_for_ents):
+    st.button(label='Back', on_click=_set_cur,
+              args=(None,), type='primary')
+    st.subheader(st.session_state['current_ent'])
+
+    # Viz the sentence involving this one
+    st.caption('Sentences with this entity')
+    for s in sents_for_ents[st.session_state['current_ent']]:
+        annotated_text(s)
+
+    st.divider()
+    # Get all relations that involve the current entity
+    rels_ = [
+        rel for rel in rels if st.session_state['current_ent'] in rel]
+
+    st.caption('Relations with this entity')
+    for rel in rels_:
+        col1, col2, col3 = st.columns(3)
+        col1.button(label=rel[0], key=str(
+                    uuid.uuid4()), on_click=_set_cur, args=(rel[0],))
+        col2.button(label=rel[2], key=str(
+                    uuid.uuid4()), on_click=_set_cur, args=(None, rel[2]))
+        col3.button(label=rel[1], key=str(
+                    uuid.uuid4()), on_click=_set_cur, args=(rel[1],))
+
+    st.divider()
+    st.caption('Other entities in this sentence')
+    temp = [part[0]
+            for s in sents_for_ents[st.session_state['current_ent']] for part in s if isinstance(part, tuple)]
+    temp = {ent: [rel for rel in rels if ent in rel]
+            for ent in temp}
+
+    for ent, val in temp.items():
+        st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
+                  on_click=_set_cur, args=(ent,))
 
     # When clicking on an entity we get a list of all relations that entity is involved in
