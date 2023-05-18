@@ -116,6 +116,13 @@ if schema != None and mode != None:
         for rel in rels:
             rels_dict[rel[2]].append(rel)
 
+        sents_for_ents = defaultdict(list)
+
+        for s in ents:
+            for part in s:
+                if isinstance(part, tuple):
+                    sents_for_ents[part[0]].append(s)
+
         ents = [
             part[0] for sent in ents for part in sent if isinstance(part, tuple)]
 
@@ -138,15 +145,21 @@ if schema != None and mode != None:
                           args=(None,), type='primary')
                 st.subheader(st.session_state['current_ent'])
 
+                # Viz the sentence involving this one
+                for s in sents_for_ents[st.session_state['current_ent']]:
+                    annotated_text(s)
+
                 # Get all relations that involve the current entity
                 rels_ = [
                     rel for rel in rels if st.session_state['current_ent'] in rel]
 
                 for rel in rels_:
-                    col1, col2 = st.columns(2)
-                    col1.button(label=rel[2], key=str(
+                    col1, col2, col3 = st.columns(3)
+                    col1.button(label=rel[0], key=str(
+                        uuid.uuid4()), on_click=set_cur, args=(rel[0],))
+                    col2.button(label=rel[2], key=str(
                         uuid.uuid4()), on_click=set_cur, args=(None, rel[2]))
-                    col2.button(label=rel[1], key=str(
+                    col3.button(label=rel[1], key=str(
                         uuid.uuid4()), on_click=set_cur, args=(rel[1],))
 
         # Relations tab
