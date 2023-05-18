@@ -55,6 +55,9 @@ def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=Non
                 if not item[0] in ids:
                     nodes.append(
                         Node(id=item[0], label=item[0] + ' (' + item[1] + ')', size=25,))
+                    # Add the clases as type edges
+                    edges.append(
+                        Edge(source=item[0], label='type', target=item[1]))
                 ids.add(item[0])
 
     for idx, rel_sent in enumerate(rels):
@@ -104,18 +107,20 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None,
     sents, corefs, rels, ents = [], [], [], []
 
     for dygie_data_fpath in matching_fpaths:
+        data = None
         try:
             with open(dygie_data_fpath, 'r') as f:
                 data = json.load(f)
         except Exception as e:
             print('malformed data file', dygie_data_fpath)
 
-        # Extend the collected data
-        sents.extend(data['sentences'])
+        if data:
+            # Extend the collected data
+            sents.extend(data['sentences'])
 
-        ents.extend(extract_entities(data))
+            ents.extend(extract_entities(data))
 
-        rels.extend(extract_relations(data))
+            rels.extend(extract_relations(data))
 
     # If not grouped everything if done
     if not grouped:

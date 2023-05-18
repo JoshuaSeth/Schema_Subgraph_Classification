@@ -1,21 +1,9 @@
 '''Interface for the KG_per_schema module.'''
 import streamlit as st
-import pandas as pd
-import numpy as np
-import os
-import json
-import glob
-import subprocess
-from utils import project_path, get_model_fname
-from results_loader import load_data, build_graph
-from metrics import get_metrics, get_abs_recall_dist, get_degrees_dist, to_long_format_df
-from annotated_text import annotated_text
-import pickle
-from collections import defaultdict
-from streamlit_agraph import agraph, Config, Node, Edge
-import plotly.express as px
-import plotly
-import uuid
+from streamlit_ui.sents_ui import viz_sents_ui
+from streamlit_ui.graph_ui import viz_graph_ui
+from streamlit_ui.graph_stats_ui import viz_graph_stats_ui
+from streamlit_ui.encyclo_ui import viz_encyclo_ui
 
 # Variables
 schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event']
@@ -53,147 +41,16 @@ def set_cur(ent=None, rel=None):
 if schema != None and mode != None:
     # Visualize the sentences and the tagged entities and relations
     with sent_tab:
-        groups = load_data(schema, mode, use_context, grouped=True)
-
-        if isinstance(groups, dict):
-            for idx, group in groups.items():
-                st.subheader(idx)
-
-                for sent, ent, rels in group:
-                    annotated_text(ent)
-                    for rel in rels:
-                        st.text(rel)
+        viz_sents_ui(schema, mode, use_context)
 
     # Visualize the full graph as an interactive graph
     with graph_tab:
-        nodes, edges = build_graph(schema, mode, use_context)
-
-        config = Config(width=700,
-                        height=700,
-                        directed=True,
-                        physics=False,
-                        hierarchical=False)
-
-        agraph(nodes=nodes,
-               edges=edges,
-               config=config)
+        viz_graph_ui(schema, mode, use_context)
 
     # Visualize the graph statistics for each schema
     with graph_stats_tab:
-        # Collect metrics
-        all_metrics = {}
-        ent_recalls, rel_recalls, degrees = {}, {}, {}
-
-        for schema_any in schemas:
-            sents, corefs, rels,  ents,  = load_data(
-                schema_any, mode, use_context, grouped=False)
-            metrics = get_metrics(ents, rels)
-
-            all_metrics[schema_any] = metrics
-            ent_recalls[schema_any] = get_abs_recall_dist(ents)
-            rel_recalls[schema_any] = get_abs_recall_dist(rels)
-            degrees[schema_any] = get_degrees_dist(ents, rels)
-
-        for v, name in [(ent_recalls, 'entities per sentence'), (rel_recalls, 'relations per sentence'), (degrees, 'degrees of graph')]:
-            long_df = to_long_format_df(v, name)
-
-            fig = px.bar(long_df, x="schema", y="value", color=name, color_discrete_sequence=plotly.colors.qualitative.Plotly,
-                         title=f"{name} distribution")
-            st.plotly_chart(fig, use_container_width=True)
-
-        st.dataframe(pd.DataFrame(all_metrics))
+        viz_graph_stats_ui(schemas, mode, use_context)
 
     # Explore the graoh in encyclopedic fashion
     with ecyclo_tab:
-
-        # The entry point is a list of all entities
-        sents, corefs, rels,  ents,  = load_data(
-            schema, mode, use_context, grouped=False)
-
-        rels = [rel for sent in rels for rel in sent]
-
-        rels_dict = defaultdict(list)
-        for rel in rels:
-            rels_dict[rel[2]].append(rel)
-
-        sents_for_ents = defaultdict(list)
-
-        for s in ents:
-            for part in s:
-                if isinstance(part, tuple):
-                    sents_for_ents[part[0]].append(s)
-
-        ents = [
-            part[0] for sent in ents for part in sent if isinstance(part, tuple)]
-
-        ents = {ent: [rel for rel in rels if ent in rel] for ent in ents}
-
-        cur_selection = st.selectbox('Entities or relations', [
-            'entities', 'relations'], key='search_1')
-
-        # Entities tab
-        if cur_selection == 'entities':
-            print(st.session_state['current_ent'])
-            # Main scrolling menu
-            if st.session_state['current_ent'] == None:
-                for ent, val in ents.items():
-                    st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
-                              on_click=set_cur, args=(ent,))
-            # Visualization  for specifc item
-            else:
-                st.button(label='Back', on_click=set_cur,
-                          args=(None,), type='primary')
-                st.subheader(st.session_state['current_ent'])
-
-                # Viz the sentence involving this one
-                st.caption('Sentences with this entity')
-                for s in sents_for_ents[st.session_state['current_ent']]:
-                    annotated_text(s)
-
-                st.divider()
-                # Get all relations that involve the current entity
-                rels_ = [
-                    rel for rel in rels if st.session_state['current_ent'] in rel]
-
-                st.caption('Relations with this entity')
-                for rel in rels_:
-                    col1, col2, col3 = st.columns(3)
-                    col1.button(label=rel[0], key=str(
-                        uuid.uuid4()), on_click=set_cur, args=(rel[0],))
-                    col2.button(label=rel[2], key=str(
-                        uuid.uuid4()), on_click=set_cur, args=(None, rel[2]))
-                    col3.button(label=rel[1], key=str(
-                        uuid.uuid4()), on_click=set_cur, args=(rel[1],))
-
-                st.divider()
-                st.caption('Other entities in this sentence')
-                temp = [part[0]
-                        for s in sents_for_ents[st.session_state['current_ent']] for part in s if isinstance(part, tuple)]
-                temp = {ent: [rel for rel in rels if ent in rel]
-                        for ent in temp}
-
-                for ent, val in temp.items():
-                    st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
-                              on_click=set_cur, args=(ent,))
-
-        # Relations tab
-        if cur_selection == 'relations':
-            if st.session_state['current_rel'] == None:
-                for rel_name, rel in rels_dict.items():
-                    st.button(label=rel_name + ' (' + str(len(rel)) + ' entities) ',
-                              on_click=set_cur, args=(None, rel_name,), key=str(uuid.uuid4()))
-            else:
-                st.button(label='Back', on_click=set_cur,
-                          args=(None, None), type='primary')
-                st.subheader(st.session_state['current_rel'])
-
-                for rel in rels_dict[st.session_state['current_rel']]:
-                    col1, col2, col3 = st.columns(3)
-                    col1.button(label=rel[0], key=str(
-                        uuid.uuid4()), on_click=set_cur, args=(rel[0],))
-                    col2.button(label=rel[2], key=str(
-                        uuid.uuid4()), on_click=set_cur, args=(None, rel[2]))
-                    col3.button(label=rel[1], key=str(
-                        uuid.uuid4()), on_click=set_cur, args=(rel[1],))
-
-        # When clicking on an entity we get a list of all relations that entity is involved in
+        viz_encyclo_ui(schema, mode, use_context, set_cur)
