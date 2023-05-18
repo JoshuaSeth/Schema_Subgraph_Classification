@@ -73,11 +73,17 @@ def get_degrees_dist(ents, rels):
 def to_long_format_df(items: dict[dict], keyname='metric') -> pd.DataFrame:
     '''Given a dict of dicts or defaultdicts of the for example the degree distribution or number of sentences with a certain triple it will return a long format dataframe wherea  row is [schema, keyname, value]. Can be used with plotting libraries for stacked bar plots.'''
     rows = []
-    for schema_name, values in items:
-        for k, v in values:
+    for schema_name, values in items.items():
+        for k, v in values.items():
             rows.append([schema_name, k, v])
 
-    return pd.DataFrame(rows, columns=['schema', keyname, 'value'])
+    df = pd.DataFrame(rows, columns=['schema', keyname, 'value'])
+
+    df.sort_values(by=[keyname], inplace=True)
+
+    df[keyname] = df[keyname].astype(str)
+
+    return df
 
 
 def get_abs_recall_dist(items):
