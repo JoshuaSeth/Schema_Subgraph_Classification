@@ -20,6 +20,30 @@ import uuid
 @st.cache_data(persist="disk", experimental_allow_widgets=True)
 def viz_encyclo_ui(schema, mode, use_context, _set_cur):
     '''Visualizes an interactive encyclopedia of entities and relations of the graph for the current selected parameters'''
+    ents, rels, sents_for_ents, rels_dict = build_encyclo_data(
+        schema, mode, use_context)
+
+    # Select entities or relations
+    cur_selection = st.selectbox('Entities or relations', [
+        'entities', 'relations'], key='search_1')
+
+    # Entities tab
+    if cur_selection == 'entities':
+        if st.session_state['current_ent'] == None:
+            viz_list_all_entities(_set_cur, ents)
+        else:
+            viz_current_entity(_set_cur, rels, sents_for_ents)
+
+    # Relations tab
+    if cur_selection == 'relations':
+        if st.session_state['current_rel'] == None:
+            viz_list_all_relations(_set_cur, rels_dict)
+        else:
+            viz_current_relation(_set_cur, rels_dict)
+
+
+@st.cache_data(persist="disk")
+def build_encyclo_data(schema, mode, use_context):
     # Load the data
     sents, corefs, rels,  entitity_sents,  = load_data(
         schema, mode, use_context, grouped=False)
@@ -52,23 +76,7 @@ def viz_encyclo_ui(schema, mode, use_context, _set_cur):
     # Create a dict with ent name: relations with this ent
     ents = {ent: [rel for rel in rels if ent in rel] for ent in ents}
 
-    # Select entities or relations
-    cur_selection = st.selectbox('Entities or relations', [
-        'entities', 'relations'], key='search_1')
-
-    # Entities tab
-    if cur_selection == 'entities':
-        if st.session_state['current_ent'] == None:
-            viz_list_all_entities(_set_cur, ents)
-        else:
-            viz_current_entity(_set_cur, rels, sents_for_ents)
-
-    # Relations tab
-    if cur_selection == 'relations':
-        if st.session_state['current_rel'] == None:
-            viz_list_all_relations(_set_cur, rels_dict)
-        else:
-            viz_current_relation(_set_cur, rels_dict)
+    return ents, rels, sents_for_ents, rels_dict
 
 
 def viz_current_relation(_set_cur, rels_dict):
