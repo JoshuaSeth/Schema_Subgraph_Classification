@@ -127,8 +127,11 @@ def viz_current_entity(_set_cur, rels, sents_for_ents):
 
     # Viz the sentence involving this one
     st.caption('Sentences with this entity')
-    for s in sents_for_ents[st.session_state['current_ent']]:
-        annotated_text(s)
+    print(sents_for_ents[st.session_state['current_ent']])
+
+    if st.session_state['current_ent'] in sents_for_ents:
+        for s in sents_for_ents[st.session_state['current_ent']]:
+            annotated_text(s)
 
     st.divider()
     # Get all relations that involve the current entity

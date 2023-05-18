@@ -120,7 +120,11 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None,
 
             ents.extend(extract_entities(data))
 
-            rels.extend(extract_relations(data))
+            # Sadly MECHANIC granular is so different that it needs a separate relation parser
+            if schema != 'covid-event':
+                rels.extend(extract_relations(data))
+            else:
+                rels.extend(extract_relations_granular(data))
 
     # If not grouped everything if done
     if not grouped:
@@ -173,6 +177,52 @@ def set_idx_and_tag(ent, tags_idxs):
             tags_idxs[ent[0]] = ent[1]
 
 
+def extract_relations_granular(data: dict) -> List[list]:
+    '''Extracts the relations from the data if relations in the data for MECHANIC Granular. Sadly the relations for mechanic granular are structured very differently and we cannot integrate their parsing in the universal relations loader. As such they have a separate loading function. 
+
+    Parameters
+    ------------
+        data: dict
+            An dygie prediction loaded json file as dict.
+
+    Return
+    -----------
+        rels 
+            List of lists of lists. Each list corresponds to a sentence. The sentence consists of multiple lists. These lists are the origin text, target text and relation tag.'''
+    new_sents = []
+    if 'predicted_events' in data:
+        # Every sentence has a list of events
+        # These events are again a list with sublists that are args or triggers
+        # These sublists are either arg0, arg1 or trigger
+        # These should not be parsed as (Covid-19, is a, arg0)
+        # Rather we want to retrieve the arg0 word from the sentence the arg1 word from the sentence and the trigger word from the sentence
+        flattened_sents = [word for sentence in data['sentences']
+                           for word in sentence]
+
+        for sent in data['predicted_events']:
+            rels_for_sent = []
+            new_sents.append(rels_for_sent)
+            for event in sent:
+                print(event)
+                subject = None
+                trigger = None
+                object = None
+                for part in event:
+                    # Is the relation
+                    if isinstance(part[1], str):
+                        trigger = flattened_sents[part[0]]
+                    # Is the origin or target
+                    elif part[2] == 'ARG0':
+                        subject = ' '.join(flattened_sents[part[0]: part[1]+1])
+                    elif part[2] == 'ARG1':
+                        object = ' '.join(flattened_sents[part[0]: part[1]+1])
+                if subject and trigger and object:
+                    rels_for_sent.append(tuple([subject, object, trigger]))
+
+    print(new_sents)
+    return new_sents
+
+
 def extract_relations(data: dict) -> List[List]:
     '''Extracts the relations from the data if relations in the data. 
 
@@ -207,7 +257,7 @@ def extract_relations(data: dict) -> List[List]:
                     rels_in_sent.append(rel_in_sent)
 
             rels.append(rels_in_sent)
-
+    print(rels)
     return rels
 
 
@@ -242,6 +292,7 @@ def extract_entities(data: dict) -> List[list]:
         l = build_tagged_sent(data['sentences'], data['predicted_ner'])
         ents.extend(l)
 
+    # For tbe mechanic granular events we need a different procedure
     if 'predicted_events' in data:
         # For events we follow the same proces
         l = build_tagged_sent(data['sentences'], data['predicted_events'])
@@ -279,16 +330,25 @@ def build_tagged_sent(sents: List[list], ent_list: List[list]) -> List[list]:
                 tagged_sent.append(word + ' ')
                 last_tag = None
                 # If is entity add new tag span or extend previous span
-            else:
+                # Filter for this, we do not want relations as entities (granular)
+            elif tags_idxs[global_idx] != 'TRIGGER':
                 if last_tag == tags_idxs[global_idx]:
                     tagged_sent[-1] = (tagged_sent[-1][0] +
                                        ' ' + word, tagged_sent[-1][1])
                 else:
-                    tagged_sent.append(tuple([word, tags_idxs[global_idx]]))
+                    tagged_sent.append(
+                        tuple([word, post_process_granular_tag(tags_idxs[global_idx])]))
                     # Set this tag as the last tag
                 last_tag = tags_idxs[global_idx]
         sent_total_idx += len(sent)
     return fill_list
+
+
+def post_process_granular_tag(tag):
+    '''The granular tags are arg0 or arg1, these should all be set to entity'''
+    if tag == 'ARG0' or tag == 'ARG1':
+        return 'entity'
+    return tag
 
 
 def get_fpaths_for_request(schema, mode, context, index):
