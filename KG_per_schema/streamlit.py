@@ -15,6 +15,7 @@ from collections import defaultdict
 from streamlit_agraph import agraph, Config, Node, Edge
 import plotly.express as px
 import plotly
+import uuid
 
 # Variables
 schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event']
@@ -31,12 +32,22 @@ schema = st.selectbox('Schema', schemas)
 mode = st.selectbox('Mode', modes)
 use_context = st.checkbox('Use context', value=True)
 sent_tab, graph_tab, graph_stats_tab, ecyclo_tab = st.tabs(visualizations)
-current_ent = None
+
+# Data flow state
+if not 'current_ent' in st.session_state:
+    st.session_state['current_ent'] = None
+if not 'current_rel' in st.session_state:
+    st.session_state['current_rel'] = None
 
 
-def show_connections(ent):
-    global current_ent
-    current_ent = ent
+def set_cur(ent=None, rel=None):
+    '''Sets the current entity and relation to the given ones. If not given the entity or relation will be set to none.'''
+    st.session_state['current_ent'] = ent
+    st.session_state['current_rel'] = rel
+    if ent == None:
+        st.session_state.search_1 = 'relations'
+    if rel == None:
+        st.session_state.search_1 = 'entities'
 
 
 if schema != None and mode != None:
@@ -99,12 +110,63 @@ if schema != None and mode != None:
         sents, corefs, rels,  ents,  = load_data(
             schema, mode, use_context, grouped=False)
 
-        ents = set([
-            part[0] for sent in ents for part in sent if isinstance(part, tuple)])
+        rels = [rel for sent in rels for rel in sent]
 
-        if not current_ent:
-            for ent in ents:
-                st.button(label=ent, on_click=show_connections, args=(ent,))
-        else:
-            st.text(current_ent)
+        rels_dict = defaultdict(list)
+        for rel in rels:
+            rels_dict[rel[2]].append(rel)
+
+        ents = [
+            part[0] for sent in ents for part in sent if isinstance(part, tuple)]
+
+        ents = {ent: [rel for rel in rels if ent in rel] for ent in ents}
+
+        cur_selection = st.selectbox('Entities or relations', [
+            'entities', 'relations'], key='search_1')
+
+        # Entities tab
+        if cur_selection == 'entities':
+            print(st.session_state['current_ent'])
+            # Main scrolling menu
+            if st.session_state['current_ent'] == None:
+                for ent, val in ents.items():
+                    st.button(label=ent + ' (' + str(len(val)) + ' relations) ',
+                              on_click=set_cur, args=(ent,))
+            # Visualization  for specifc item
+            else:
+                st.button(label='Back', on_click=set_cur,
+                          args=(None,), type='primary')
+                st.subheader(st.session_state['current_ent'])
+
+                # Get all relations that involve the current entity
+                rels_ = [
+                    rel for rel in rels if st.session_state['current_ent'] in rel]
+
+                for rel in rels_:
+                    col1, col2 = st.columns(2)
+                    col1.button(label=rel[2], key=str(
+                        uuid.uuid4()), on_click=set_cur, args=(None, rel[2]))
+                    col2.button(label=rel[1], key=str(
+                        uuid.uuid4()), on_click=set_cur, args=(rel[1],))
+
+        # Relations tab
+        if cur_selection == 'relations':
+            if st.session_state['current_rel'] == None:
+                for rel_name, rel in rels_dict.items():
+                    st.button(label=rel_name + ' (' + str(len(rel)) + ' entities) ',
+                              on_click=set_cur, args=(None, rel_name,), key=str(uuid.uuid4()))
+            else:
+                st.button(label='Back', on_click=set_cur,
+                          args=(None, None), type='primary')
+                st.subheader(st.session_state['current_rel'])
+
+                for rel in rels_dict[st.session_state['current_rel']]:
+                    col1, col2, col3 = st.columns(3)
+                    col1.button(label=rel[0], key=str(
+                        uuid.uuid4()), on_click=set_cur, args=(rel[0],))
+                    col2.button(label=rel[2], key=str(
+                        uuid.uuid4()), on_click=set_cur, args=(None, rel[2]))
+                    col3.button(label=rel[1], key=str(
+                        uuid.uuid4()), on_click=set_cur, args=(rel[1],))
+
         # When clicking on an entity we get a list of all relations that entity is involved in
