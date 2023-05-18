@@ -7,11 +7,13 @@ import json
 import glob
 import subprocess
 from utils import project_path, get_model_fname
-from results_loader import load_data, build_graph, get_metrics, get_abs_recall_dist, get_degrees_dist
+from results_loader import load_data, build_graph
+from metrics import get_metrics, get_abs_recall_dist, get_degrees_dist
 from annotated_text import annotated_text
 import pickle
 from collections import defaultdict
 from streamlit_agraph import agraph, Config, Node, Edge
+import plotly.express as px
 
 
 # Variables
@@ -58,17 +60,32 @@ if schema != None and mode != None:
                config=config)
 
     with graph_stats_tab:
+        # Collect metrics
         all_metrics = {}
+        ent_recalls, rel_recalls, degrees = {}, {}, {}
+
         for schema in schemas:
             sents, corefs, rels,  ents,  = load_data(
                 schema, mode, use_context, grouped=False)
             metrics = get_metrics(ents, rels)
 
             all_metrics[schema] = metrics
-
-            st.text(schema)
-            st.text(get_abs_recall_dist(ents))
-            st.text(get_abs_recall_dist(rels))
-            st.text(get_degrees_dist(ents, rels))
+            ent_recalls[schema] = get_abs_recall_dist(ents)
+            rel_recalls[schema] = get_abs_recall_dist(rels)
+            degrees[schema] = get_degrees_dist(ents, rels)
 
         st.dataframe(pd.DataFrame(all_metrics))
+
+
+def to_nx_graph(ents, rels):
+    '''Converts a list of entity tagged sentences and relations to a nx graph'''
+    G = nx.Graph()
+
+    for rel_sent in rels:
+        for rel in rel_sent:
+            G.add_edge(rel[0], rel[1], label=rel[2])
+
+    for ent_sent in ents:
+        for ent in ent_sent:
+            G.add_edge(ent[1], ent[0], label='type')
+    return G
