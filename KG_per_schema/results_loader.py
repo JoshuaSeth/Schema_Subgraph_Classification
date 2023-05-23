@@ -18,8 +18,8 @@ import pandas as pd
 
 
 # Some variables for the operation
-dygie_prediction_dir_path = project_path + '/KG_per_schema/data/predictions/'
-group_info_fpath = project_path + '/KG_per_schema/data/group_info/group_info.pkl'
+dygie_prediction_dir_path = project_path + '/data/predictions/'
+group_info_fpath = project_path + '/data/group_info/group_info.pkl'
 
 
 @st.cache_data(persist="disk", experimental_allow_widgets=True)
@@ -203,7 +203,6 @@ def extract_relations_granular(data: dict) -> List[list]:
             rels_for_sent = []
             new_sents.append(rels_for_sent)
             for event in sent:
-                print(event)
                 subject = None
                 trigger = None
                 object = None
@@ -219,7 +218,6 @@ def extract_relations_granular(data: dict) -> List[list]:
                 if subject and trigger and object:
                     rels_for_sent.append(tuple([subject, object, trigger]))
 
-    print(new_sents)
     return new_sents
 
 
@@ -257,7 +255,6 @@ def extract_relations(data: dict) -> List[List]:
                     rels_in_sent.append(rel_in_sent)
 
             rels.append(rels_in_sent)
-    print(rels)
     return rels
 
 

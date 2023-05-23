@@ -1,0 +1,33 @@
+FROM python:3.11
+
+# Expose port you want your app on
+EXPOSE 8080
+EXPOSE 8501
+
+RUN mkdir app
+
+# Upgrade pip and install requirements
+COPY requirements.txt app/requirements.txt
+RUN pip install -U pip
+RUN pip install -r app/requirements.txt
+
+# Copy app code and set working directory
+COPY data/ /app/data/
+COPY streamlit_ui /app/streamlit_ui
+COPY dockerfile /app/dockerfile
+COPY README.md /app/README.md
+COPY requirements.txt /app/requirements.txt
+COPY results_loader.py /app/results_loader.py
+COPY streamlit.py /app/streamlit.py
+COPY utils.py /app/utils.py
+COPY metrics.py /app/metrics.py
+
+RUN cd app && ls -a
+# COPY /. app
+
+WORKDIR ./app
+
+ENV WATCHDOG_USE_INOTIFY=false
+
+# Run
+ENTRYPOINT ["streamlit", "run", "streamlit.py","--browser.gatherUsageStats", "False", "–server.port=8080", "–server.address=0.0.0.0"]

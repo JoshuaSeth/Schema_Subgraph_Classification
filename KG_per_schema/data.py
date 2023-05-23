@@ -21,7 +21,7 @@ def is_research_sent(item, mode='OR'):
 def pickle_group_info(item):
     '''Saves the context sentences to a pickled dict so that later can be retrieved what sentences belong to what context. This is needed since the dygie pipeline can only handle sentences and not texts (consisting of multiple sentences). With this group info the contexts can be recreated later from the sentences.'''
     group_info_fpath = project_path + \
-        '/KG_per_schema/data/group_info/group_info.pkl'
+        '/data/group_info/group_info.pkl'
 
     # Load the current dict
     with open(group_info_fpath, 'rb') as f:

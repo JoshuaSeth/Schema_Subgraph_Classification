@@ -138,8 +138,11 @@ def viz_current_entity(_set_cur, rels, sents_for_ents):
     rels_ = [
         rel for rel in rels if st.session_state['current_ent'] in rel]
 
+    rels_ = list(set(rels_))
+    rels_.sort(key=lambda x: x[2])
     st.caption('Relations with this entity')
-    for rel in set(rels_):
+
+    for rel in rels_:
         col1, col2, col3 = st.columns(3)
         col1.button(label=rel[0], key=str(
                     uuid.uuid4()), on_click=_set_cur, args=(rel[0],))

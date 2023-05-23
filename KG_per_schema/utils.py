@@ -3,7 +3,7 @@
 from os.path import dirname
 
 
-project_path: str = dirname(dirname(__file__))
+project_path: str = '/app'  # dirname(dirname(__file__))
 
 
 def get_model_fname(filename):
