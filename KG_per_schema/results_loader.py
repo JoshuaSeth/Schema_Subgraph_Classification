@@ -19,9 +19,10 @@ import pandas as pd
 
 # Some variables for the operation
 dygie_prediction_dir_path = project_path + \
-    ('KG_per_schema' if is_docker() else '') + '/data/predictions/'
+    ('/KG_per_schema' if not is_docker() else '') + '/data/predictions/'
 group_info_fpath = project_path + \
-    ('KG_per_schema' if is_docker() else '') + '/data/group_info/group_info.pkl'
+    ('/KG_per_schema' if not is_docker() else '') + \
+    '/data/group_info/group_info.pkl'
 
 
 @st.cache_data(persist="disk", experimental_allow_widgets=True)
@@ -128,6 +129,8 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None,
             else:
                 rels.extend(extract_relations_granular(data))
 
+    # print(rels)
+    # print(ents)
     # If not grouped everything if done
     if not grouped:
         return sents, corefs, rels, ents

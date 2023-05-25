@@ -41,7 +41,7 @@ def viz_encyclo_ui(schema, mode, use_context, _set_cur):
             viz_current_relation(_set_cur, rels_dict)
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def build_encyclo_data(schema, mode, use_context):
     # Load the data
     sents, corefs, rels,  entitity_sents,  = load_data(
