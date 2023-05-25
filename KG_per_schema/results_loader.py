@@ -71,7 +71,7 @@ def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=Non
 
 
 @st.cache_data(persist="disk")
-def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None, grouped=True):
+def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=None, grouped=True):
     '''Loads all predicted data for certain request parameters.
 
     Parameters
@@ -96,38 +96,40 @@ def load_data(schema: str, mode: str = 'AND', context: bool = False, index=None,
         '''
 
     # Check input
-    if schema not in ["scierc", "None", "genia", "covid-event", "ace05", "ace-event"]:
-        raise ValueError(
-            "Schema must be one of: [scierc, None (= mechanic granular), genia, covid-event (= mechanic coarse), ace05, ace-event]")
+    for schema in schemas:
+        if schema not in ["scierc", "None", "genia", "covid-event", "ace05", "ace-event"]:
+            raise ValueError(
+                f"Schema must be one or multiple of: [scierc, None (= mechanic granular), genia, covid-event (= mechanic coarse), ace05, ace-event], you gave {schemas}")
 
     if mode not in ["AND", "OR"]:
         raise ValueError("Mode must be one of: [AND, OR]")
 
-    # Retrieve file paths that match the request
-    matching_fpaths = get_fpaths_for_request(schema, mode, context, index)
-
     # Load and concatenate the data of the matching files
     sents, corefs, rels, ents = [], [], [], []
 
-    for dygie_data_fpath in matching_fpaths:
-        data = None
-        try:
-            with open(dygie_data_fpath, 'r') as f:
-                data = json.load(f)
-        except Exception as e:
-            print('malformed data file', dygie_data_fpath)
+    # Retrieve file paths that match the request
+    for schema in schemas:
+        matching_fpaths = get_fpaths_for_request(schema, mode, context, index)
 
-        if data:
-            # Extend the collected data
-            sents.extend(data['sentences'])
+        for dygie_data_fpath in matching_fpaths:
+            data = None
+            try:
+                with open(dygie_data_fpath, 'r') as f:
+                    data = json.load(f)
+            except Exception as e:
+                print('malformed data file', dygie_data_fpath)
 
-            ents.extend(extract_entities(data))
+            if data:
+                # Extend the collected data
+                sents.extend(data['sentences'])
 
-            # Sadly MECHANIC granular is so different that it needs a separate relation parser
-            if schema != 'covid-event':
-                rels.extend(extract_relations(data))
-            else:
-                rels.extend(extract_relations_granular(data))
+                ents.extend(extract_entities(data))
+
+                # Sadly MECHANIC granular is so different that it needs a separate relation parser
+                if schema != 'covid-event':
+                    rels.extend(extract_relations(data))
+                else:
+                    rels.extend(extract_relations_granular(data))
 
     # print(rels)
     # print(ents)

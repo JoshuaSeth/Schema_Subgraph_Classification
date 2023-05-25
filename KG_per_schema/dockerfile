@@ -21,6 +21,7 @@ COPY results_loader.py /app/results_loader.py
 COPY streamlit.py /app/streamlit.py
 COPY utils.py /app/utils.py
 COPY metrics.py /app/metrics.py
+COPY __pycache__ /app/__pycache__
 
 RUN cd app && ls -a
 # COPY /. app

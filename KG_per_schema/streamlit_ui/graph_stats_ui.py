@@ -25,7 +25,7 @@ def viz_graph_stats_ui(schemas, mode, use_context):
 
     for schema_any in schemas:
         sents, corefs, rels,  ents,  = load_data(
-            schema_any, mode, use_context, grouped=False)
+            [schema_any], mode, use_context, grouped=False)
         metrics = get_metrics(ents, rels)
 
         all_metrics[schema_any] = metrics

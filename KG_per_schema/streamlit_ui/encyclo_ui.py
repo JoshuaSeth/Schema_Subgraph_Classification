@@ -17,10 +17,10 @@ import plotly
 import uuid
 
 
-def viz_encyclo_ui(schema, mode, use_context, _set_cur):
+def viz_encyclo_ui(schemas, mode, use_context, _set_cur):
     '''Visualizes an interactive encyclopedia of entities and relations of the graph for the current selected parameters'''
     ents, rels, sents_for_ents, rels_dict = build_encyclo_data(
-        schema, mode, use_context)
+        schemas, mode, use_context)
 
     # Select entities or relations
     cur_selection = st.selectbox('Entities or relations', [
@@ -42,10 +42,10 @@ def viz_encyclo_ui(schema, mode, use_context, _set_cur):
 
 
 # @st.cache_data(persist="disk")
-def build_encyclo_data(schema, mode, use_context):
+def build_encyclo_data(schemas, mode, use_context):
     # Load the data
     sents, corefs, rels,  entitity_sents,  = load_data(
-        schema, mode, use_context, grouped=False)
+        schemas, mode, use_context, grouped=False)
 
     # Flatten relations
     rels = [rel for sent in rels for rel in sent]
@@ -126,7 +126,6 @@ def viz_current_entity(_set_cur, rels, sents_for_ents):
 
     # Viz the sentence involving this one
     st.caption('Sentences with this entity')
-    print(sents_for_ents[st.session_state['current_ent']])
 
     if st.session_state['current_ent'] in sents_for_ents:
         for s in sents_for_ents[st.session_state['current_ent']]:
