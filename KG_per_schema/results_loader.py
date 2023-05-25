@@ -2,7 +2,7 @@
 import subprocess
 import glob
 import os
-from utils import project_path
+from utils import project_path, is_docker
 import json
 from tqdm import tqdm
 from copy import deepcopy
@@ -18,8 +18,10 @@ import pandas as pd
 
 
 # Some variables for the operation
-dygie_prediction_dir_path = project_path + '/data/predictions/'
-group_info_fpath = project_path + '/data/group_info/group_info.pkl'
+dygie_prediction_dir_path = project_path + \
+    ('KG_per_schema' if is_docker() else '') + '/data/predictions/'
+group_info_fpath = project_path + \
+    ('KG_per_schema' if is_docker() else '') + '/data/group_info/group_info.pkl'
 
 
 @st.cache_data(persist="disk", experimental_allow_widgets=True)

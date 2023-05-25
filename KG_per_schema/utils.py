@@ -1,9 +1,19 @@
 '''Utility functions used by multiple scripts in folder'''
 
 from os.path import dirname
+import os
 
 
-project_path: str = '/app'  # dirname(dirname(__file__))
+def is_docker():
+    path = '/proc/self/cgroup'
+    return (
+        os.path.exists('/.dockerenv') or
+        os.path.isfile(path) and any('docker' in line for line in open(path))
+    )
+
+
+# Different for local running and runnning from docker
+project_path: str = '/app' if is_docker() else dirname(dirname(__file__))
 
 
 def get_model_fname(filename):

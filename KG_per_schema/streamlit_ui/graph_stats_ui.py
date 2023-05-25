@@ -17,7 +17,6 @@ import plotly
 import uuid
 
 
-@st.cache_data(persist="disk", experimental_allow_widgets=True)
 def viz_graph_stats_ui(schemas, mode, use_context):
     '''Visualizes the graph statistics such as degree and absolute recall in several plots.'''
     # Collect metrics

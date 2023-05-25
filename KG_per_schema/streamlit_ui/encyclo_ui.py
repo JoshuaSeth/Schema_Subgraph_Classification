@@ -17,7 +17,6 @@ import plotly
 import uuid
 
 
-@st.cache_data(persist="disk", experimental_allow_widgets=True)
 def viz_encyclo_ui(schema, mode, use_context, _set_cur):
     '''Visualizes an interactive encyclopedia of entities and relations of the graph for the current selected parameters'''
     ents, rels, sents_for_ents, rels_dict = build_encyclo_data(
