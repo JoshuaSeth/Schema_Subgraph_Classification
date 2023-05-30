@@ -22,6 +22,7 @@ def viz_encyclo_ui(schemas, mode, use_context, _set_cur):
     ents, rels, sents_for_ents, rels_dict = build_encyclo_data(
         schemas, mode, use_context)
 
+
     # Select entities or relations
     cur_selection = st.selectbox('Entities or relations', [
         'entities', 'relations'], key='search_1')
@@ -53,7 +54,7 @@ def build_encyclo_data(schemas, mode, use_context):
     # Append the entity types to the relations of the graph
     for ent_sent in entitity_sents:
         for part in ent_sent:
-            if isinstance(part, tuple):
+            if isinstance(part, tuple) or isinstance(part, list):
                 rels.append((part[0], part[1], 'is a'))
 
     # Only take unique relations
@@ -68,12 +69,12 @@ def build_encyclo_data(schemas, mode, use_context):
     sents_for_ents = defaultdict(list)
     for s in entitity_sents:
         for part in s:
-            if isinstance(part, tuple):
+            if isinstance(part, tuple) or isinstance(part, list) :
                 sents_for_ents[part[0]].append(s)
 
     # Extract the acgual entities from the entity sentences
     ents = [
-        part[0] for sent in entitity_sents for part in sent if isinstance(part, tuple)]
+        part[0] for sent in entitity_sents for part in sent if isinstance(part, tuple) or isinstance(part, list)]
 
     # Create a dict with ent name: relations with this ent
     ents = {ent: [rel for rel in rels if ent in rel] for ent in ents}
@@ -81,6 +82,7 @@ def build_encyclo_data(schemas, mode, use_context):
     # Sort ents by number of relations
     ents = dict(
         sorted(ents.items(), key=lambda item: len(item[1]), reverse=True))
+    
 
     return ents, rels, sents_for_ents, rels_dict
 

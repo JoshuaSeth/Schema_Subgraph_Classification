@@ -70,7 +70,7 @@ def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=Non
     return nodes, edges
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=None, grouped=True):
     '''Loads all predicted data for certain request parameters.
 
@@ -97,9 +97,11 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=Non
 
     # Check input
     for schema in schemas:
-        if schema not in ["scierc", "None", "genia", "covid-event", "ace05", "ace-event"]:
+        if schema not in ["scierc", "None", "genia", "covid-event", "ace05", "ace-event"] and not 'spacy' in schema:
             raise ValueError(
-                f"Schema must be one or multiple of: [scierc, None (= mechanic granular), genia, covid-event (= mechanic coarse), ace05, ace-event], you gave {schemas}")
+                f"Schema must be one or multiple of: [scierc, None (= mechanic granular), genia, covid-event (= mechanic coarse), ace05, ace-event, spacy (several variants)], you gave {schemas}")
+
+    # Preprocess spacy schema name
 
     if mode not in ["AND", "OR"]:
         raise ValueError("Mode must be one of: [AND, OR]")
@@ -110,7 +112,7 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=Non
     # Retrieve file paths that match the request
     for schema in schemas:
         matching_fpaths = get_fpaths_for_request(schema, mode, context, index)
-
+        print('\n', schema, mode, context, 'matching_fnames', [os.path.basename(matching_fpath) for matching_fpath in matching_fpaths])
         for dygie_data_fpath in matching_fpaths:
             data = None
             try:
@@ -157,6 +159,7 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=Non
     return dict(sorted(groups.items()))
 
 
+@st.cache_data(persist="disk")
 def get_tag_idxs(entity_list):
     '''Creates a dictionary of word indices and their corresponding tags.'''
     tags_idxs = {}
@@ -173,6 +176,7 @@ def get_tag_idxs(entity_list):
     return tags_idxs
 
 
+@st.cache_data(persist="disk")
 def set_idx_and_tag(ent, tags_idxs):
     '''Get the idx and tag from the entity and add it to the tags_idxs dict.'''
     if len(ent) > 2:
@@ -184,6 +188,7 @@ def set_idx_and_tag(ent, tags_idxs):
             tags_idxs[ent[0]] = ent[1]
 
 
+@st.cache_data(persist="disk")
 def extract_relations_granular(data: dict) -> List[list]:
     '''Extracts the relations from the data if relations in the data for MECHANIC Granular. Sadly the relations for mechanic granular are structured very differently and we cannot integrate their parsing in the universal relations loader. As such they have a separate loading function. 
 
@@ -228,6 +233,7 @@ def extract_relations_granular(data: dict) -> List[list]:
     return new_sents
 
 
+@st.cache_data(persist="disk")
 def extract_relations(data: dict) -> List[List]:
     '''Extracts the relations from the data if relations in the data. 
 
@@ -265,6 +271,7 @@ def extract_relations(data: dict) -> List[List]:
     return rels
 
 
+@st.cache_data(persist="disk")
 def extract_rel_items(flattened_sents: List[str], rel: list) -> tuple:
     '''Takes a single list representing a relation and returns a list of the origin text, target text and relation tag.'''
     origin_start_idx = rel[0]
@@ -278,6 +285,7 @@ def extract_rel_items(flattened_sents: List[str], rel: list) -> tuple:
     return rel_in_sent
 
 
+# @st.cache_data(persist="disk")
 def extract_entities(data: dict) -> List[list]:
     '''Extracts the entities from the data if entities in the data. 
 
@@ -295,6 +303,12 @@ def extract_entities(data: dict) -> List[list]:
         # Create a dict of words indices and their corresponding tags
         l = build_tagged_sent(data['sentences'], data['predicted_ner'])
         ents.extend(l)
+    
+    # Some predictors (spacy self-build) will have the tagged sents ready already
+    if 'tagged_sents' in data:
+        print('yes\nyes\nyes\n')
+        l = deepcopy(data['tagged_sents'])
+        ents.extend(l)
 
     # For tbe mechanic granular events we need a different procedure
     if 'predicted_events' in data:
@@ -305,6 +319,7 @@ def extract_entities(data: dict) -> List[list]:
     return ents
 
 
+@st.cache_data(persist="disk")
 def build_tagged_sent(sents: List[list], ent_list: List[list]) -> List[list]:
     '''Returns the list with the tagged sentences based on the sentences and the entities from the dygie data.
 
@@ -358,7 +373,7 @@ def post_process_granular_tag(tag):
 def get_fpaths_for_request(schema, mode, context, index):
     '''Returns the file paths that match the request parameters.'''
     matching_fpaths = []
-    for dygie_data_fpath in tqdm(glob.glob(f"{dygie_prediction_dir_path}*")):
+    for dygie_data_fpath in glob.glob(f"{dygie_prediction_dir_path}*"):
         # Retrieve properties
         properties = os.path.basename(dygie_data_fpath).split('_')
         has_start_idx = properties[-1]

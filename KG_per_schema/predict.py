@@ -10,6 +10,8 @@ import os
 from utils import get_model_fname, project_path
 import glob
 from tqdm import tqdm
+import json
+
 
 # Little less verbose logs
 os.environ["ALLENNLP_LOG_LEVEL"] = "ERROR"
@@ -18,12 +20,13 @@ os.environ["ALLENNLP_LOG_LEVEL"] = "ERROR"
 
 # Variables
 dygie_data_dir_path = project_path + '/KG_per_schema/data/dygie_data/'
+base_data_dir_path = project_path + '/KG_per_schema/data/sents/'
 output_dir_path = project_path + '/KG_per_schema/data/predictions/'
 dygie_dir_path = project_path + \
     "/old/streamlit_compare_schemas/ORKG_parsers/dygiepp/"
 
 
-def create_prediction_datasets(schemas=['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event'], use_cached=True):
+def create_prediction_datasets(schemas=['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event', 'spacy'], use_cached=True):
     '''
     Use the dygie schema models to do predictions for all datasets.
 
@@ -56,6 +59,49 @@ def create_prediction_datasets(schemas=['scierc', 'None', 'genia', 'covid-event'
             cmd = f'''allennlp predict "{model_fpath}" "{dygie_data_fpath}"  --include-package dygie   --predictor dygie  --use-dataset-reader  --cuda-device "-1" --output-file "{output_fpath}"'''
             subprocess.run(cmd, shell=True, cwd=dygie_dir_path)
 
+    
+    # For non-dygie (spacy) predictions we simply read from the base data but write the data in the same format
+    if 'spacy' in schemas:
+        import spacy
+        # import en_core_sci_scibert
+        # import en_core_web_lg
+        # import en_core_web_sm
+
+        for model in ['en_core_web_sm', 'en_core_web_lg', 'en_core_sci_scibert']:
+            nlp = spacy.load(model)
+
+
+            for base_data_fpath in tqdm(glob.glob(f"{base_data_dir_path}*")):
+                mode = os.path.basename(base_data_fpath).split('_')[1]
+                prediction = {"doc_key": os.path.basename(base_data_fpath), "dataset": "spacy"}
+
+                with open(base_data_fpath, 'r') as f:
+                    sents = f.read()
+
+                print(base_data_fpath)
+                doc = nlp(sents)
+
+                prediction['sentences'] = [[token.text for token in sent] for sent in doc.sents]
+
+                predicted_ners = []
+                for sent in doc.sents:
+                    new_sent = []
+                    ent_names = {ent.text: ent.label_ for ent in sent.ents}
+
+                    for token in sent:
+                        if token.text in ent_names:
+                            new_sent.append((token.text, ent_names[token.text]))
+                        else:
+                            new_sent.append(token.text)
+
+                    predicted_ners.append(new_sent)
+
+                prediction['tagged_sents'] = predicted_ners
+
+                output_fname = 'spacy-' + model.replace('_', '') + '_' + os.path.basename(base_data_fpath).replace('.txt', '') + '_0'
+                with open(output_dir_path + output_fname, 'w') as f:
+                    json.dump(prediction, f)
+
 
 if __name__ == '__main__':
-    create_prediction_datasets()
+    create_prediction_datasets(schemas=['spacy'])
