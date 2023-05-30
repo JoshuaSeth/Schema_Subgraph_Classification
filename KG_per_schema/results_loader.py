@@ -70,7 +70,7 @@ def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=Non
     return nodes, edges
 
 
-# @st.cache_data(persist="disk")
+@st.cache_data(persist="disk")
 def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=None, grouped=True):
     '''Loads all predicted data for certain request parameters.
 
@@ -285,7 +285,7 @@ def extract_rel_items(flattened_sents: List[str], rel: list) -> tuple:
     return rel_in_sent
 
 
-# @st.cache_data(persist="disk")
+@st.cache_data(persist="disk")
 def extract_entities(data: dict) -> List[list]:
     '''Extracts the entities from the data if entities in the data. 
 
@@ -306,7 +306,6 @@ def extract_entities(data: dict) -> List[list]:
     
     # Some predictors (spacy self-build) will have the tagged sents ready already
     if 'tagged_sents' in data:
-        print('yes\nyes\nyes\n')
         l = deepcopy(data['tagged_sents'])
         ents.extend(l)
 

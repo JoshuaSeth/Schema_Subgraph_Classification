@@ -41,12 +41,16 @@ def viz_encyclo_ui(schemas, mode, use_context, _set_cur):
         else:
             viz_current_relation(_set_cur, rels_dict)
 
+def list_to_tuple(l):
+    return [[tuple(x)  if not isinstance(x, str)  else x + ' ' for x in ent_sent] for ent_sent in l]
 
 # @st.cache_data(persist="disk")
 def build_encyclo_data(schemas, mode, use_context):
     # Load the data
     sents, corefs, rels,  entitity_sents,  = load_data(
         schemas, mode, use_context, grouped=False)
+    
+    entitity_sents = list_to_tuple(entitity_sents)
 
     # Flatten relations
     rels = [rel for sent in rels for rel in sent]
