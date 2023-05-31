@@ -30,5 +30,9 @@ WORKDIR ./app
 
 ENV WATCHDOG_USE_INOTIFY=false
 
+# Paths are different for local and docker container
+ENV AM_I_IN_A_DOCKER_CONTAINER Yes
+
+
 # Run
 ENTRYPOINT ["streamlit", "run", "app.py","--server.port","8080",  "--browser.gatherUsageStats", "False", "–server.port=8080", "–server.address=0.0.0.0"]

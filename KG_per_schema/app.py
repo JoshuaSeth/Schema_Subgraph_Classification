@@ -4,20 +4,12 @@ from streamlit_ui.sents_ui import viz_sents_ui
 from streamlit_ui.graph_ui import viz_graph_ui
 from streamlit_ui.graph_stats_ui import viz_graph_stats_ui
 from streamlit_ui.encyclo_ui import viz_encyclo_ui
-
-# Move to utils
-def map_schema_names(selected_schemas):
-    renamed_schemas = []
-    for schema in selected_schemas:
-        if 'spacy' in schema:
-            renamed_schemas.append(schema.replace('_', '').replace(' ', '-'))
-        else: renamed_schemas.append(schema)
-    return renamed_schemas
-
+from utils import project_path, map_schema_names
 
 
 # Variables
-schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event', 'spacy en_core_web_sm', 'spacy en_core_web_lg', 'spacy en_core_sci_scibert']
+schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event',
+           'spacy en_core_web_sm', 'spacy en_core_web_lg', 'spacy en_core_sci_scibert']
 modes = ['AND', 'OR']
 visualizations = ['sentences', 'graph', 'graph stats', 'encyclopedic explorer']
 
@@ -27,6 +19,7 @@ st.header('KG Schema Explorer')
 st.markdown('NOTE: To get the best performance when exporing schemas use the "AND" mode and disable using the context and only select a single schema. When you want the most complete interconnecte graph use the "OR" mode and enable using the context. You can combine multiple schemas into a single graph. Results are cached so the second time loading the results for a particular combination of parameters should be magnitudes faster.')
 st.markdown(
     'The analysis of these results can be found in the [research notes](https://docs.google.com/document/d/1i5xHfUvWKcGeX7D1r3Eb1IPm4Bg83-Y0/edit#bookmark=id.jb6w6xm4vqf2).')
+st.markdown(f'Running from project dir: {str(project_path)}')
 
 selected_schemas = st.multiselect('Schema', schemas)
 

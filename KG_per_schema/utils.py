@@ -3,12 +3,23 @@
 from os.path import dirname
 import os
 
+# Move to utils
+def map_schema_names(selected_schemas):
+    renamed_schemas = []
+    for schema in selected_schemas:
+        if 'spacy' in schema:
+            renamed_schemas.append(schema.replace('_', '').replace(' ', '-'))
+        else: renamed_schemas.append(schema)
+    return renamed_schemas
 
 def is_docker():
     path = '/proc/self/cgroup'
+    FOUND_DOCKER = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+
     return (
         os.path.exists('/.dockerenv') or
-        os.path.isfile(path) and any('docker' in line for line in open(path))
+        os.path.isfile(path) and any(
+            'docker' in line for line in open(path)) or FOUND_DOCKER
     )
 
 
