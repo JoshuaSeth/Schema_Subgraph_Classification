@@ -11,7 +11,6 @@ import pickle
 from collections import defaultdict
 from streamlit_agraph import Node, Edge, Config, agraph
 import streamlit as st
-from stqdm import stqdm
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -23,6 +22,55 @@ dygie_prediction_dir_path = project_path + \
 group_info_fpath = project_path + \
     ('/KG_per_schema' if not is_docker() else '') + \
     '/data/group_info/group_info.pkl'
+
+
+def list_to_tuple(l):
+    return [[tuple(x) if not isinstance(x, str) else x + ' ' for x in ent_sent] for ent_sent in l]
+
+
+def build_encyclo_data(schemas, mode, use_context):
+    # Load the data
+    sents, corefs, rels,  entitity_sents,  = load_data(
+        schemas, mode, use_context, grouped=False)
+
+    entitity_sents = list_to_tuple(entitity_sents)
+
+    # Flatten relations
+    rels = [rel for sent in rels for rel in sent]
+
+    # Append the entity types to the relations of the graph
+    for ent_sent in entitity_sents:
+        for part in ent_sent:
+            if isinstance(part, tuple) or isinstance(part, list):
+                rels.append((part[0], part[1], 'is a'))
+
+    # Only take unique relations
+    rels = list(set(rels))
+
+    # Create a dict with rel name: rel
+    rels_dict = defaultdict(list)
+    for rel in rels:
+        rels_dict[rel[2]].append(rel)
+
+    # Create a dict with ent name: sentences wherein it appears
+    sents_for_ents = defaultdict(list)
+    for s in entitity_sents:
+        for part in s:
+            if isinstance(part, tuple) or isinstance(part, list):
+                sents_for_ents[part[0]].append(s)
+
+    # Extract the acgual entities from the entity sentences
+    ents = [
+        part[0] for sent in entitity_sents for part in sent if isinstance(part, tuple) or isinstance(part, list)]
+
+    # Create a dict with ent name: relations with this ent
+    ents = {ent: [rel for rel in rels if ent in rel] for ent in ents}
+
+    # Sort ents by number of relations
+    ents = dict(
+        sorted(ents.items(), key=lambda item: len(item[1]), reverse=True))
+
+    return ents, rels, sents_for_ents, rels_dict
 
 
 @st.cache_data(persist="disk", experimental_allow_widgets=True)
@@ -70,7 +118,7 @@ def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=Non
     return nodes, edges
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=None, grouped=True):
     '''Loads all predicted data for certain request parameters.
 
@@ -112,7 +160,7 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=Non
     # Retrieve file paths that match the request
     for schema in schemas:
         matching_fpaths = get_fpaths_for_request(schema, mode, context, index)
-        print('\n', schema, mode, context, 'matching_fnames', [os.path.basename(matching_fpath) for matching_fpath in matching_fpaths])
+        # print('\n', schema, mode, context, 'matching_fnames', [os.path.basename(matching_fpath) for matching_fpath in matching_fpaths])
         for dygie_data_fpath in matching_fpaths:
             data = None
             try:
@@ -159,7 +207,7 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=Non
     return dict(sorted(groups.items()))
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def get_tag_idxs(entity_list):
     '''Creates a dictionary of word indices and their corresponding tags.'''
     tags_idxs = {}
@@ -176,7 +224,7 @@ def get_tag_idxs(entity_list):
     return tags_idxs
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def set_idx_and_tag(ent, tags_idxs):
     '''Get the idx and tag from the entity and add it to the tags_idxs dict.'''
     if len(ent) > 2:
@@ -188,7 +236,7 @@ def set_idx_and_tag(ent, tags_idxs):
             tags_idxs[ent[0]] = ent[1]
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def extract_relations_granular(data: dict) -> List[list]:
     '''Extracts the relations from the data if relations in the data for MECHANIC Granular. Sadly the relations for mechanic granular are structured very differently and we cannot integrate their parsing in the universal relations loader. As such they have a separate loading function. 
 
@@ -233,7 +281,7 @@ def extract_relations_granular(data: dict) -> List[list]:
     return new_sents
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def extract_relations(data: dict) -> List[List]:
     '''Extracts the relations from the data if relations in the data. 
 
@@ -271,7 +319,7 @@ def extract_relations(data: dict) -> List[List]:
     return rels
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def extract_rel_items(flattened_sents: List[str], rel: list) -> tuple:
     '''Takes a single list representing a relation and returns a list of the origin text, target text and relation tag.'''
     origin_start_idx = rel[0]
@@ -285,7 +333,7 @@ def extract_rel_items(flattened_sents: List[str], rel: list) -> tuple:
     return rel_in_sent
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def extract_entities(data: dict) -> List[list]:
     '''Extracts the entities from the data if entities in the data. 
 
@@ -303,7 +351,7 @@ def extract_entities(data: dict) -> List[list]:
         # Create a dict of words indices and their corresponding tags
         l = build_tagged_sent(data['sentences'], data['predicted_ner'])
         ents.extend(l)
-    
+
     # Some predictors (spacy self-build) will have the tagged sents ready already
     if 'tagged_sents' in data:
         l = deepcopy(data['tagged_sents'])
@@ -318,7 +366,7 @@ def extract_entities(data: dict) -> List[list]:
     return ents
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def build_tagged_sent(sents: List[list], ent_list: List[list]) -> List[list]:
     '''Returns the list with the tagged sentences based on the sentences and the entities from the dygie data.
 

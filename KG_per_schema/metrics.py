@@ -12,7 +12,6 @@ import pickle
 from collections import defaultdict
 from streamlit_agraph import Node, Edge, Config, agraph
 import streamlit as st
-from stqdm import stqdm
 import networkx as nx
 import numpy as np
 import pandas as pd
