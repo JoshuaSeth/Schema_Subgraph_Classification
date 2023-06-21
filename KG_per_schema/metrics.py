@@ -15,7 +15,7 @@ import streamlit as st
 import networkx as nx
 import numpy as np
 import pandas as pd
-
+from community import community_louvain
 
 # Some variables for the operation
 dygie_prediction_dir_path = project_path + '/KG_per_schema/data/predictions/'
@@ -36,7 +36,7 @@ def to_nx_graph(ents, rels):
     return G
 
 
-@st.cache_data(persist="disk")
+# @st.cache_data(persist="disk")
 def get_metrics(ents, rels):
     '''Gets the metrics for the given ents and rels as a dict.'''
     metrics = {}
@@ -49,13 +49,39 @@ def get_metrics(ents, rels):
     metrics['mean degree'] = np.nanmean(degrees)
     metrics['std degree'] = np.nanstd(degrees)
 
-    nx_metrics = {'degree centrality': nx.degree_centrality(G), 'closeness centrality': nx.closeness_centrality(
-        G), 'betweenness centrality': nx.betweenness_centrality(G), 'pagerank': nx.pagerank(G)}
-    for k, v in nx_metrics.items():
-        t = sorted(v.values())
+    nx_metrics = {'degree centrality': nx.degree_centrality(G),
+                  #   'closeness centrality': nx.closeness_centrality(G),
+                  #   'betweenness centrality': nx.betweenness_centrality(G),
+                  #   'pagerank': nx.pagerank(G)
+                  'clustering coefficient': nx.clustering(G),
 
-        metrics['mean ' + k] = np.nanmean(t)
-        metrics['std ' + k] = np.nanstd(t)
+                  }
+    for k, v in nx_metrics.items():
+        if isinstance(v, dict):
+            t = sorted(v.values())
+
+            metrics['mean ' + k] = np.nanmean(t)
+            metrics['std ' + k] = np.nanstd(t)
+        else:
+            metrics[k] = v
+
+    try:
+        metrics['modularity'] = community_louvain.modularity(
+            community_louvain.best_partition(G), G)
+    except:
+        pass
+    # try:
+    #     metrics['avg path length'] = nx.average_shortest_path_length(G),
+    # except:
+    #     pass
+    # try:
+    #     metrics['diameter'] = nx.diameter(G)
+    # except:
+    #     pass
+    try:
+        metrics['density'] = nx.density(G)
+    except:
+        pass
 
     return metrics
 

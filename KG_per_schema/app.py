@@ -10,6 +10,7 @@ from utils import project_path, map_schema_names
 # Variables
 schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event',
            'spacy en_core_web_sm', 'spacy en_core_web_lg', 'spacy en_core_sci_scibert']
+viz_schemas = ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event',]
 modes = ['AND', 'OR']
 visualizations = ['sentences', 'graph', 'graph stats', 'encyclopedic explorer']
 
@@ -58,7 +59,7 @@ if selected_schemas != None and renamed_schemas != [] and mode != None:
 
     # Visualize the graph statistics for each schema
     with graph_stats_tab:
-        viz_graph_stats_ui(schemas, mode, use_context)
+        viz_graph_stats_ui(viz_schemas, mode, use_context)
 
     # Explore the graoh in encyclopedic fashion
     with ecyclo_tab:

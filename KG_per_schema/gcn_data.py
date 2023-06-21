@@ -34,6 +34,8 @@ from transformers import BertModel
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 
+schema_name = 'scierc'
+
 
 def get_embeddings(phrases, batch_size=32):
     embeddings = []
@@ -92,11 +94,11 @@ def process(entitity_sents, rels, ):
     embeddings = get_embeddings(phrases)
 
     # Flatten the list of tensors into a 2D array
-    embeddings_2d = embeddings.detach().numpy()
+    embeddings = embeddings.detach().numpy()
 
     # Apply PCA
     pca = PCA(n_components=32)  # reduce to 50 dimensions
-    reduced_embeddings = pca.fit_transform(embeddings_2d)
+    embeddings = pca.fit_transform(embeddings)
     print('Explained variation per principal component: {}'.format(
         pca.explained_variance_ratio_))
 
@@ -105,17 +107,17 @@ def process(entitity_sents, rels, ):
     start = 0
     for sent in entity_to_idx:
         end = start + len(sent)
-        node_features.append(reduced_embeddings[start:end])
+        node_features.append(embeddings[start:end])
         start = end
 
     return edge_idx, node_features
 
 
 sents, corefs, rels,  entitity_sents,  = load_data(
-    ['ace05'], 'OR', False, grouped=False)
+    [schema_name], 'OR', False, grouped=False)
 
 sents_cont, corefs, rels_cont,  entitity_sents_cont,  = load_data(
-    ['ace05'], 'OR', True, grouped=False)
+    [schema_name], 'OR', True, grouped=False)
 
 num_misses = 0
 hits = 0
@@ -130,6 +132,9 @@ for sent in sents:
 
 print('misses',  num_misses, 'hits', hits)
 
+del sents
+del corefs
+
 
 # Remove sentences in the true data that are not in the context data
 sents_cont = [i for idx, i in enumerate(
@@ -139,10 +144,13 @@ rels_cont = [i for idx, i in enumerate(
 entitity_sents_cont = [i for idx, i in enumerate(
     entitity_sents_cont) if idx not in indices_to_remove]
 
+del indices_to_remove
+
 # Get connections and node features
 edge_idx, node_features = process(entitity_sents, rels)
-edge_idx_cont, node_features_cont = process(entitity_sents_cont, rels_cont)
 
+del entitity_sents
+del rels
 
 dataset = []
 for s, l in zip(edge_idx, node_features):
@@ -151,9 +159,19 @@ for s, l in zip(edge_idx, node_features):
                     y=torch.Tensor(np.array([1], dtype=np.int64)))
         dataset.append(data)
 
+del edge_idx
+del node_features
+
+
 print(len(dataset))
 
-for s, l in zip(edge_idx_cont, node_features_cont):
+edge_idx_cont, node_features_cont = process(
+    entitity_sents_cont, rels_cont)
+
+del entitity_sents_cont
+del rels_cont
+
+for s, l in zip(edge_idx_cont, node_features_cont)[:-70]:
     if len(l) > 0:
         data = Data(x=torch.Tensor(l), edge_index=torch.Tensor(s),
                     y=torch.Tensor(np.array([0], dtype=np.int64)))
@@ -163,5 +181,5 @@ for s, l in zip(edge_idx_cont, node_features_cont):
 
 print(len(dataset))
 
-with open('KG_per_schema/gcn_data/ace05.pkl', 'wb') as f:
+with open(f'KG_per_schema/gcn_data/{schema_name}.pkl', 'wb') as f:
     pickle.dump(dataset, f)
