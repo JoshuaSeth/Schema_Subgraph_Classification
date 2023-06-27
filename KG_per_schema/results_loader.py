@@ -119,7 +119,7 @@ def build_graph(schema: str, mode: str = 'AND', context: bool = False, index=Non
 
 
 # @st.cache_data(persist="disk")
-def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=None, grouped=True):
+def load_data(schemas: list, mode: str = 'AND', context: bool = False, is_research=True, index=None, grouped=True):
     '''Loads all predicted data for certain request parameters.
 
     Parameters
@@ -130,6 +130,8 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=Non
             Whether to use sentences that are a research challenge or direction or are both. One of: [AND, OR]. Default: AND
         context: bool, Optional
             Whether to include context sentences or not. Default: False
+        is_research: bool, Optional
+            Whether to use sentences that are a research challenge or direction or that are explcitly not. Default: True
         index: int, Optional
             Whether to use a specific index file. If None then all data conforming to the request params is used. If given an index only a single datafile containing the request params and this specific index is used. Which might be handy for taking small samples. Default: None
         grouped: bool, Optional
@@ -159,7 +161,8 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, index=Non
 
     # Retrieve file paths that match the request
     for schema in schemas:
-        matching_fpaths = get_fpaths_for_request(schema, mode, context, index)
+        matching_fpaths = get_fpaths_for_request(
+            schema, mode, context, is_research, index)
         # print('\n', schema, mode, context, 'matching_fnames', [os.path.basename(matching_fpath) for matching_fpath in matching_fpaths])
         for dygie_data_fpath in matching_fpaths:
             data = None
@@ -417,7 +420,7 @@ def post_process_granular_tag(tag):
     return tag
 
 
-def get_fpaths_for_request(schema, mode, context, index):
+def get_fpaths_for_request(schema, mode, context, is_research, index):
     '''Returns the file paths that match the request parameters.'''
     matching_fpaths = []
     for dygie_data_fpath in glob.glob(f"{dygie_prediction_dir_path}*"):
@@ -425,10 +428,14 @@ def get_fpaths_for_request(schema, mode, context, index):
         properties = os.path.basename(dygie_data_fpath).split('_')
         has_start_idx = properties[-1]
         has_context = 'context' in os.path.basename(dygie_data_fpath)
-        has_mode = properties[-2]
         has_schema = properties[0]
+        if len(properties) == 4:
+            has_mode = properties[-2]
+        else:
+            has_mode = properties[-3]
+            has_research = properties[-2]
 
         # Check if the properties match the request
-        if has_schema == schema and has_mode == mode and has_context == context and (index == None or has_start_idx == str(index)):
+        if has_schema == schema and has_mode == mode and has_context == context and (has_research == str(is_research) and len(properties) > 4) and (index == None or has_start_idx == str(index)):
             matching_fpaths.append(dygie_data_fpath)
     return matching_fpaths

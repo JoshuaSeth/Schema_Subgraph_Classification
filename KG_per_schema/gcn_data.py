@@ -23,6 +23,7 @@ import random
 # from gensim.models import KeyedVectors
 import os
 from sklearn.decomposition import PCA
+from metrics import to_nx_graph
 
 from collections import OrderedDict
 
@@ -36,150 +37,81 @@ model = BertModel.from_pretrained('bert-base-uncased')
 
 schema_name = 'scierc'
 
-
-def get_embeddings(phrases, batch_size=32):
-    embeddings = []
-
-    # Creating a progress bar
-    progress_bar = tqdm(range(0, len(phrases), batch_size),
-                        desc='Processing phrases')
-
-    # Loop over phrases in batches
-    for i in progress_bar:
-        batch = phrases[i:i+batch_size]
-        inputs = tokenizer(batch, return_tensors="pt",
-                           padding=True, truncation=True, max_length=512)
-        outputs = model(**inputs)
-        batch_embeddings = torch.mean(outputs[0], dim=1)
-        embeddings.append(batch_embeddings)
-
-    # Concatenate all batch embeddings
-    embeddings = torch.cat(embeddings, dim=0)
-    return embeddings
+with open('/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/scierc_init_embeddings.pkl', 'rb') as f:
+    initial_node_embeddings = pickle.load(f)
 
 
-def process(entitity_sents, rels, ):
+def build_graph_part(research_sents_or_not):
+    sents, corefs, rels,  entitity_sents,  = load_data(
+        [schema_name], 'OR', False, is_research=research_sents_or_not,  grouped=False)
+    print(len(sents))
+    G = to_nx_graph(entitity_sents, rels)
+
+    global_entity_to_index = {
+        entity: index for index, entity in enumerate(G.nodes())}
+
     # Append the entity types to the relations of the graph
     for idx, ent_sent in enumerate(entitity_sents):
         for part in ent_sent:
             if isinstance(part, tuple) or isinstance(part, list):
                 rels[idx].append((part[0], part[1], 'is a'))
 
-    entity_to_idx = []
+    dataset = []
     for rel_sent in rels:
-        idxs = {}
-        entity_to_idx.append(idxs)
-        for rel in rel_sent:
-            if rel[0] not in idxs:
-                idxs[rel[0]] = len(idxs)
-            if rel[1] not in idxs:
-                idxs[rel[1]] = len(idxs)
+        if len(rel_sent) > 0:
+            edge_indices = []
 
-    edge_idx = []
+            local_entity_to_index = {}
+            for rel in rel_sent:
+                if rel[0] not in local_entity_to_index:
+                    local_entity_to_index[rel[0]] = len(local_entity_to_index)
+                if rel[1] not in local_entity_to_index:
+                    local_entity_to_index[rel[1]] = len(local_entity_to_index)
 
-    for idx, rel_sent in enumerate(rels):
-        # print('\n\n')
-        edge_idx_for_sent = np.zeros((len(rel_sent), 2), dtype=np.int64)
+            for rel in rel_sent:
+                edge_indices.append(
+                    [local_entity_to_index[rel[0]], local_entity_to_index[rel[1]]])
+            edge_indices = np.array(edge_indices).transpose()
 
-        for idx2,  rel in enumerate(rel_sent):
-            edge_idx_for_sent[idx2][0] = entity_to_idx[idx][rel[0]]
-            edge_idx_for_sent[idx2][1] = entity_to_idx[idx][rel[1]]
+            node_features = []
+            for rel in rel_sent:
+                node_features.append(
+                    initial_node_embeddings[global_entity_to_index[rel[0]]])
+                node_features.append(
+                    initial_node_embeddings[global_entity_to_index[rel[1]]])
+            node_features = np.array(node_features)
 
-        edge_idx_for_sent = np.array(edge_idx_for_sent)
-        edge_idx_for_sent = np.transpose(edge_idx_for_sent)
-        edge_idx.append(edge_idx_for_sent)
+            data = Data(x=torch.Tensor(node_features), edge_index=torch.Tensor(edge_indices),
+                        y=torch.Tensor(np.array([int(research_sents_or_not)], dtype=np.int64)))
+            dataset.append(data)
 
-    # Flatten the phrases and get embeddings all at once
-    phrases = [key for sent in entity_to_idx for key, val in sent.items()]
-    embeddings = get_embeddings(phrases)
-
-    # Flatten the list of tensors into a 2D array
-    embeddings = embeddings.detach().numpy()
-
-    # Apply PCA
-    pca = PCA(n_components=32)  # reduce to 50 dimensions
-    embeddings = pca.fit_transform(embeddings)
-    print('Explained variation per principal component: {}'.format(
-        pca.explained_variance_ratio_))
-
-    # Now split the embeddings back into the per-sentence structure
-    node_features = []
-    start = 0
-    for sent in entity_to_idx:
-        end = start + len(sent)
-        node_features.append(embeddings[start:end])
-        start = end
-
-    return edge_idx, node_features
+    return dataset
 
 
-sents, corefs, rels,  entitity_sents,  = load_data(
-    [schema_name], 'OR', False, grouped=False)
+data = build_graph_part(research_sents_or_not=True)
+data.extend(build_graph_part(research_sents_or_not=False))
 
-sents_cont, corefs, rels_cont,  entitity_sents_cont,  = load_data(
-    [schema_name], 'OR', True, grouped=False)
-
-num_misses = 0
-hits = 0
-indices_to_remove = []
-for sent in sents:
-    try:
-        hits += 1
-        indices_to_remove.append(sents_cont.index(sent))
-    except Exception as e:
-        # print(e)
-        num_misses += 1
-
-print('misses',  num_misses, 'hits', hits)
-
-del sents
-del corefs
+# del edge_idx
+# del node_features
 
 
-# Remove sentences in the true data that are not in the context data
-sents_cont = [i for idx, i in enumerate(
-    sents_cont) if idx not in indices_to_remove]
-rels_cont = [i for idx, i in enumerate(
-    rels_cont) if idx not in indices_to_remove]
-entitity_sents_cont = [i for idx, i in enumerate(
-    entitity_sents_cont) if idx not in indices_to_remove]
+# print(len(dataset))
 
-del indices_to_remove
+# edge_idx_cont, node_features_cont = process(
+#     entitity_sents_cont, rels_cont)
 
-# Get connections and node features
-edge_idx, node_features = process(entitity_sents, rels)
+# del entitity_sents_cont
+# del rels_cont
 
-del entitity_sents
-del rels
+# for s, l in zip(edge_idx_cont, node_features_cont)[:-70]:
+#     if len(l) > 0:
+#         data = Data(x=torch.Tensor(l), edge_index=torch.Tensor(s),
+#                     y=torch.Tensor(np.array([0], dtype=np.int64)))
 
-dataset = []
-for s, l in zip(edge_idx, node_features):
-    if len(l) > 0:
-        data = Data(x=torch.Tensor(l), edge_index=torch.Tensor(s),
-                    y=torch.Tensor(np.array([1], dtype=np.int64)))
-        dataset.append(data)
+#         # print(data.x)
+#         dataset.append(data)
 
-del edge_idx
-del node_features
-
-
-print(len(dataset))
-
-edge_idx_cont, node_features_cont = process(
-    entitity_sents_cont, rels_cont)
-
-del entitity_sents_cont
-del rels_cont
-
-for s, l in zip(edge_idx_cont, node_features_cont)[:-70]:
-    if len(l) > 0:
-        data = Data(x=torch.Tensor(l), edge_index=torch.Tensor(s),
-                    y=torch.Tensor(np.array([0], dtype=np.int64)))
-
-        # print(data.x)
-        dataset.append(data)
-
-print(len(dataset))
+# print(len(dataset))
 
 with open(f'KG_per_schema/gcn_data/{schema_name}.pkl', 'wb') as f:
-    pickle.dump(dataset, f)
+    pickle.dump(data, f)

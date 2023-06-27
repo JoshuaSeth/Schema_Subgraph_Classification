@@ -75,35 +75,37 @@ def create_sentence_datasets():
     # Save 4 datasets (OR, AND challenges) x (with, without context)
     for mode in ['OR', 'AND']:
         for context in [True, False]:
-            # If using the context (sentences around), the info about grouping needs to be noted
-            if context:
-                # Clean current group info
-                clear_group_info(group_info_fpath)
+            for is_research in [True, False]:
+                # If using the context (sentences around), the info about grouping needs to be noted
+                # if context:
+                #     # Clean current group info
+                #     clear_group_info(group_info_fpath)
 
-                # Create group info
-                [pickle_group_info(item) for item in data]
+                #     # Create group info
+                #     [pickle_group_info(item) for item in data]
 
-            # Get the relevant items + context
-            sentences = [get_sents(item, context)
-                         for item in data if is_research_sent(item, mode)]
+                # Get the relevant items + context
+                sentences = [get_sents(item, context)
+                             for item in data if (is_research and is_research_sent(item, mode)) or (not is_research and not is_research_sent(item, mode))]
 
-            # Flatten the lists of context sents
-            sentences = [s for l in sentences for s in l]
+                # Flatten the lists of context sents
+                sentences = [s for l in sentences for s in l]
 
-            # Clean sentences
-            sentences = [clean_preprocess(sent) for sent in sentences]
+                # Clean sentences
+                sentences = [clean_preprocess(sent) for sent in sentences]
 
-            # Clear malformed sentences (some context sents are only a reference number, etc.)
-            sentences = [sent for sent in sentences if len(
-                sent.strip().split()) > 4]
+                # Clear malformed sentences (some context sents are only a reference number, etc.)
+                sentences = [sent for sent in sentences if len(
+                    sent.strip().split()) > 4]
 
-            # Save
-            postfix = ('context_' if context else '') + mode
-            sents_target_fpath = f'KG_per_schema/data/sents/sents_{postfix}.txt'
+                # Save
+                postfix = ('context_' if context else '') + \
+                    mode + '_' + str(is_research)
+                sents_target_fpath = f'KG_per_schema/data/sents/sents_{postfix}.txt'
 
-            # Write sents with newlines to file (but not the last one)
-            with open(sents_target_fpath, 'w') as f:
-                [f.write(sent) for sent in sentences]
+                # Write sents with newlines to file (but not the last one)
+                with open(sents_target_fpath, 'w') as f:
+                    [f.write(sent) for sent in sentences]
 
 
 if __name__ == '__main__':
