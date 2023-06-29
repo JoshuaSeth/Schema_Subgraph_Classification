@@ -22,13 +22,13 @@ print('dygie_formatter_path:', dygie_formatter_fpath)
 
 # Define the dataset codes (needed for dygie to correctly understand dataset)
 dataset_codes = [
-    "scierc",
-    # "genia",
-    # # "chemprot",
-    # "ace05",
-    # "ace-event",
-    # "None",
-    # "covid-event",
+    # "scierc",
+    "genia",
+    # "chemprot",
+    "ace05",
+    "ace-event",
+    "None",
+    "covid-event",
 ]
 
 

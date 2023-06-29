@@ -2,7 +2,7 @@
 import subprocess
 import glob
 import os
-from utils import project_path, is_docker
+from KG_per_schema.utils import project_path, is_docker
 import json
 from tqdm import tqdm
 from copy import deepcopy
@@ -163,7 +163,8 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, is_resear
     for schema in schemas:
         matching_fpaths = get_fpaths_for_request(
             schema, mode, context, is_research, index)
-        # print('\n', schema, mode, context, 'matching_fnames', [os.path.basename(matching_fpath) for matching_fpath in matching_fpaths])
+        # print('\n', schema, mode, context, is_research, 'matching_fnames', [
+        #       os.path.basename(matching_fpath) for matching_fpath in matching_fpaths])
         for dygie_data_fpath in matching_fpaths:
             data = None
             try:
@@ -436,6 +437,6 @@ def get_fpaths_for_request(schema, mode, context, is_research, index):
             has_research = properties[-2]
 
         # Check if the properties match the request
-        if has_schema == schema and has_mode == mode and has_context == context and (has_research == str(is_research) and len(properties) > 4) and (index == None or has_start_idx == str(index)):
+        if has_schema == schema and has_mode == mode and has_context == context and (str(has_research).lower() == str(is_research).lower()) and (index == None or has_start_idx == str(index)):
             matching_fpaths.append(dygie_data_fpath)
     return matching_fpaths

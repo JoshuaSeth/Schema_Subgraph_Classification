@@ -3,7 +3,7 @@
 import subprocess
 import glob
 import os
-from utils import project_path
+from KG_per_schema.utils import project_path
 import json
 from tqdm import tqdm
 from copy import deepcopy
@@ -50,7 +50,7 @@ def get_metrics(ents, rels):
     metrics['std degree'] = np.nanstd(degrees)
 
     nx_metrics = {'degree centrality': nx.degree_centrality(G),
-                  #   'closeness centrality': nx.closeness_centrality(G),
+                  'closeness centrality': nx.closeness_centrality(G),
                   #   'betweenness centrality': nx.betweenness_centrality(G),
                   #   'pagerank': nx.pagerank(G)
                   'clustering coefficient': nx.clustering(G),
@@ -70,14 +70,14 @@ def get_metrics(ents, rels):
             community_louvain.best_partition(G), G)
     except:
         pass
-    # try:
-    #     metrics['avg path length'] = nx.average_shortest_path_length(G),
-    # except:
-    #     pass
-    # try:
-    #     metrics['diameter'] = nx.diameter(G)
-    # except:
-    #     pass
+    try:
+        metrics['avg path length'] = 1  # nx.average_shortest_path_length(G)
+    except Exception as e:
+        pass
+    try:
+        metrics['diameter'] = nx.diameter(G)
+    except:
+        pass
     try:
         metrics['density'] = nx.density(G)
     except:
@@ -93,6 +93,14 @@ def get_degrees_dist(ents, rels):
     for item in list(G.degree):
         degrees[item[1]] += 1
     return degrees
+
+
+def get_clusterings(ents, rels):
+    G = to_nx_graph(ents, rels)
+    result = defaultdict(int)
+    for item in list(nx.clustering(G).values()):
+        result[item] += 1
+    return result
 
 
 def to_long_format_df(items: dict[dict], keyname='metric') -> pd.DataFrame:
