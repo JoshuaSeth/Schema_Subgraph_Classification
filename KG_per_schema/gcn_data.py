@@ -42,7 +42,6 @@ def build_graph_part(research_sents_or_not, mode):
 
     G = to_nx_graph(entitity_sents, rels)
 
-    print(len(entitity_sents), len(rels), len(sents))
     assert len(entitity_sents) == len(
         rels), f'The number of sentences and relations should be equal. Difference is {len(entitity_sents)} - {len(rels)}'
 
