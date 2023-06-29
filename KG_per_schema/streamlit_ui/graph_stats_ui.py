@@ -38,6 +38,7 @@ def viz_graph_stats_ui(schemas, mode, use_context):
         metrics = get_metrics(ents, rels)
 
         all_metrics[schema_any] = metrics
+        print(ents)
         ent_recalls[schema_any] = get_abs_recall_dist(ents)
         rel_recalls[schema_any] = get_abs_recall_dist(rels)
         degrees[schema_any] = get_degrees_dist(ents, rels)

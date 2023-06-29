@@ -122,15 +122,25 @@ def to_long_format_df(items: dict[dict], keyname='metric') -> pd.DataFrame:
 def get_abs_recall_dist(items):
     '''Get the distribution of absolute recalls. For example: 3 sentences with 4 triples, 5 sentences with 3 triples, 20 sentences with 2 triples and 100 sentences with 1 triple. Can be given an sentence with entities or relations.'''
     distribution = defaultdict(int)
+
     # Entity sentence
     if len(items) > 0:
-        if isinstance(items[0], str) or isinstance(items[0], tuple):
+        print('getting abs recall')
+        is_entities = False
+        for sent in items:
+            if len(sent) > 0:
+                if (isinstance(sent[0], tuple) and len(sent[0]) == 2) or isinstance(sent[0], str):
+                    is_entities = True
+                    break
+        if is_entities:
+            print('are ents')
             for sent in items:
                 num_ents = len(
                     [part for part in sent if isinstance(part, tuple)])
                 distribution[num_ents] += 1
         # Relation sentence
         else:
+            print('are rels')
             for sent in items:
                 num_rels = len(sent)
                 distribution[num_rels] += 1

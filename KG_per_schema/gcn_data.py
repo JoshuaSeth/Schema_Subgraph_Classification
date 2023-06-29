@@ -1,4 +1,4 @@
-'''Convert data to a toch scatter compatible dataset'''
+'''Convert data to a torch scatter compatible dataset. Sues the full_graph for each schema as initial embeddings for this.'''
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
@@ -35,17 +35,16 @@ from transformers import BertModel
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 
-schema_name = 'scierc'
 
-with open('/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/scierc_init_embeddings.pkl', 'rb') as f:
-    initial_node_embeddings = pickle.load(f)
-
-
-def build_graph_part(research_sents_or_not):
+def build_graph_part(research_sents_or_not, mode):
     sents, corefs, rels,  entitity_sents,  = load_data(
-        [schema_name], 'OR', False, is_research=research_sents_or_not,  grouped=False)
-    print(len(sents))
+        [schema_name], mode, False, is_research=research_sents_or_not,  grouped=False)
+
     G = to_nx_graph(entitity_sents, rels)
+
+    print(len(entitity_sents), len(rels), len(sents))
+    assert len(entitity_sents) == len(
+        rels), f'The number of sentences and relations should be equal. Difference is {len(entitity_sents)} - {len(rels)}'
 
     global_entity_to_index = {
         entity: index for index, entity in enumerate(G.nodes())}
@@ -88,30 +87,20 @@ def build_graph_part(research_sents_or_not):
     return dataset
 
 
-data = build_graph_part(research_sents_or_not=True)
-data.extend(build_graph_part(research_sents_or_not=False))
+embeddings_dir = '/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/full_schema_node_embeddings/'
 
-# del edge_idx
-# del node_features
+for full_graph_init_embeddings_fpath in tqdm(glob.glob(f"{embeddings_dir}*.pkl")):
+    properties = os.path.basename(full_graph_init_embeddings_fpath).split('_')
+    schema_name = properties[0]
+    mode = properties[1]
+    print('processing', schema_name, mode)
 
+    # Open intial embeddings
+    with open(full_graph_init_embeddings_fpath, 'rb') as f:
+        initial_node_embeddings = pickle.load(f)
 
-# print(len(dataset))
+    data = build_graph_part(research_sents_or_not=True, mode=mode)
+    data.extend(build_graph_part(research_sents_or_not=False, mode=mode))
 
-# edge_idx_cont, node_features_cont = process(
-#     entitity_sents_cont, rels_cont)
-
-# del entitity_sents_cont
-# del rels_cont
-
-# for s, l in zip(edge_idx_cont, node_features_cont)[:-70]:
-#     if len(l) > 0:
-#         data = Data(x=torch.Tensor(l), edge_index=torch.Tensor(s),
-#                     y=torch.Tensor(np.array([0], dtype=np.int64)))
-
-#         # print(data.x)
-#         dataset.append(data)
-
-# print(len(dataset))
-
-with open(f'KG_per_schema/gcn_data/{schema_name}.pkl', 'wb') as f:
-    pickle.dump(data, f)
+    with open(f'/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/gcn_subgraph_data/{schema_name}_{mode}.pkl', 'wb') as f:
+        pickle.dump(data, f)

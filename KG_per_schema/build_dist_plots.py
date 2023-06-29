@@ -59,12 +59,12 @@ for schema_any in ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event
                 except:
                     nbins = 10
                 fig = px.histogram(
-                    df, x=naming, y='Number of items', title=f"", nbins=nbins)
+                    df, x=naming, y='Number of items', title=f"", nbins=nbins, color_discrete_sequence=['gray'])
                 fig.update_layout(
                     yaxis_title="Number of items",
                     xaxis_title=f"{naming}",
                     font=dict(
-                        family="Arial",
+                        family="Times New Roman",
                         size=23,
                         color="gray"
                     )

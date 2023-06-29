@@ -320,6 +320,9 @@ def extract_relations(data: dict) -> List[List]:
                     rels_in_sent.append(rel_in_sent)
 
             rels.append(rels_in_sent)
+    # Make sure that if no rels can be parsed we at least have empty rels
+    if len(rels) == 0:
+        rels = [[] for _ in range(len(data['sentences']))]
     return rels
 
 
@@ -357,12 +360,12 @@ def extract_entities(data: dict) -> List[list]:
         ents.extend(l)
 
     # Some predictors (spacy self-build) will have the tagged sents ready already
-    if 'tagged_sents' in data:
+    elif 'tagged_sents' in data:
         l = deepcopy(data['tagged_sents'])
         ents.extend(l)
 
     # For tbe mechanic granular events we need a different procedure
-    if 'predicted_events' in data:
+    elif 'predicted_events' in data:
         # For events we follow the same proces
         l = build_tagged_sent(data['sentences'], data['predicted_events'])
         ents.extend(l)
