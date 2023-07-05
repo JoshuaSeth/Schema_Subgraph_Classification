@@ -32,7 +32,8 @@ def to_nx_graph(ents, rels):
 
     for ent_sent in ents:
         for ent in ent_sent:
-            G.add_edge(ent[1], ent[0], label='type')
+            if isinstance(ent, tuple) or isinstance(ent, list):
+                G.add_edge(ent[1], ent[0], label='type')
     return G
 
 

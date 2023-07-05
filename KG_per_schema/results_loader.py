@@ -163,7 +163,7 @@ def load_data(schemas: list, mode: str = 'AND', context: bool = False, is_resear
     for schema in schemas:
         matching_fpaths = get_fpaths_for_request(
             schema, mode, context, is_research, index)
-        # print('\n', schema, mode, context, is_research, 'matching_fnames', [
+        # print('\n', schema, mode, context, is_research, index, 'matching_fnames', [
         #       os.path.basename(matching_fpath) for matching_fpath in matching_fpaths])
         for dygie_data_fpath in matching_fpaths:
             data = None
@@ -424,13 +424,14 @@ def post_process_granular_tag(tag):
     return tag
 
 
-def get_fpaths_for_request(schema, mode, context, is_research, index):
+def get_fpaths_for_request(schema, mode, context, is_research, index, debug=False):
     '''Returns the file paths that match the request parameters.'''
     matching_fpaths = []
     for dygie_data_fpath in glob.glob(f"{dygie_prediction_dir_path}*"):
         # Retrieve properties
         properties = os.path.basename(dygie_data_fpath).split('_')
         has_start_idx = properties[-1]
+
         has_context = 'context' in os.path.basename(dygie_data_fpath)
         has_schema = properties[0]
         if len(properties) == 4:
@@ -438,6 +439,22 @@ def get_fpaths_for_request(schema, mode, context, is_research, index):
         else:
             has_mode = properties[-3]
             has_research = properties[-2]
+
+        if debug:
+            if has_start_idx == str(index) and has_schema == schema and has_mode == mode and has_context == context:
+                print('actual match')
+                print('start_idx', has_start_idx)
+                print('schema', has_schema)
+                print('mode', has_mode)
+                print('context', has_context)
+                print('is_research', has_research, 'should be', is_research)
+            if has_schema == schema and has_mode == mode and has_context == context and str(has_research).lower() == str(is_research).lower():
+                print('desired match')
+                print('start_idx', has_start_idx)
+                print('schema', has_schema)
+                print('mode', has_mode)
+                print('context', has_context)
+                print('is_research', has_research, 'should be', is_research)
 
         # Check if the properties match the request
         if has_schema == schema and has_mode == mode and has_context == context and (str(has_research).lower() == str(is_research).lower()) and (index == None or has_start_idx == str(index)):

@@ -32,8 +32,37 @@ import pandas as pd
 from transformers import BertTokenizer
 from transformers import BertModel
 
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertModel.from_pretrained('bert-base-uncased')
+import os.path as osp
+
+import torch
+from torch_geometric.data import Dataset, download_url
+
+
+class MyOwnDataset(Dataset):
+    def __init__(self, data, transform=None, pre_transform=None, num_relations=None):
+        super(MyOwnDataset, self).__init__('', transform, pre_transform)
+        self.data_list = data
+        self.num_relations = num_relations
+
+    @property
+    def raw_file_names(self):
+        return []  # This dataset has no raw files
+
+    @property
+    def processed_file_names(self):
+        return []  # This dataset has no processed files
+
+    def download(self):
+        pass  # This dataset has no download
+
+    def process(self):
+        pass  # This dataset doesn't need processing
+
+    def len(self):
+        return len(self.data_list)
+
+    def get(self, idx):
+        return self.data_list[idx]
 
 
 def build_graph_part(research_sents_or_not, mode):
@@ -54,11 +83,19 @@ def build_graph_part(research_sents_or_not, mode):
             if isinstance(part, tuple) or isinstance(part, list):
                 rels[idx].append((part[0], part[1], 'is a'))
 
+    # Create a dict with every possible edge label and an unique index
+    edge_label_to_index = {}
+    for rel_sent in rels:
+        for rel in rel_sent:
+            if rel[2] not in edge_label_to_index:
+                edge_label_to_index[rel[2]] = len(edge_label_to_index)
+
     dataset = []
     for rel_sent in rels:
         if len(rel_sent) > 0:
             edge_indices = []
-
+            edge_types_indices = []
+            # Create the indices for local entities
             local_entity_to_index = {}
             for rel in rel_sent:
                 if rel[0] not in local_entity_to_index:
@@ -66,11 +103,15 @@ def build_graph_part(research_sents_or_not, mode):
                 if rel[1] not in local_entity_to_index:
                     local_entity_to_index[rel[1]] = len(local_entity_to_index)
 
+            # Create indices for the local edges
             for rel in rel_sent:
                 edge_indices.append(
                     [local_entity_to_index[rel[0]], local_entity_to_index[rel[1]]])
-            edge_indices = np.array(edge_indices).transpose()
+                edge_types_indices.append(edge_label_to_index[rel[2]])
+            edge_indices = np.array(edge_indices, dtype=np.int64).transpose()
+            edge_types_indices = np.array(edge_types_indices, dtype=np.int64)
 
+            # Node features should actually be read from the global embeddings
             node_features = []
             for rel in rel_sent:
                 node_features.append(
@@ -79,27 +120,40 @@ def build_graph_part(research_sents_or_not, mode):
                     initial_node_embeddings[global_entity_to_index[rel[1]]])
             node_features = np.array(node_features)
 
-            data = Data(x=torch.Tensor(node_features), edge_index=torch.Tensor(edge_indices),
+            data = Data(x=torch.Tensor(node_features), edge_index=torch.Tensor(edge_indices), edge_types=torch.Tensor(edge_types_indices),
                         y=torch.Tensor(np.array([int(research_sents_or_not)], dtype=np.int64)))
             dataset.append(data)
 
-    return dataset
+    return dataset, len(edge_label_to_index)
 
 
-embeddings_dir = '/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/full_schema_node_embeddings/'
+if __name__ == '__main__':
 
-for full_graph_init_embeddings_fpath in tqdm(glob.glob(f"{embeddings_dir}*.pkl")):
-    properties = os.path.basename(full_graph_init_embeddings_fpath).split('_')
-    schema_name = properties[0]
-    mode = properties[1]
-    print('processing', schema_name, mode)
+    embeddings_dir = '/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/embeddings_gdrive/'
 
-    # Open intial embeddings
-    with open(full_graph_init_embeddings_fpath, 'rb') as f:
-        initial_node_embeddings = pickle.load(f)
+    for full_graph_init_embeddings_fpath in tqdm(glob.glob(f"{embeddings_dir}*.pth")):
+        print(full_graph_init_embeddings_fpath)
+        properties = os.path.basename(
+            full_graph_init_embeddings_fpath).split('_')
+        schema_name = properties[0]
+        mode = properties[1]
+        print('processing', schema_name, mode)
 
-    data = build_graph_part(research_sents_or_not=True, mode=mode)
-    data.extend(build_graph_part(research_sents_or_not=False, mode=mode))
+        # Open intial embeddings
+        initial_node_embeddings = torch.load(
+            full_graph_init_embeddings_fpath, map_location=torch.device('cpu'))
+        global_edge_types = initial_node_embeddings.edge_types
+        initial_node_embeddings = initial_node_embeddings.x
 
-    with open(f'/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/gcn_subgraph_data/{schema_name}_{mode}.pkl', 'wb') as f:
-        pickle.dump(data, f)
+        data, num_rels = build_graph_part(
+            research_sents_or_not=True, mode=mode)
+        secondpart, _ = build_graph_part(
+            research_sents_or_not=False, mode=mode)
+        data.extend(secondpart)
+
+        dataset = MyOwnDataset(data=data, num_relations=num_rels)
+
+        print(dataset)
+
+        with open(f'/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/gcn_subgraph_data/{schema_name}_{mode}.pkl', 'wb') as f:
+            pickle.dump(dataset, f)

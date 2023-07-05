@@ -9,7 +9,7 @@ import numpy as np
 import plotly.graph_objects as go
 
 
-for schema in ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event']:
+for schema in ['None', 'scierc', 'genia', 'covid-event', 'ace05', 'ace-event']:
     for mode in ['OR', 'AND']:
         for use_context in [False]:
             sents, corefs, rels,  ents,  = load_data(
@@ -38,13 +38,13 @@ for schema in ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event']:
                 node_color.append(np.clip(base_color[:3] + noise, 0, 1))
 
             # generate a layout for the nodes
-            pos = nx.spring_layout(G)
-            # Optional: pos = nx.spectral_layout(G)
+            # pos = nx.spectral_layout(G)
+            pos = nx.spring_layout(G, iterations=25, scale=4)
 
             # draw the graph
             fig = nx.draw(G, pos, node_color=node_color, alpha=0.8, edge_color='gray',
                           node_size=17, with_labels=False)
 
             plt.show()
-            plt.savefig(
-                '/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/network_graphs/' + f"{schema} {mode}.png", bbox_inches='tight')
+            # plt.savefig(
+            # '/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/network_graphs/' + f"{schema} {mode}.png")

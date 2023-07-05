@@ -40,47 +40,35 @@ for schema in tqdm(['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-even
 
         # Now create your list of edges, with nodes represented by their indices
         edges_as_indices = []
-        edge_labels = []
+        edge_types = []
         for edge in G.edges(data=True):
             edges_as_indices.append(
                 [node_to_index[edge[0]], node_to_index[edge[1]]])
-            edge_labels.append(edge[2]['label'])  # 'label' is the key
+            edge_types.append(edge[2]['label'])
 
-        edges_as_indices = np.array(edges_as_indices).transpose()
+        edge_types = torch.Tensor(
+            np.array(label_encoder.fit_transform(edge_types)))
+        print(edge_types)
 
         # Convert numpy array to tensor of type long
         edges_as_indices_tensor = torch.tensor(
-            edges_as_indices, dtype=torch.long)
-
-        # Fit the LabelEncoder and transform the edge labels
-        edge_labels_encoded = label_encoder.fit_transform(edge_labels)
+            edges_as_indices, dtype=torch.long).transpose(0, 1)
 
         # Convert edge_labels_encoded to a tensor
-        edge_labels_tensor = torch.tensor(
-            edge_labels_encoded, dtype=torch.long)
+        # edge_labels_tensor = torch.tensor(
+        #     edge_types, dtype=torch)
 
         # Assuming you have edge_index for the full graph
-        num_nodes = edges_as_indices_tensor.shape[1]
+        num_nodes = len(G.nodes())
         num_node_features = 5
 
         # Initialize node features randomly
         x = torch.randn((num_nodes, num_node_features))
 
-        # # Use GCN layer for message passing
-        # conv1 = GCNConv(num_node_features, 5)  # Reduce to 2 features
-        # # pass tensor instead of np array
-        # x = conv1(x, edges_as_indices_tensor)
-        # # pass tensor instead of np array
-        # x = conv1(x, edges_as_indices_tensor)
-
-        # Now x holds your new node features after applying one layer of GCN.
-        # These are your initial node embeddings for the full graph
-        # initial_node_embeddings = x.detach().numpy()
-
-        # print(initial_node_embeddings.shape)
-
         data = Data(x=x, edge_index=edges_as_indices_tensor,
-                    edge_attr=edge_labels_tensor)
+                    # edge_types=edge_labels_tensor
+                    edge_types=edge_types
+                    )
 
         print(f"Number of attributes on data: {len(data)}")
         print(f"Number of nodes: {data.x.shape[0]}")
