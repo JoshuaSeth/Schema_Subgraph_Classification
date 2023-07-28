@@ -110,7 +110,7 @@ def viz_graph_stats_ui(schemas, mode, use_context):
                                     columns=['schema', 'mode'],
                                     values='value')
 
-    df_pivot = df_pivot.style.format(decimal='.', thousands=',', precision=2)
+    df_pivot = df_pivot.style.format(decimal='.', thousands=',', precision=5)
     # grand_df = grand_df.round(2)
     print(df_pivot.to_latex())
     st.dataframe(df_pivot)

@@ -24,3 +24,4 @@ plt.ylabel('Modularity Score', fontsize=14)
 
 # Show the plot
 plt.show()
+plt.savefig('/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/KG_per_schema/spectrum_plots/degree_vs_modularity_local.png')

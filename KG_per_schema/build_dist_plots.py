@@ -17,12 +17,18 @@ import kaleido  # required
 import plotly.express as px
 import plotly
 import uuid
+import matplotlib.pyplot as plt
 
 
 all_metrics = {}
 ent_recalls, rel_recalls, degrees, clusterings = {}, {}, {}, {}
 
-for schema_any in ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event',]:
+for schema_any in [
+    # 'scierc', 'None',
+    'genia',
+    #    'covid-event',
+    #    'ace05', 'ace-event',
+]:
     for mode in ['OR', 'AND']:
         sents, corefs, rels,  ents,  = load_data(
             [schema_any], mode, False, is_research=False, grouped=False)
@@ -43,23 +49,33 @@ for schema_any in ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event
 
         # Visualize a distribution of absolute recall
 
-        for naming, metric in zip(['Number of entities detected', 'Number of relations detected', 'Number of degrees per node', 'Clustering coefficient per node'], [ent_recalls, rel_recalls, degrees, clusterings]):
+        for naming, metric in zip(['Number of relations detected',
+                                   # 'Number of entities detected', 'Number of degrees per node', 'Clustering coefficient per node'
+                                   ],
+                                  [rel_recalls,
+                                   # ent_recalls, degrees, clusterings
+                                   ]):
             df = pd.DataFrame(columns=[naming, 'Number of items'])
             df[naming] = metric[schema_any].keys()
             df['Number of items'] = metric[schema_any].values()
             # df.set_index(naming, inplace=True)
             # df = df[df.index < 50]
             if len(df) > 0:
-                try:
-                    # If the values are floats
-                    if df[naming].dtype == np.float64:
-                        nbins = 20
-                    else:
-                        nbins = int(df[naming].max())+1
-                except:
-                    nbins = 10
-                fig = px.histogram(
-                    df, x=naming, y='Number of items', title=f"", nbins=nbins, color_discrete_sequence=['gray'])
+                # Dirty hack to get good genia relations visualization
+                if naming != 'Number of relations detected':
+                    try:
+                        # If the values are floats
+                        if df[naming].dtype == np.float64:
+                            nbins = 20
+                        else:
+                            nbins = int(df[naming].max())+1
+                    except:
+                        nbins = 10
+                    fig = px.histogram(
+                        df, x=naming, y='Number of items', title=f"", nbins=nbins, color_discrete_sequence=['gray'])
+                else:
+                    fig = px.histogram(
+                        df, x=naming, y='Number of items', title=f"", color_discrete_sequence=['gray'])
                 fig.update_layout(
                     yaxis_title="Number of items",
                     xaxis_title=f"{naming}",
@@ -75,3 +91,4 @@ for schema_any in ['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event
 
                 fig.write_image("/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extraction/dist_figs/" +
                                 f"{naming} distribution for {schema_any} mode {mode}.png", width=1280, height=720, format="png", engine='orca')
+                fig.show()

@@ -43,8 +43,9 @@ def get_metrics(ents, rels):
     metrics = {}
     G = to_nx_graph(ents, rels)
 
-    metrics['asbolute recall ner'] = len(ents)
-    metrics['asbolute recall re'] = len(rels)
+    metrics['asbolute recall ner'] = sum(
+        [len([w for w in item if isinstance(w, tuple) or isinstance(w, list)]) for item in ents])
+    metrics['asbolute recall re'] = sum([len(item) for item in rels])
 
     degrees = [item[1] for item in list(G.degree)]
     metrics['mean degree'] = np.nanmean(degrees)
@@ -79,10 +80,10 @@ def get_metrics(ents, rels):
         metrics['diameter'] = nx.diameter(G)
     except:
         pass
-    try:
-        metrics['density'] = nx.density(G)
-    except:
-        pass
+
+    metrics['density'] = nx.density(G)
+    # except:
+    #     pass
 
     return metrics
 
