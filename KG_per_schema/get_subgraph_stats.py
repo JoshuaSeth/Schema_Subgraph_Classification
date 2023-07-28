@@ -13,23 +13,28 @@ datasets_path = '/Users/sethvanderbijl/Coding Projects/VUThesis_LM_Triple_Extrac
 
 results = []
 
-metric_names = ['degrees',
-                'degrees std',
-                'degree_centralities',
-                'degree_centralities std',
-                'closeness_centralities',
-                'closeness_centralities std',
-                'clusterings',
-                'clusterings std',
-                'modularities',
-                'modularities std',
-                'avg_path_lens',
-                'avg_path_lens std',
-                'densities',
-                'densities std',
-                'schema',
-                'mode',
-                ]
+metric_names = [
+    'entities',
+    'std entities',
+    'rels',
+    'std rels',
+    'degrees',
+    'degrees std',
+    'degree_centralities',
+    'degree_centralities std',
+    'closeness_centralities',
+    'closeness_centralities std',
+    'clusterings',
+    'clusterings std',
+    'modularities',
+    'modularities std',
+    'avg_path_lens',
+    'avg_path_lens std',
+    'densities',
+    'densities std',
+    'schema',
+    'mode',
+]
 
 for dataset_fpath in tqdm(glob.glob(f"{datasets_path}*.pkl")):
     degrees = []
@@ -39,6 +44,8 @@ for dataset_fpath in tqdm(glob.glob(f"{datasets_path}*.pkl")):
     modularities = []
     avg_path_lens = []
     densities = []
+    entity_nums = []
+    relations_nums = []
 
     properties = os.path.basename(dataset_fpath).split('_')
     schema_name = properties[0]
@@ -48,9 +55,11 @@ for dataset_fpath in tqdm(glob.glob(f"{datasets_path}*.pkl")):
         dataset = pickle.load(f)
 
     for data in dataset.data_list:
-
         # Assuming you have a PyTorch Geometric data object named `data`
         G = to_networkx(data, to_undirected=True)
+
+        entity_nums.append(G.number_of_nodes())
+        relations_nums.append(G.number_of_edges())
 
         degrees.append(np.nanmean(list(G.degree())))
         degree_centralities.append(np.nanmean(
@@ -74,20 +83,25 @@ for dataset_fpath in tqdm(glob.glob(f"{datasets_path}*.pkl")):
 
         densities.append(nx.density(G))
 
-    stats = [np.nanmean(degrees),
-             np.nanstd(degrees),
-             np.nanmean(degree_centralities),
-             np.nanstd(degree_centralities),
-             np.nanmean(closeness_centralities),
-             np.nanstd(closeness_centralities),
-             np.nanmean(clusterings),
-             np.nanstd(clusterings),
-             np.nanmean(modularities),
-             np.nanstd(modularities),
-             np.nanmean(avg_path_lens),
-             np.nanstd(avg_path_lens),
-             np.nanmean(densities),
-             np.nanstd(densities)]
+    stats = [
+        np.nanmean(entity_nums),
+        np.nanstd(entity_nums),
+        np.nanmean(relations_nums),
+        np.nanstd(relations_nums),
+        np.nanmean(degrees),
+        np.nanstd(degrees),
+        np.nanmean(degree_centralities),
+        np.nanstd(degree_centralities),
+        np.nanmean(closeness_centralities),
+        np.nanstd(closeness_centralities),
+        np.nanmean(clusterings),
+        np.nanstd(clusterings),
+        np.nanmean(modularities),
+        np.nanstd(modularities),
+        np.nanmean(avg_path_lens),
+        np.nanstd(avg_path_lens),
+        np.nanmean(densities),
+        np.nanstd(densities)]
 
     for idx, stat in enumerate(stats):
         results.append([metric_names[idx], stat, schema_name, mode])

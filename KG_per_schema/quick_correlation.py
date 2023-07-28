@@ -3,25 +3,29 @@ from collections import defaultdict
 from scipy.stats.stats import pearsonr
 
 global_top_str = '''
-Entities & 7,374 & 9,484 & 3,690 & 4,438 & 4,559 & 5,379 & 4,954 & 5,592 & 1,294 & 1,426 & 9,090 & 10,782 \\ \hline
-Relations & 6,375 & 8,147 & 216 & 262 & 218 & 248 & 1,793 & 1,993 & 0 & 0 & 2922 & 3,092 \\ \hline
-
-$\mu$ degree & \cellcolor{green}3.06 & \cellcolor{green}3.07 & 2.36 & 2.37 & 2.44 & 2.44 & 2.65 & 2.65 & \cellcolor{red}2.01 & \cellcolor{red}2.01 & 2.61 & 2.68 \\ \hline
-$\sigma$ degree & \cellcolor{green}72.68 & \cellcolor{green}72.79 & 20.86 & 20.76 & 21.72 & 21.67 & 62.15 & 62.23 & 19.62 & 19.69 & 47.01 & 47.12 \\ \hline
-
-$\mu$ degree centrality & 0.00043 & 0.00043 & 0.00156 & 0.00158 & 0.00154 & 0.00154 & 0.00064 & 0.00063 & 0.00202 & 0.00201 & 0.00260 & 0.00039 \\ \hline
-$\sigma$ degree centrality & 0.01 & 0.01 & 0.01 & 0.01 & 0.01 & 0.01 & 0.01 & 0.01 & \cellcolor{green}0.02 & \cellcolor{green}0.02 & \cellcolor{green}0.02 & 0.01 \\ \hline
+$\mu$ entities & 9.22 & 9.20 & 4.26 & 4.25 & 4.57 & 4.55 & 6.26 & 6.22 & 3.32 & 3.30 & 9.10 & 8.02 \\ \hline
+$\mu$ relations & 3.39 & 3.42 & 1.59 & 1.60 & 1.58 & 1.57 & 2.70 & 2.68 & 1.16 & 1.15 & 3.66 & 3.26 \\ \hline
+$\sigma$ entities & 9.64 & 9.43 & 3.10 & 3.08 & 3.39 & 3.33 & 3.56 & 3.60 & 2.15 & 2.18 & 5.97 & 6.43 \\ \hline
+$\sigma$ relations & 2.54 & 2.58 & 1.11 & 1.12 & 1.03 & 1.03 & 1.53 & 1.55 & 0.42 & 0.41 & 2.38 & 2.58 \\ \hline
 
 
-$\mu$ closeness centrality & 0.44 & 0.44 & 0.30 & 0.30 & 0.30 & 0.30 & \cellcolor{green}0.48 & \cellcolor{green}0.48 & \cellcolor{red}0.26 & \cellcolor{red}0.26 & 0.31 & 0.31 \\ \hline
-$\sigma$ closeness centrality & \cellcolor{green}0.06 & \cellcolor{green}0.06 & \cellcolor{red}0.03 & \cellcolor{red}0.03 & \cellcolor{red}0.03 & \cellcolor{red}0.03 & 0.04 & 0.04 & \cellcolor{green}0.07 & \cellcolor{green}0.07 & 0.04 & 0.04 \\ \hline
+$\mu$ degrees & \cellcolor{green}2.47 & \cellcolor{green}2.47 & 1.23 & 1.23 & 1.29 & 1.29 & 1.76 & 1.75 & \cellcolor{red}1.00 & 0.99 & 2.45 & 2.18 \\ \hline
+$\sigma$  degrees  & \cellcolor{green}2.37 & 2.31 & 0.72 & 0.72 & 0.78 & 0.77 & 0.87 & 0.88 & \cellcolor{red}0.44 & \cellcolor{red}0.45 & 1.46 & 1.59 \\ \hline
+$\mu$ degree centralities & 0.32 & 0.32 & 0.56 & 0.56 & 0.51 & 0.51 & 0.35 & 0.36 & \cellcolor{green}0.67 & \cellcolor{green}0.68 & \cellcolor{red}0.24 & 0.30 \\ \hline
+$\sigma$  degree centralities & \cellcolor{red}0.37 & \cellcolor{red}0.37 & \cellcolor{green}0.42 & \cellcolor{green}0.42 & \cellcolor{green}0.42 & \cellcolor{green}0.42 & 0.37 & 0.37 & \cellcolor{green}0.41 & \cellcolor{green}0.41 & 0.30 & 0.34 \\ \hline
+
+$\mu$ closeness centralities & 0.32 & 0.32 & 0.56 & 0.56 & 0.51 & 0.51 & 0.36 & 0.36 & \cellcolor{green}0.67 & \cellcolor{green}0.68 & \cellcolor{red}0.25 & 0.31 \\ \hline
+$\sigma$  closeness centralities & \cellcolor{red}0.37 & \cellcolor{red}0.37 & 0.42 & 0.42 & 0.42 & 0.42 & 0.37 & 0.37 & \cellcolor{green}0.41 & \cellcolor{green}0.41 & 0.30 & 0.34 \\ \hline
+$\mu$ clusterings & 0.18 & 0.18 & \cellcolor{red}0.00 & \cellcolor{red}0.00 & \cellcolor{red}0.00 & \cellcolor{red}0.00 & \cellcolor{green}0.24 & \cellcolor{green}0.24 & \cellcolor{red}0.00 & \cellcolor{red}0.00 & 0.06 & 0.05 \\ \hline
+$\sigma$ clusterings & 0.19 & 0.19 & 0.04 & \cellcolor{red}0.03 & \cellcolor{red}0.03 & \cellcolor{red}0.03 & \cellcolor{green}0.21 & \cellcolor{green}0.22 & \cellcolor{red}0.00 & \cellcolor{red}0.00 & 0.12 & 0.11 \\ \hline
 
 
-$\mu$ clustering coefficient & 0.51 & 0.51 & 0.03 & 0.03 & 0.03 & 0.03 & \cellcolor{green}0.56 & \cellcolor{green}0.56 & \cellcolor{red}0.00 & \cellcolor{red}0.00 & 0.16 & 0.17 \\ \hline
-$\sigma$ clustering coefficient & \cellcolor{green}0.45 & \cellcolor{green}0.45 & 0.15 & 0.15 & 0.16 & 0.16 & 0.49 & 0.49 & \cellcolor{red}0.00 & \cellcolor{red}0.00 & 0.34 & 0.35 \\ \hline
 
+$\mu$ modularities & 0.04 & 0.04 & 0.16 & 0.16 & 0.18 & 0.17 & \cellcolor{red}0.01 & \cellcolor{red}0.01 & 0.08 & 0.07 & \cellcolor{green}0.33 & \cellcolor{green}0.30 \\ \hline
+$\sigma$  modularities  & \cellcolor{red}0.09 & \cellcolor{red}0.09 & \cellcolor{green}0.24 & \cellcolor{green}0.24 & \cellcolor{green}0.25 & \cellcolor{green}0.25 & 0.05 & 0.05 & 0.18 & 0.18 & 0.24 & 0.24 \\ \hline
 
-modularity & 0.47 & 0.48 & \cellcolor{green}0.66 & \cellcolor{green}0.66 & \cellcolor{green}0.65 & \cellcolor{green}0.65 & \cellcolor{red}0.29 & \cellcolor{red}0.29 & 0.61 & 0.61 & 0.62 & 0.64 \\ \hline'''.replace('\cellcolor{green}', '').replace('\cellcolor{red}', '').replace(',', '')
+$\mu$ densities & 0.32 & 0.32 & 0.56 & 0.56 & 0.51 & 0.51 & 0.35 & 0.36 & \cellcolor{green}0.67 & \cellcolor{green}0.68 & \cellcolor{red}0.24 & 0.30 \\ \hline
+$\sigma$  densities  & \cellcolor{red}0.37 & \cellcolor{red}0.37 & \cellcolor{green}0.42 & \cellcolor{green}0.42 & \cellcolor{green}0.42 & \cellcolor{green}0.42 & 0.37 & 0.37 & \cellcolor{green}0.41 & \cellcolor{green}0.41 & 0.30 & 0.34 \\ \hline'''.replace('\cellcolor{green}', '').replace('\cellcolor{red}', '').replace(',', '')
 
 topology = {}
 topology['AND'] = {}
