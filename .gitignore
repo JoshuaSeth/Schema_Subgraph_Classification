@@ -1,5 +1,6 @@
 # Project specific files
 /old/SciErc_data
+.vscode
 
 
 # Byte-compiled / optimized / DLL files
