@@ -20,7 +20,9 @@ schema = 'scierc'
 mode = 'OR'
 use_context = False
 
-for schema in tqdm(['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-event']):
+for schema in tqdm(['scierc',
+                    # 'None', 'genia', 'covid-event', 'ace05', 'ace-event'
+                    ]):
     for mode in ['OR', 'AND']:
         sents, corefs, rels,  ents,  = load_data(
             [schema], mode, use_context, is_research=True, grouped=False)
@@ -29,6 +31,10 @@ for schema in tqdm(['scierc', 'None', 'genia', 'covid-event', 'ace05', 'ace-even
 
         ents.extend(ents_false)
         rels.extend(rels_false)
+
+        assert len(sents) > 0, 'No sentences found'
+        assert len(ents) > 0, 'No entitties found'
+        assert len(rels) > 0, 'No relations found'
 
         G = to_nx_graph(ents, rels)
 

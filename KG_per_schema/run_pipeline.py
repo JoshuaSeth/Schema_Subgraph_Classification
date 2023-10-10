@@ -15,4 +15,5 @@ from predict import create_prediction_datasets
 # # 3.
 create_prediction_datasets(schemas=[
     'scierc',
-    'None', 'genia', 'covid-event', 'ace05', 'ace-event'], use_cached=False)
+    # 'None', 'genia', 'covid-event', 'ace05', 'ace-event'
+], use_cached=False)

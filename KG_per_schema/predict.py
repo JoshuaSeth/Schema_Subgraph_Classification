@@ -47,25 +47,25 @@ def create_prediction_datasets(schemas=['scierc', 'None', 'genia', 'covid-event'
         # Check if it is not an malformed file
 
         properties = os.path.basename(dygie_data_fpath).split('_')
-        if not all(char.isdigit() for char in properties[-2]):
+        # if not all(char.isdigit() for char in properties[-2]):
 
-            # Filenames
-            fname = os.path.basename(dygie_data_fpath)
-            schema = fname.split('_')[0]
-            model_fpath = dygie_dir_path + \
-                'pretrained/' + get_model_fname(fname)
-            output_fpath = output_dir_path + fname
+        # Filenames
+        fname = os.path.basename(dygie_data_fpath)
+        schema = fname.split('_')[0]
+        model_fpath = dygie_dir_path + \
+            'pretrained/' + get_model_fname(fname)
+        output_fpath = output_dir_path + fname
 
-            # Only perform prediction if desired schema and not caching or no cached file exists
-            if schema in schemas and (not os.path.isfile(output_fpath) or not use_cached):
-                print(
-                    f"Processing {fname} with {get_model_fname(fname)}, for {os.path.basename(output_fpath)}...")
+        # Only perform prediction if desired schema and not caching or no cached file exists
+        if schema in schemas and (not os.path.isfile(output_fpath) or not use_cached):
+            print(
+                f"Processing {fname} with {get_model_fname(fname)}, for {os.path.basename(output_fpath)}...")
 
-                # Without specifying the python version this uses python3.8 for me and that is the only way I can get it working (together with the dygie requirements.txt)
-                cmd = f'''"{interpreter}" -m allennlp predict "{model_fpath}" "{dygie_data_fpath}"  --include-package dygie   --predictor dygie  --use-dataset-reader  --cuda-device "-1" --output-file "{output_fpath}"'''
-                subprocess.run(cmd, shell=True, cwd=dygie_dir_path)
-        else:
-            print(f"Skipping {dygie_data_fpath} because it is malformed")
+            # Without specifying the python version this uses python3.8 for me and that is the only way I can get it working (together with the dygie requirements.txt)
+            cmd = f'''"{interpreter}" -m allennlp predict "{model_fpath}" "{dygie_data_fpath}"  --include-package dygie   --predictor dygie  --use-dataset-reader  --cuda-device "-1" --output-file "{output_fpath}"'''
+            subprocess.run(cmd, shell=True, cwd=dygie_dir_path)
+        # else:
+        #     print(f"Skipping {dygie_data_fpath} because it is malformed")
     # For non-dygie (spacy) predictions we simply read from the base data but write the data in the same format
     if 'spacy' in schemas:
         import spacy

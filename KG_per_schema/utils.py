@@ -3,7 +3,13 @@
 from os.path import dirname
 import os
 
-# Move to utils
+
+def hash_data(subgraph):
+    x = str(subgraph.x.cpu().numpy().tolist())
+    y = str(subgraph.y.cpu().numpy().tolist())
+    edge_index = str(subgraph.edge_index.cpu().numpy().tolist())
+    edge_types = str(subgraph.edge_types.cpu().numpy().tolist())
+    return x + '\n' + y + '\n' + edge_index + '\n' + edge_types
 
 
 def map_schema_names(selected_schemas):
