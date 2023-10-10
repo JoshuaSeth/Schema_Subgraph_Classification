@@ -1,4 +1,4 @@
-# Quick test to see correlations between topology and results, these are not statistically significant of course rather they are anecdotal evidence and cuase of further inquiry
+'''Quick test to see correlations between topology and results, these are not statistically significant of course rather they are anecdotal evidence and cuase of further inquiry'''
 from collections import defaultdict
 from scipy.stats.stats import pearsonr
 
