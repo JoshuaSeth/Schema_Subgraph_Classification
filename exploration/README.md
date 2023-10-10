@@ -1,1 +1,0 @@
-Some scripts for initially exploring some datsets/schemas
