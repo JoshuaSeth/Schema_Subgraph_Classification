@@ -27,8 +27,8 @@ Several scripts alot to verification, visualizations and tests. The pipeline tak
 Ensure that you have python3.10 installed, as using python3.11 may cause package incompatibilities. For using the spacy schema's (not inclued by default) python3.8 is recommended.
 
 ```
-git clone https://github.com/JoshuaSeth/VUThesis_LM_Triple_Extraction.git
-cd VUThesis_LM_Triple_Extraction
+git clone https://github.com/JoshuaSeth/Schema_Subgraph_Classification.git
+cd Schema_Subgraph_Classification
 python3.10 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
